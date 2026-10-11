@@ -32,18 +32,18 @@
 /* ---------- the control row ----------
    margin-left:auto pushes the arrow pair to the right edge of the head line. */
 .rail-ctrl{margin-left:auto;display:flex;align-items:center;gap:8px}
-/* the arrows page nothing without 07-rail.js; 17a-repos.css narrows this
-   hide to .repo-btn, because that row also carries the GitHub link */
+/* the arrows page nothing without 07-rail.js; 17a-repos.css narrows this hide to
+   the arrow buttons, because that row also carries the GitHub escape-hatch link */
 html:not(.js) .rail-ctrl{display:none}
 
-/* ---------- the arrow buttons ----------
-   Always rendered: buttons that come and go make the head line jump, so
-   07-rail.js moves only [disabled]. The box is --rail-btn, 32px by
-   default — 17a-repos.css takes that default, 17b-minutes.css raises it
-   to 34px. */
+/* ---------- the circle controls ----------
+   The rail arrows and the head-line GitHub escape-hatch link share this box: it is
+   always rendered, because controls that come and go make the head line jump, so
+   07-rail.js moves only [disabled]. The box is --rail-btn, 32px by default —
+   17a-repos.css takes that default, 17b-minutes.css raises it to 34px. */
 .rail-btn{flex:none;width:var(--rail-btn,32px);height:var(--rail-btn,32px);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.65);border:1px solid var(--line);color:var(--accent-strong);transition:background .25s,border-color .25s,color .25s,opacity .25s}
-/* the shared chevron marks of src/data/icons.js (family stroke 2.4), drawn
-   smaller and lighter here — one home for both rails, so they match */
+/* the icons.js marks inside the circle: the chevrons carry the family stroke 2.4,
+   drawn smaller and lighter here — one home for both rails, so they match */
 .rail-btn svg{width:15px;height:15px;stroke-width:2.2}
 .rail-btn:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
 .rail-btn[disabled]{opacity:.32;cursor:default;pointer-events:none}

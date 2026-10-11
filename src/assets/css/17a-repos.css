@@ -93,16 +93,14 @@
 .repo-n::before{content:"·";margin-right:7px;color:var(--accent-bright)}
 .repo-n:empty{display:none}
 /* ---------- the arrows and the GitHub escape hatch ----------
-   --neg (GitHub red) belongs to the two things that really are GitHub links —
-   here and the card name's hover — and nowhere else on this page, the rule
-   10b-categories.css sets; every other mark takes --accent-strong. */
-.repo-side{gap:9px}   /* .rail-ctrl is 8px (17-rail.css); this row also carries a text link */
-.repo-gh{font-size:12.5px;font-weight:600;color:var(--accent-strong);text-decoration:none;transition:color .25s}
-.repo-gh:hover{color:var(--neg)}
-/* the rail's blanket hide (17-rail.css) is narrowed here: the arrows are
-   JS-only, the GitHub link in the same .rail-ctrl is not */
+   All three are .rail-btn circles (17-rail.css): the mark needs no rule of its own,
+   so the head line reads as one control row. --neg (GitHub red) belongs to the card
+   links below and nowhere else on this page, the rule 10b-categories.css sets; every
+   other mark takes --accent-strong. */
 html:not(.js) .repo-side{display:flex}
-html:not(.js) .repo-btn{display:none}
+/* the rail's blanket hide (17-rail.css) is narrowed here: the arrows are JS-only,
+   the GitHub mark in the same .rail-ctrl is not — so it hides by element, not class */
+html:not(.js) button.repo-btn{display:none}
 /* the arrows are authored in repo-group.html and always rendered; the box, the
    hover fill and the [disabled] state 07-rail.js sets are .rail-btn's (17-rail.css) */
 

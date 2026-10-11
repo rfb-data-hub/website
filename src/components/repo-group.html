@@ -1,7 +1,7 @@
 <!-- One category of the live repository list (resources.html): its head line, then ONE
      horizontal rail of repository cards — the minutes-group.html rail shape, with cards
      instead of documents. Data: src/data/sites-general.js → categories[]; fields topic,
-     title, icon, ghSearch (the org topic search, the "Search on GitHub" escape hatch).
+     title, icon, ghSearch (the org topic search: the icon-only "Search on GitHub" link).
      Rail shape and the always-rendered arrows: 17-rail.css + 17a-repos.css ·
      docs/authoring.md §2c; 07-rail.js owns the [disabled] state, 07-repos.js the
      cards. The buttons are siblings of the head line, never children of the <h3>: a
@@ -15,7 +15,7 @@
     <h3 class="repo-t rail-t"><span class="ic">{{icon}}</span><span class="k">{{title}}</span></h3>
     <span class="repo-n" data-repo-count="{{topic}}"></span>
     <span class="repo-side rail-ctrl">
-      <a class="repo-gh" href="{{ghSearch}}" rel="noopener" target="_blank">Search on GitHub</a>
+      <a class="repo-btn rail-btn" href="{{ghSearch}}" rel="noopener" target="_blank" aria-label="Search on GitHub">{{icons.githubBrand}}</a>
       <button class="repo-btn rail-btn" type="button" data-repo-prev aria-label="Previous repositories in {{title}}">
         {{icons.chevronL}}
       </button>
