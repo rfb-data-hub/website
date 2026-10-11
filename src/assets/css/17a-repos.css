@@ -186,7 +186,7 @@ html:not(.js) .repo-btn{display:none}
 .repo-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--repo-gap)}
 .repo-tags:empty{display:none}   /* 07-repos.js drops an unfilled pill row; this is the same case from CSS */
 .repo-tag{font-size:10.5px;padding:2px 9px}
-.repo-tag.is-new{border-color:var(--accent-bright);background:var(--mint-soft);color:var(--accent-strong)}   /* 07-repos.js adds .is-new under NEW_DAYS */
+.repo-tag.is-new{border-color:var(--accent-bright);color:var(--accent-strong)}   /* 07-repos.js adds .is-new under NEW_DAYS */
 /* a card is a link out of the site, so it may answer the cursor: name to --neg,
    description to ink, the arrow steps out of its .55 opacity */
 .repo-link:hover .repo-name,.repo-link:focus-visible .repo-name{color:var(--neg)}
