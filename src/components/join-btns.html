@@ -1,0 +1,11 @@
+<!-- The two platform buttons — shared by the hero CTA row (index.html #top)
+     and the join card (components/join-card.html).
+     Fields from the join key in src/data/sites-general.js: discordUrl /
+     discordLabel and githubUrl / githubLabel; the marks are the
+     discordBrand / githubBrand icons from src/data/icons.js.
+     Discord (comms) + GitHub (data hub), no forms, external tabs.
+     Both are neutral by default (green theme); the page theme highlights
+     the platform the page is about — yellow → Discord, red → GitHub
+     (03-nav.css). -->
+<a class="btn btn-dc" href="{{join.discordUrl}}" rel="noopener" target="_blank">{{icons.discordBrand}} {{join.discordLabel}}</a>
+<a class="btn btn-gh" href="{{join.githubUrl}}" rel="noopener" target="_blank">{{icons.githubBrand}} {{join.githubLabel}}</a>

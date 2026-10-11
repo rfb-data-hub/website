@@ -1,0 +1,44 @@
+/* ============================================================
+   Committee chairs — the committees-page sibling of the live readout
+   (12a-proof.css): the same .glass-strip ground (01b-glass.css), hairlines and
+   charge line, plain display (no links, hover or transitions). One column per
+   committee; both roles at one size, the label carries the distinction.
+   Markup components/chair-item.html, data site-committees.js → committees
+   (title / chair / coChair); each column carries [data-reveal], hidden until
+   02-reveal.js adds .revealed (16-reveal.css). The band furniture is the
+   figures idiom in 08a-band.css, which sorts before this file, so the
+   --fig-cols and padding set here win the cascade; a chairs column holds
+   names, not numerals, so it takes no .figures-v/.figures-k.
+   ============================================================ */
+.chairs{padding:26px 0 22px}
+.chairs-grid{--fig-cols:3}
+.chairs-col{padding:12px 26px 14px}   /* column rules at the idiom's default inset */
+.chairs-title{
+  font-family:var(--font-body);font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strong);
+  margin-bottom:12px;
+}
+.chairs-row{display:flex;align-items:center;gap:11px;min-width:0}
+.chairs-row + .chairs-row{margin-top:10px}
+.chairs-avatar{border-radius:50%;display:block;flex:none}
+.chairs-name{
+  flex:1;min-width:0;
+  font-family:var(--font-display);font-weight:600;color:var(--ink);
+  font-size:15.5px;line-height:1.25;letter-spacing:-.01em;
+}
+.chairs-role{
+  flex:none;font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+}
+.chairs .footnote{margin-top:16px;text-align:center}
+
+/* ---------- fold ----------
+   ≤960px: one committee per row, hairlines turn horizontal. */
+@media (max-width:960px){
+  .chairs-grid{--fig-cols:1}
+  /* suppresses the column rule 08a-band.css draws on .figures-item */
+  .chairs-col + .chairs-col::before{display:none}
+  .chairs-col + .chairs-col::after{
+    content:"";display:block;position:absolute;left:26px;right:26px;top:0;height:1px;background:var(--line);
+  }
+}

@@ -1,0 +1,28 @@
+/* ============================================================
+   The resource category cards (home · section.categories) — the tile one
+   category is drawn with: mark, title, one paragraph, one CTA. Its ground is
+   .glass-card (01b-glass.css); this file owns only the layout and the hover.
+   `.cat-grid` lays them out three across (18-responsive.css takes it to two,
+   then one); markup components/category-card.html, data sites-general.js →
+   categories. The tiles carry [data-reveal] (02-reveal.js, 16-reveal.css).
+   10b-categories.css sorts after this file and re-accents `.cat` inside
+   `section.categories` at higher specificity — keep the two in step.
+   ============================================================ */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.cat{
+  padding:30px 28px;text-decoration:none;color:inherit;display:block;
+  transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s,border-color .3s;
+}
+.cat:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--accent-bright)}
+.cat .ic{
+  width:46px;height:46px;border-radius:13px;background:var(--mint-soft);border:1px solid var(--mint);
+  display:flex;align-items:center;justify-content:center;color:var(--accent-strong);margin-bottom:20px;
+  transition:background .3s,color .3s;
+}
+.cat:hover .ic{background:var(--accent-deep);color:#fff}
+.cat h3{margin-bottom:8px}
+.cat p{font-size:14.5px;color:var(--muted)}
+.cat .go{margin-top:16px;font-size:13px;color:var(--accent-strong)}
+.cat .go svg{width:13px;height:13px}   /* the mark is canonical 24-grid; the size is ours */
+/* the card answers, not the CTA: the nudge is .cta-arrow's, this is the wider trigger */
+.cat:hover .go svg{transform:translateX(4px)}

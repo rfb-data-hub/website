@@ -1,0 +1,55 @@
+/* ============================================================
+   The rail — the shared horizontal scroller: a head line with a pair of
+   arrows, a snap-scrolling row of items, and a note that holds the row's
+   box when it is empty. Two instances wear it: the repository list
+   (components/repo-group.html, resources.html, sized by 17a-repos.css) and
+   the committee minutes (components/minutes-group.html, committees.html,
+   sized by 17b-minutes.css). 07-rail.js owns the arrows: window.fbcRail
+   pages by one measured item and sets [disabled] on them, and the control
+   row only shows under the `html.js` gate src/layout.html sets. Numbered
+   17-rail so it sorts after 17-page.css and before its instances: at equal
+   specificity the later file wins, so an instance overrides the utility.
+   ============================================================ */
+
+/* ---------- the scroller ----------
+   overscroll-behavior-x:contain stops a flick at either end from dragging the
+   page sideways; the scrollbar is hidden because the arrows already say "more
+   to come". The snap pairs with `scroll-snap-align:start` on the items, and
+   07-rail.js measures this row's column gap (--rail-gap, 17a-repos.css) into
+   its paging step. */
+.rail{list-style:none;display:flex;align-items:stretch;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+.rail::-webkit-scrollbar{display:none}
+.rail[hidden]{display:none}                 /* display:flex outranks the UA [hidden]; 07a-minutes.js hides an emptied rail */
+
+/* ---------- the head line ----------
+   One wrapping row for the heading and the arrows: .rail-t needs
+   min-width:0, or the flex item cannot shrink below its own text and a
+   long name overflows instead of moving the arrows. Instances retune the
+   12px gap (17a-repos.css .repo-t, 17b-minutes.css .minutes-h). */
+.rail-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rail-t{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
+
+/* ---------- the control row ----------
+   margin-left:auto pushes the arrow pair to the right edge of the head line. */
+.rail-ctrl{margin-left:auto;display:flex;align-items:center;gap:8px}
+/* the arrows page nothing without 07-rail.js; 17a-repos.css narrows this
+   hide to .repo-btn, because that row also carries the GitHub link */
+html:not(.js) .rail-ctrl{display:none}
+
+/* ---------- the arrow buttons ----------
+   Always rendered: buttons that come and go make the head line jump, so
+   07-rail.js moves only [disabled]. The box is --rail-btn, 32px by
+   default — 17a-repos.css takes that default, 17b-minutes.css raises it
+   to 34px. */
+.rail-btn{flex:none;width:var(--rail-btn,32px);height:var(--rail-btn,32px);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.65);border:1px solid var(--line);color:var(--accent-strong);transition:background .25s,border-color .25s,color .25s,opacity .25s}
+/* the shared chevron marks of src/data/icons.js (family stroke 2.4), drawn
+   smaller and lighter here — one home for both rails, so they match */
+.rail-btn svg{width:15px;height:15px;stroke-width:2.2}
+.rail-btn:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+.rail-btn[disabled]{opacity:.32;cursor:default;pointer-events:none}
+
+/* ---------- the empty-state note ----------
+   The note is what keeps an emptied rail from collapsing the page: the
+   height it reserves is the instance's — --repo-h in 17a-repos.css,
+   --minute-h + --rail-pad in 17b-minutes.css. */
+.rail-note{font-size:14px;color:var(--faint)}

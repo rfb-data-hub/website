@@ -1,0 +1,25 @@
+/* ============================================================
+   Wave dividers — the two-tone caps of components/wave-top.html and
+   components/wave-bottom.html, joining bands and piping the stream into the
+   footer tank. Height is --wave-h (01-tokens.css); caps overlap the band by 1px
+   so no page-ground hairline shows at the seam. They are furniture, z-index:-1
+   behind the band's content (stacking context: .band's isolation, 11-band.css).
+   scripts/gen-wave-mask.js copies the caps' body paths into the band photos'
+   CSS masks (WAVE-MASK blocks in 11a-news.css and 17c-dashboard.css).
+   CRITICAL: an absolutely-positioned decorative SVG needs explicit
+   width/height:100% — a viewBox alone sizes by aspect ratio and detaches the wave.
+   ============================================================ */
+.band .wave-top,.band .wave-bottom{position:absolute;left:0;width:100%;height:var(--wave-h);pointer-events:none;z-index:-1}
+.band .wave-top svg,.band .wave-bottom svg{display:block;width:100%;height:100%}
+.band .wave-top{top:calc(1px - var(--wave-h))}
+.band .wave-bottom{bottom:calc(1px - var(--wave-h));transform:scaleY(-1)}
+/* the two-tone fills follow the page theme (01a-theme.css) — the caps are the
+   band's edge, so they take the tank colours exactly like the footer wave */
+.wave-foam{fill:var(--tank-foam)}
+.wave-body{fill:var(--tank)}
+
+.foot-wave{position:absolute;top:calc(1px - var(--wave-h));left:0;width:100%;height:var(--wave-h);pointer-events:none}
+.foot-wave svg{display:block;width:100%;height:100%}
+/* the footer reuses the wave-top partial, so its .wave-top wrapper has to
+   fill the .foot-wave box exactly (the .band rules above don't reach it) */
+.foot-wave .wave-top{position:absolute;inset:0}

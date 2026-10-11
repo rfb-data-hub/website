@@ -1,0 +1,152 @@
+/* ============================================================
+   Committee minutes rail — committees.html #minutes: one hairline row per
+   committee, its published documents in a rail that snaps entry by entry.
+   Markup: components/minutes-group.html (row, head line, arrows, note) and
+   components/minute-item.html (one entry), from committees[] and minutes[]
+   in data/site-committees.js. State: 07a-minutes.js filters by year off
+   data-minute-year — never data-year, which 06-year.js claims site-wide —
+   and 07-rail.js (window.fbcRail) pages each rail and moves [disabled].
+   The ground is .glass-wash (01b-glass.css), the surface the platforms band
+   wears too (10a-platforms.css); the hairlines are .rows (08-sections.css)
+   and the scroller 17-rail.css. Numbered 17b, before 18-responsive.css (docs/authoring.md §3).
+   ============================================================ */
+/* ---------- the rail's measures ----------
+   One entry is glyph + gap + date line + inset, and that sum is a row's
+   content box: AUTHORED, not left to the text metrics, so the note can
+   reserve the same box and a row emptied by the year filter keeps its
+   height. Change a number here and both states move together. */
+.minutes{
+  --minute-glyph:34px;      /* the drawn document mark (icons.js doc) */
+  --minute-gap:16px;        /* glyph → date */
+  --minute-line:26px;       /* fixed so --minute-h is not a font accident */
+  --minute-inset:2px;       /* .minute-link vertical padding */
+  --minute-h:calc(var(--minute-glyph) + var(--minute-gap) + var(--minute-line) + var(--minute-inset)*2);
+  --rail-pad:16px;          /* .minutes-rail padding-top + padding-bottom */
+  --row-gap:16px;           /* head line → content, rail and note alike */
+  --rail-btn:34px;          /* the idiom's 32px (17-rail.css) one step up */
+}
+.minutes .sec-head{margin-bottom:24px}   /* the shared .sec-head space is 56px (08-sections.css) */
+
+/* ---------- the rows ----------
+   The .rows utility (08-sections.css) draws the hairlines; there are no
+   boxes and no shadows — the section is set apart by its ground, not chrome. */
+.minutes-group{padding:26px 0}
+
+/* .rail-h / .rail-t (17-rail.css) with the minutes' own gap; the heading
+   holds text only, the arrows are its siblings (minutes-group.html). */
+.minutes-h,.minutes-t{gap:13px}
+.minutes-h .num{
+  font-family:var(--font-display);font-weight:700;font-size:12.5px;
+  letter-spacing:.1em;color:var(--accent);
+}
+.minutes-h .k{
+  font-family:var(--font-display);font-weight:600;font-size:1.06rem;
+  letter-spacing:-.01em;color:var(--ink);
+}
+/* ---------- the controls ----------
+   The arrows need no rule here: box, hover fill and [disabled] are .rail-btn
+   (17-rail.css), and 07-rail.js only moves [disabled], so the head line never
+   changes shape. Both controls are markup (minutes-group.html, and the menu
+   in pages/committees.html); without JS both hide and the rail is a plain list. */
+html:not(.js) .minutes-bar{display:none}
+
+/* ---------- the year menu ----------
+   ONE menu for the whole section, above the rows and authored in
+   pages/committees.html — never inside a row's .minutes-ctrl, where it would
+   vanish with the row it filters. A native <select> is the whole control
+   (keyboard, screen reader, mobile picker), worn in the badge pill of 17-page.css. */
+.minutes-bar{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-bottom:14px}
+.minutes-bar-k{
+  font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);
+}
+.minutes-select{position:relative;display:inline-flex;align-items:center}
+.minutes-year{
+  -webkit-appearance:none;appearance:none;   /* the native arrow is replaced by .minutes-caret */
+  font-family:var(--font-body);font-size:12.5px;font-weight:600;line-height:1.1;
+  color:var(--ink);cursor:pointer;
+  padding:6px 30px 6px 13px;border:1px solid var(--line);border-radius:999px;   /* the 30px clears the caret */
+  background:rgba(255,255,255,.65);
+  transition:border-color .25s,color .25s;
+}
+.minutes-year:hover{border-color:var(--accent-bright);color:var(--accent-strong)}
+.minutes-caret{position:absolute;right:11px;pointer-events:none;color:var(--faint)}   /* inside the select's right padding, out of its hit area */
+.minutes-caret svg{width:11px;height:11px;stroke-width:2.2}   /* icons.js caret, sized for this pill */
+.minutes-year:hover + .minutes-caret{color:var(--accent-strong)}
+
+/* ---------- the emptied row ----------
+   A committee with nothing in the chosen year keeps its head: 07a-minutes.js
+   hides the rail and shows the note, which reserves the rail's box, so
+   filtering changes text and not layout. The note declares no display, so
+   this is not the rail's [hidden] trap (17-rail.css); JS writes no text. */
+.minutes-note{
+  margin-top:var(--row-gap);padding-top:6px;   /* the rail's padding-top, so the
+                                                  words start under the first glyph */
+  min-height:calc(var(--minute-h) + var(--rail-pad));   /* the rail's box */
+}
+.minutes-note[hidden]{display:none}
+
+/* ---------- the rail ----------
+   The scroller, the snap, the hidden scrollbar and the rail's own [hidden]
+   rule are .rail (17-rail.css); this file keeps only its measures. A fixed
+   entry width lets the next entry peek past the right edge — that is the
+   affordance, so no fade mask is needed. */
+.minutes-rail{
+  --minute-w:250px;   /* the paging step: 07-rail.js measures the first visible entry */
+  margin-top:var(--row-gap);padding:6px 0 10px;   /* 6 + 10 = --rail-pad */
+}
+.minute{flex:0 0 var(--minute-w);scroll-snap-align:start}
+.minute[hidden]{display:none}   /* a filtered-out entry leaves no gap */
+.minute + .minute{border-left:1px solid var(--line)}
+
+/* ---------- one published document ----------
+   Glyph above the date, and the whole entry is the link. The first entry
+   drops its left inset so its glyph lines up with the committee head above
+   it; every later entry is inset from the hairline it starts behind. */
+.minute-link{
+  display:grid;align-content:start;gap:var(--minute-gap);height:100%;
+  padding:var(--minute-inset) 26px;text-decoration:none;color:inherit;
+}
+.minute:first-child .minute-link{padding-left:0}
+.minute:last-child .minute-link{padding-right:0}
+.minute-ic{
+  display:flex;color:var(--accent);
+  transition:transform .35s cubic-bezier(.22,.61,.36,1),color .25s;
+}
+.minute-ic svg{width:var(--minute-glyph);height:var(--minute-glyph);stroke-width:1.6}  /* icons.js doc, thinned for its size */
+.minute-line{display:flex;align-items:baseline;gap:9px;min-height:var(--minute-line)}
+.minute-date{
+  font-family:var(--font-display);font-weight:600;font-size:15.5px;
+  letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums;
+  transition:color .25s;
+}
+/* the corner arrow stays WITH the date: pinned to the right edge of a 250px
+   entry it would read as a separate column and leave a void behind the date. */
+.minute-go{
+  display:flex;color:var(--faint);opacity:.55;
+  transition:transform .25s,color .25s,opacity .25s;
+}
+.minute-go svg{width:13px;height:13px;stroke-width:2.2}   /* icons.js externalGo, set on the date's baseline */
+/* an entry IS a link, so it answers the pointer; :focus-visible shares every
+   rule below, so the keyboard path cannot drift from the hover states. */
+.minute-link:hover .minute-ic,.minute-link:focus-visible .minute-ic{transform:translateY(-3px);color:var(--accent-deep)}
+.minute-link:hover .minute-date,.minute-link:focus-visible .minute-date{color:var(--accent-strong)}
+.minute-link:hover .minute-go,.minute-link:focus-visible .minute-go{transform:translate(3px,-3px);opacity:1;color:var(--accent-strong)}
+
+/* ---------- responsive ----------
+   The site's thresholds: 960px is the narrow fold (18-responsive.css, the
+   NARROW constant in 01-stream.js), 560px the single column. */
+@media (max-width:960px){
+  .minutes-group{padding:22px 0}
+  .minutes-rail{--minute-w:220px}
+}
+@media (max-width:560px){
+  .minutes{--minute-glyph:30px;--minute-gap:13px;--row-gap:14px;--rail-btn:32px}  /* --minute-h follows */
+  .minutes-h,.minutes-t{gap:10px}
+  .minutes-h .k{font-size:1rem}
+  .minutes-bar{margin-bottom:12px}
+  .minutes-year{font-size:12px;padding:5px 27px 5px 11px}
+  .minutes-rail{--minute-w:190px}
+  .minute-link{padding:var(--minute-inset) 20px}
+  .minute-date{font-size:14.5px}
+}

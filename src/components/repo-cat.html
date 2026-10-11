@@ -1,0 +1,19 @@
+<!-- One category tile of the resources page's category band (resources.html
+     #categories). Data: src/data/sites-general.js → categories[]; fields topic,
+     title, icon (build.js resolves it from iconKey). The figures idiom of
+     08a-band.css — mark, number, small-caps label — the shape the home readout
+     and the committee chairs use too. The number is the live count: the markup
+     ships the [data-repo-count] span empty and 07-repos.js fills it, so a count
+     nobody fetched is never printed; the same script toggles .is-empty on the
+     tile through data-repo-cat when the topic holds no repositories (dimmed by
+     17a-repos.css). The tile's own href is the in-page anchor #cat-<topic>, the
+     same topic's rail group in components/repo-group.html. Styles: 17a-repos.css ·
+     docs/authoring.md §2c. -->
+<li class="repo-cat figures-item" data-repo-cat="{{topic}}">
+  <a href="#cat-{{topic}}" aria-label="{{title}} — see the {{topic}} repositories below">
+    <span class="ic">{{icon}}</span>
+    <span class="n figures-v" data-repo-count="{{topic}}"></span>
+    <span class="k figures-k">{{title}}</span>
+    <span class="tag">#{{topic}}</span>
+  </a>
+</li>

@@ -1,0 +1,109 @@
+---
+title: Digital Resources — Flow Battery Commons
+description: Everything the commons has published, read live from the GitHub organisation: datasets, open hardware, living documents, teaching material, events and software tools.
+theme: red
+h1: Digital <br><span class="grad">Resources</span>
+sub: Every digital resource the community members (re)share on the GitHub organisation is listed here. This page reads that organisation live and files each repository under the topics its maintainers gave it. This is just for convenience and you can always browse and search the GitHub organisation directly as well.
+---
+    <!-- The resources page: the organisation's public GitHub repositories filed by
+         topic, plus the reproducibility-study band. build.js renders this file through
+         src/layout.html into public/resources.html; the front matter's `theme: red`
+         becomes the body's data-theme attribute, the repaint owned by 01a-theme.css.
+         Data: site-resources.js loads for this page only (the dashboard key);
+         sites-general.js (categories, join, nav) and icons.js load on every page.
+         Partials: page-hero, repo-cat, repo-group, dash-spot between wave-top and
+         wave-bottom, join-card.
+         Behaviour: 07-repos.js fills the rails and the counts from GitHub and
+         07-rail.js pages them; 02-reveal.js fades the [data-reveal] blocks. -->
+    {{> page-hero}}
+
+    <!-- ============================ CATEGORY BAND (frosty glass) ============================ -->
+    <!-- The home page's six categories as a compact strip: icon, name, topic pill and —
+         once 07-repos.js has answered — the live count filed there. Data: categories in
+         sites-general.js, the SAME array the home cards render, so a category cannot be
+         renamed in one place only. Markup: repo-cat.html · styles: 17a-repos.css. -->
+    <section class="repo-band figures glass-strip" id="categories">
+      <div class="wrap">
+        <ol class="repo-cats figures-grid" data-reveal>
+          {{#each categories}}{{> repo-cat}}
+          {{/each}}</ol>
+        <p class="repo-band-note">The resource categories here are GitHub <b>topics</b> on a repository we search for — a repo can sit in several of them, and adding one is a two-minute job by the repo maintainer.</p>
+      </div>
+    </section>
+
+    <!-- ============================ THE LIVE LIST ============================ -->
+    <!-- One row per category, its repositories sliding through sideways as small cards — the
+         minutes-group.html shape, so a new repository adds a card to a rail instead of height
+         to the page. 07-repos.js fills the rails from the organisation's GitHub API (one GET
+         per API page, cached in sessionStorage); the <noscript> line and the rails'
+         placeholders are what a visitor sees when it cannot answer. -->
+    <section class="repos" id="resources" data-repos data-repos-exclude=".github">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow">Public repositories</span>
+          <h2>Resources shared by the community.</h2>
+          <p class="lede">This list is read straight from the GitHub organisation. Each public repository appears here the moment its maintainers give it one of the topics (i.e., #dataset, #tools, etc.) — no website edit required.</p>
+          <!-- data-repo-summary is a SPAN, not the <p>: 07-repos.js writes
+               textContent into it, and the link beside it must survive that. -->
+          <p class="repo-summary" aria-live="polite">
+            <span data-repo-summary></span>
+            <a href="https://github.com/rfb-data-hub" rel="noopener" target="_blank">Browse the organisation on GitHub</a>
+          </p>
+        </div>
+
+        <div class="repo-groups">
+          {{#each categories}}{{> repo-group}}
+          {{/each}}</div>
+
+        <noscript>
+          <p class="repo-note rail-note">JavaScript is switched off, so this page cannot ask GitHub for the repository list. Everything is still there: <a href="https://github.com/rfb-data-hub" rel="noopener" target="_blank">rfb-data-hub on GitHub</a>.</p>
+        </noscript>
+
+        <!-- The repo-*-tpl templates below are 07-repos.js's only markup: never rendered
+             as-is, cloned into the matching <ul>, and filled with textContent, never
+             innerHTML — names and descriptions arrive from a network. The whole card is
+             the link, so the name is a span; 17a-repos.css clamps the description and
+             07-repos.js moves the cut text into the link's aria-label. -->
+        <template id="repo-row-tpl">
+          <li class="repo">
+            <a class="repo-link glass-card" href="#" rel="noopener" target="_blank">
+              <span class="repo-line">
+                <span class="repo-name"></span>
+                <span class="repo-go">{{icons.externalGo}}</span>
+              </span>
+              <span class="repo-desc"></span>
+              <span class="repo-meta"></span>
+              <span class="repo-tags"></span>
+            </a>
+          </li>
+        </template>
+        <template id="repo-loading-tpl">
+          <li class="repo-note rail-note">Querying GitHub…</li>
+        </template>
+        <template id="repo-empty-tpl">
+          <li class="repo-note rail-note">Nothing is filed under this topic yet. If you or your lab has something worth sharing, just open a repository <a href="https://discord.gg/SgTcQcfSgn" rel="noopener" target="_blank">in the Data Hub</a> or <a href="https://discord.gg/SgTcQcfSgn" rel="noopener" target="_blank">ask on the Discord server</a> if you need help to set it up.</li>
+        </template>
+        <template id="repo-error-tpl">
+          <li class="repo-note rail-note">GitHub did not respond (it rate-limits unauthenticated requests to sixty an hour per address). The resources are unaffected: <a href="https://github.com/rfb-data-hub" rel="noopener" target="_blank">open the organisation</a>.</li>
+        </template>
+      </div>
+    </section>
+
+    <!-- ============================ REPRODUCIBILITY DASHBOARD (dark band) ============================ -->
+    <!-- The study's own platform, after the commons' repositories: a different object, so a
+         different ground — and no new furniture (11-band.css, the news deck's backdrop of
+         11a-news.css, the figures row of 08a-band.css). Data: dashboard in site-resources.js
+         · dash-spot.html · 17c-dashboard.css · static. The nav's dashboard entry targets this
+         #dashboard; docs/authoring.md §2e is why the band links out and embeds no iframe. -->
+    <section class="band band-dash" id="dashboard">
+      {{> wave-top}}
+      {{> dash-spot}}
+      {{> wave-bottom}}
+    </section>
+
+    <!-- ============================ JOIN ============================ -->
+    <section class="join" id="join">
+      <div class="wrap">
+        {{> join-card}}
+      </div>
+    </section>

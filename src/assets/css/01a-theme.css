@@ -1,0 +1,95 @@
+/* ============================================================
+   Page themes — the token sets that repaint a page for the platform
+   it is about, selected by <body data-theme>, which src/layout.html
+   emits from the page's front matter `theme:` (no key = green).
+   Concatenated right after 01-tokens.css; later files read themeable
+   colour only through these roles, so a new theme must redefine each
+   one except --stream-track, the neutral empty tubing. Consumers:
+   04-stream.css, 05-hero.css, 13-join.css and the tank grounds —
+   07-waves.css, 11-band.css, 11a-news.css, 14-footer.css,
+   17c-dashboard.css. 03-nav.css also reads the attribute itself.
+   Never themed: --mint*, the green ramp, the status colours.
+   ============================================================ */
+
+/* ---------- green: the neutral commons default ----------
+   No platform is the page's subject, so 03-nav.css keeps both
+   .btn-dc and .btn-gh neutral. The brand glyphs are currentColor and
+   follow the button's text colour; the platform hover fills stay
+   fixed (--pos-deep / --neg-deep, 01-tokens.css). */
+:root{
+  --accent:#1F8A4C;          /* marker and label weight */
+  --accent-strong:#166534;   /* the text-safe weight */
+  --accent-deep:#14532D;     /* the hover-fill weight */
+  --accent-bright:#7FD1A2;   /* the pale weight */
+  /* the tank: .band and its content take --tank / --tank-ink roles
+     (11-band.css), the wave caps --tank-foam (07-waves.css) */
+  --tank:#0E3B2E;
+  --tank-foam:#166534;
+  --tank-ink:#EAF6EE;
+  --tank-ink-dim:#A9C7B8;
+  --tank-ink-faint:#7FA98F;
+  --tank-line:rgba(167,224,190,.22);
+  /* electrolyte ramp, top of the page → tank: --stream-c always equals
+     --tank, so the ramp ends in the tank */
+  --stream-a:#1F8A4C;
+  --stream-b:#166534;
+   --stream-c:var(--tank);
+  /* the tubing's inner shading stroke, neutral on every theme */
+   --stream-track-inner:#D5D5D5;
+  /* the empty tubing: neutral light grey on EVERY theme */
+  --stream-track:#E8E9E8;
+  /* the hero's corner glow (05-hero.css): a tint of --accent */
+  --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
+  /* the join card's pale tints (13-join.css): background wash, hairline
+     and edge crest, inner crest */
+  --card-wash:#EAF6EE;
+  --card-edge:#DCF2E4;
+  --card-crest:#BFE7CD;
+}
+
+/* ---------- yellow: Discord / communication / committees ----------
+   03-nav.css gives .btn-dc the solid highlight on this theme. */
+[data-theme="yellow"]{
+  --accent:#C9A20D;
+  --accent-strong:#8A6D00;
+  --accent-deep:#6B5400;
+  --accent-bright:#F7DE5A;
+  --tank:#453A06;
+  --tank-foam:#D9B60A;
+  --tank-ink:#FBF6DC;
+  --tank-ink-dim:#D8C88B;
+  --tank-ink-faint:#A9975C;
+  --tank-line:rgba(242,208,36,.22);
+  --stream-a:#F2D024;
+  --stream-b:#D9B60A;
+  --stream-c:var(--tank);    /* re-declared per theme on purpose: declared
+                                once on :root it would resolve the green --tank */
+  --stream-track-inner:#D5D5D5;
+  --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
+  --card-wash:#FAF4D8;
+  --card-edge:#F4E7B2;
+  --card-crest:#EDD98A;
+}
+
+/* ---------- red: GitHub / data / resources ----------
+   03-nav.css gives .btn-gh the solid highlight on this theme. */
+[data-theme="red"]{
+  --accent:#D94545;
+  --accent-strong:#A93030;
+  --accent-deep:#8A2420;
+  --accent-bright:#F58484;
+  --tank:#46201d;
+  --tank-foam:#D94545;
+  --tank-ink:#FDEDEB;
+  --tank-ink-dim:#E7B0AA;
+  --tank-ink-faint:#C0857E;
+  --tank-line:rgba(238,92,92,.22);
+  --stream-a:#EE5C5C;
+  --stream-b:#D94545;
+  --stream-c:var(--tank);
+  --stream-track-inner:#D5D5D5;
+  --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
+  --card-wash:#FCEAE8;
+  --card-edge:#F7D2CD;
+  --card-crest:#F0B3AC;
+}

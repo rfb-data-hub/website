@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- 404 page — the fallback GitHub Pages serves for any missing URL, copied
+     verbatim from src/static/ into public/ by build.js. It is never rendered:
+     no data file can feed it, and a template tag would reach the visitor as
+     literal braces — check.sh greps all of public/ for them.
+     Pages answers with this document under the requested path, so it loads
+     nothing from the site: no bundle, no image, every style inline, because a
+     relative asset URL resolves against that path's directory. The way home
+     stays relative, never root-absolute: Pages serves the site under /<repo>/,
+     so "/index.html" would miss it — ADR 0002, enforced by check.sh. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — dry pipe · Flow Battery Commons</title>
+<meta name="robots" content="noindex">
+<!-- Self-contained on purpose: the colours are literals mirroring the green
+     theme of 01a-theme.css — #0E3B2E --tank, #EAF6EE --tank-ink, #A9C7B8
+     --tank-ink-dim, #7FA98F --tank-ink-faint, #14532D --accent-deep, #166534
+     --accent-strong, #1F8A4C --accent, #7FD1A2 --accent-bright — so a theme
+     edit must be copied here by hand; this page reads no tokens. -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:#0E3B2E;color:#EAF6EE;padding:40px 24px;text-align:center;
+  }
+  .card{max-width:520px}
+  svg.flow-glyph{display:block;margin:0 auto 30px}
+  h1{font-size:clamp(3.4rem,10vw,5rem);letter-spacing:-.02em;color:#fff;line-height:1}
+  p{color:#A9C7B8;margin:18px 0 34px;font-size:16.5px;line-height:1.65}
+  p b{color:#BFE3CC}
+  a.btn{
+    display:inline-flex;align-items:center;gap:9px;text-decoration:none;cursor:pointer;
+    font-size:14.5px;font-weight:600;padding:12px 24px;border-radius:999px;
+    background:#14532D;color:#fff;box-shadow:0 12px 24px -14px rgba(20,83,45,.7);
+    transition:background .2s;
+  }
+  a.btn:hover{background:#166534}
+  .hint{margin-top:26px;font-size:12.5px;color:#7FA98F}
+</style>
+</head>
+<body>
+  <div class="card">
+    <svg class="flow-glyph" width="120" height="90" viewBox="0 0 120 90" aria-hidden="true">
+      <path d="M60 6 C60 26 34 26 34 46" fill="none" stroke="#166534" stroke-width="10" stroke-linecap="round"/>
+      <path d="M60 6 C60 26 86 26 86 46" fill="none" stroke="#166534" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="34" cy="58" r="12" fill="none" stroke="#7FD1A2" stroke-width="3"/>
+      <circle cx="86" cy="58" r="12" fill="none" stroke="#7FD1A2" stroke-width="3"/>
+      <path d="M22 62q6-6 12 0t12 0v14H22z" fill="#1F8A4C" opacity=".9"/>
+      <path d="M74 66q6-6 12 0t12 0v10H74z" fill="#1F8A4C" opacity=".55"/>
+      <circle cx="60" cy="10" r="5" fill="#4CC17C"/>
+    </svg>
+    <h1>404</h1>
+    <p>This pipe runs to an empty tank. The page you asked for has been valved off, renamed, or never existed — <b>even the best labs hit dry lines now and then.</b></p>
+    <a class="btn" href="index.html">← Back to the commons</a>
+    <p class="hint">If you followed a link from somewhere else, tell us on the forum so we can fix the fitting.</p>
+  </div>
+</body>
+</html>

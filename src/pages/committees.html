@@ -1,0 +1,95 @@
+---
+title: Committees — Flow Battery Commons
+description: The Flow Battery Commons is coordinated by three committees: Community, Data Infrastructure and Research. Their responsibilities and the minutes of their meetings.
+theme: yellow
+h1: Flow Battery Commons<br><span class="grad">Committees</span>
+sub: The Flow Battery Commons is organised by its members. Three committees take care of the community itself, the shared data infrastructure and the joint research activities. Each committee is described below; the written minutes of their meetings are collected in the section underneath.
+---
+    <!-- The committees page: the three committees, their chairs and their published
+         minutes. build.js renders this file through src/layout.html into
+         public/committees.html; the front matter's `theme: yellow` becomes the body's
+         data-theme attribute, the repaint owned by 01a-theme.css.
+         Data: site-committees.js loads for this page only (committees[], minutes[],
+         the minutes head copy); sites-general.js (join, nav) and icons.js (the caret
+         glyph) load on every page.
+         Partials: page-hero, chair-item, committee-row, minutes-group with its
+         minute-item rows, join-card.
+         Behaviour: 07a-minutes.js filters the rows by year and 07-rail.js pages each
+         rail; 02-reveal.js fades the [data-reveal] blocks. -->
+    {{> page-hero}}
+
+    <!-- ============================ COMMITTEE CHAIRS ============================ -->
+    <!-- One column per committee: the committee name once, then Chair and Co-chair as one
+         line each (same size — the role label tells them apart). Data: chair/coChair inside
+         committees[] in site-committees.js — kept inside the committee, so the band cannot
+         drift out of the list below. Markup: chair-item.html · styles: 11b-chairs.css. -->
+    <section class="chairs figures glass-strip" id="chairs">
+      <div class="wrap">
+        <div class="chairs-grid figures-grid">
+          {{#each committees}}{{> chair-item}}
+          {{/each}}</div>
+        <p class="footnote">Chairs and co-chairs are volunteers from the community and rotate on an irregular basis; they coordinate the meetings and push committee activities forward.</p>
+      </div>
+    </section>
+
+    <!-- ============================ COMMITTEES ============================ -->
+    <!-- One row per committee: what it coordinates, its two meeting badges, and the anchor
+         the nav's Committees children link to — committee-row.html prefixes the row's id
+         with "committee-", so the hrefs in sites-general.js must match the committees[]
+         ids in site-committees.js; check.sh fails on a fragment without a target.
+         Markup: committee-row.html · styles: 17-page.css · no behaviour module. -->
+    <section id="committees">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow">Committees</span>
+          <h2>Three committees.</h2>
+          <p class="lede">The committees coordinate the activities of the community: the Discord server and the regular meetings, the GitHub organisation and its data infrastructure, and the joint research activities such as the international round-robin studies. Committee members are volunteers from the community, meetings are open to members, and outcomes are recorded in written minutes.</p>
+        </div>
+        <div class="rule-list">
+          {{#each committees}}{{> committee-row}}
+          {{/each}}</div>
+      </div>
+    </section>
+
+    <!-- ============================ COMMITTEE MINUTES ============================ -->
+    <!-- One row per committee, divided by hairlines only: the committee as the row head, then
+         its published minutes as a rail that pages entry by entry. The section rides
+         .glass-wash (01b-glass.css), the frosty ground of the platforms band. Data:
+         site-committees.js → committees[] with its minutes[] filed in by build.js ·
+         minutes-group.html + minute-item.html · 17b-minutes.css · behaviour: 07a-minutes.js. -->
+    <section class="minutes glass-wash" id="minutes">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow">{{minutesEyebrow}}</span>
+          <h2>{{minutesTitle}}</h2>
+          <p class="lede">{{minutesLede}}</p>
+        </div>
+
+        <!-- ONE year menu for the whole section, on the right edge above the rows;
+             [data-minutes-year] is 07a-minutes.js's hook. A native select on
+             purpose: keyboard, screen reader and the mobile picker come free, and it
+             holds an open-ended list of years without a wall of pills. Its options
+             are exactly the years build.js derives from the published minutes' dates. -->
+        {{#if minutesYearFilter}}<div class="minutes-bar">
+          <label class="minutes-bar-k" for="minutes-year">Year</label>
+          <span class="minutes-select">
+            <select class="minutes-year" id="minutes-year" data-minutes-year>
+              <option value="">All years</option>
+              {{#each minutesYears}}<option value="{{.}}">{{.}}</option>
+              {{/each}}</select>
+            <span class="minutes-caret">{{icons.caret}}</span>
+          </span>
+        </div>{{/if}}
+
+        <div class="minutes-groups rows">
+          {{#each committees}}{{> minutes-group}}
+          {{/each}}</div>
+      </div>
+    </section>
+
+    <!-- ============================ JOIN ============================ -->
+    <section class="join" id="join">
+      <div class="wrap">
+        {{> join-card}}
+      </div>
+    </section>

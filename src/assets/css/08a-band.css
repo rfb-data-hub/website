@@ -1,0 +1,23 @@
+/* ============================================================
+   Figures band — the single home of the shared figures idiom: a
+   row of display numerals divided by hairline column rules, with
+   small-caps labels beneath. This file draws the charge line, the
+   grid, the column rules and the figure type, and sets no boxes,
+   no hover, no transition; an instance adds only its own box —
+   padding, --fig-cols, item alignment, --fig-rule-t/-b insets and
+   numeral size: .readout (12a-proof.css), .chairs (11b-chairs.css),
+   .repo-band (17a-repos.css), .dash-facts (17c-dashboard.css) — and
+   sorts later, so it wins at equal specificity. Markup: .figures in
+   the three pages; items: readout-item, chair-item, repo-cat, dash-spot.
+   ============================================================ */
+.figures{position:relative}
+/* the charge line; a band that must not carry it uses .figures-grid
+   without .figures — the dark .dash-facts row, components/dash-spot.html */
+.figures::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--pos),var(--g500) 50%,var(--neg));opacity:.75}
+.figures-grid{list-style:none;display:grid;grid-template-columns:repeat(var(--fig-cols,4),1fr)}
+.figures-item{position:relative}
+.figures-item + .figures-item::before{content:"";position:absolute;left:0;top:var(--fig-rule-t,10px);bottom:var(--fig-rule-b,10px);width:1px;background:var(--fig-rule,var(--line))}
+.figures-v{font-family:var(--font-display);font-weight:700;line-height:1.05;font-size:clamp(2.2rem,3.6vw,3.05rem);color:var(--ink);font-variant-numeric:tabular-nums}
+.figures-k{margin-top:9px;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+/* The dark variant (components/dash-spot.html) takes the hairline colour from the page theme's --tank-line (01a-theme.css). */
+.is-dark{--fig-rule:var(--tank-line)}

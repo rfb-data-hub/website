@@ -1,0 +1,50 @@
+/* ============================================================
+   Design tokens — the single place the palette, radii, shadows,
+   fonts and glass recipes are decided.
+   Concatenated first by scripts/build.js, so every later file in
+   src/assets/css/ may read these through var(); nothing here
+   selects anything.
+   Couplings: 01a-theme.css repaints the colour roles per page
+   theme; the glass recipes are consumed only by 01b-glass.css,
+   whose translucent surfaces 15-fallbacks.css degrades to opaque.
+   ============================================================ */
+:root{
+  /* ---------- page colours ---------- */
+  --bg:#F6F9F7;
+  --paper:#FFFFFF;
+  --ink:#0C261D;
+  --muted:#40584F;
+  --faint:#6B8178;
+  /* ---------- green ramp ---------- */
+  --g900:#0E3B2E;
+  --g700:#14532D;
+  --g600:#166534;
+  --g500:#1F8A4C;
+  --g300:#7FD1A2;
+  --mint:#DCF2E4;
+  --mint-soft:#EAF6EE;
+  --line:#DCE7E0;
+  /* ---------- frosted-glass recipes ---------- */
+  /* Applied by 01b-glass.css to .glass-card/.glass-strip/.glass-wash;
+     15-fallbacks.css degrades the same surfaces. */
+  --glass-bg:rgba(255,255,255,.55);
+  --glass-line:rgba(255,255,255,.7);
+  --glass-blur:blur(10px) saturate(1.15);
+  --wash-bg:linear-gradient(180deg,rgba(246,249,247,.45),rgba(234,246,238,.5) 55%,rgba(246,249,247,.45));
+  --wash-blur:blur(14px) saturate(1.2);
+
+  /* ---------- status colours ---------- */
+  --pos:#F2D024;
+  --pos-deep:#D9B60A;
+  --neg:#EE5C5C;
+  --neg-deep:#D94545;
+  /* ---------- wave cap, radius, shadow, fonts ---------- */
+  /* one height for the wave caps (07-waves.css), the offset they cost the next
+     band (13-join.css) and the photo masks (11a-news.css, 17c-dashboard.css) */
+  --wave-h:70px;
+  --radius:16px;
+  --shadow:0 24px 48px -24px rgba(12,38,29,.16);
+  --shadow-soft:0 10px 30px -12px rgba(12,38,29,.12);
+  --font-display:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}

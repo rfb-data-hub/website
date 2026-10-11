@@ -1,0 +1,14 @@
+<!-- One of the commons' four aims (home · "Why a digital commons?", #mission):
+     the builder repeats this partial over aimItems in src/data/site-index.js.
+     Fields: num (ordinal), title (the aim), gloss (one-line promise), desc,
+     delay (reveal stagger in ms, read by 02-reveal.js from data-delay).
+     A list item — the <ol class="aims-list"> in pages/index.html is what makes
+     the ordinals mean "first of four". Deliberately NOT a card: one hairline
+     ramp over the whole row, the aim word as the only large type.
+     Styles: 09a-aims.css. -->
+<li class="aim-item" data-reveal data-delay="{{delay}}">
+  <span class="num">{{num}}</span>
+  <h3>{{title}}</h3>
+  <p class="gloss">{{gloss}}</p>
+  <p class="why">{{desc}}</p>
+</li>

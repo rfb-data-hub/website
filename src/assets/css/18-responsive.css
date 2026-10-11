@@ -1,0 +1,42 @@
+/* ============================================================
+   Responsive — the page-level folds shared by every section.
+   The stylesheet assumes three widths: 1100px (grids lose a
+   column), 960px (the narrow threshold — 01-stream.js matches
+   it with its NARROW constant and 04-stream.css with a 960px
+   query; 03a-navmenu.css switches at min-width:961px) and
+   560px (single column). Component-owned breakpoints live with
+   their components; only blocks no component file owns are
+   folded here.
+   ============================================================ */
+@media (max-width:1100px){
+  /* the three-across default of .cat-grid is set in 10-cards.css */
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:960px){
+  /* page-level blocks only: .hero is 05-hero.css, .band 11-band.css,
+     .readout-item 12a-proof.css (its column rules live in 08a-band.css) */
+  /* components own their responsive rules: the nav bar's breakpoints live in 03a-navmenu.css */
+  .hero{padding-top:120px}
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .page-hero{padding-top:120px}
+  /* the news deck's own breakpoints live in 11a-news.css — same rule */
+  .band{padding:96px 0 76px}
+  .readout-item{padding:10px 14px 12px}
+  .footnote{margin-top:20px}
+  /* the footer's own breakpoints live in 14-footer.css — same rule */
+  section{padding:72px 0}
+}
+@media (max-width:560px){
+  .cat-grid{grid-template-columns:1fr}
+  /* readout folds to 2×2: drop the rule on the new column edge and
+     draw a horizontal one across the gap instead */
+  .readout-grid{grid-template-columns:1fr 1fr;row-gap:18px}
+  .readout-item:nth-child(3)::before{display:none}
+  .readout-item:nth-child(n+3)::after{
+    content:"";position:absolute;left:14px;right:14px;top:-10px;height:1px;background:var(--line);
+  }
+  .cta-row .btn{width:100%;justify-content:center}
+  /* .rule-item's two-column default grid is set in 17-page.css */
+  .rule-item{grid-template-columns:1fr}
+  .rule-item h3,.rule-item p,.rule-item .meetings{grid-column:1}
+}

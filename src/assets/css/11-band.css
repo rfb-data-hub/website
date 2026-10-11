@@ -1,0 +1,34 @@
+/* ============================================================
+   Dark band ("the transparent stack") — the section that sits on the tank
+   colour instead of glass: the home News & events deck (index.html →
+   section.band#news, site-index.js news) and the resources dashboard band
+   (resources.html → section.band#dashboard, site-resources.js dashboard).
+   This file is the shared ground and ink only; wave caps are 07-waves.css,
+   the news deck's rules 11a-news.css, the dashboard's 17c-dashboard.css.
+   The band follows the page theme: its ground IS the tank colour — the same
+   dark liquid the footer holds — so band, wave caps and footer read as one
+   body of electrolyte on themed pages (01a-theme.css).
+   ============================================================ */
+/* isolation, not a transform: stacking context for the z-index:-1 wave caps (see 11a-news.css) */
+.band{position:relative;isolation:isolate;background:var(--tank);color:var(--tank-ink);padding:130px 0 90px;margin-top:70px}
+.band .eyebrow{color:var(--accent-bright)}
+.band .eyebrow::before{background:var(--accent-bright)}
+.band h2{color:#fff}
+.band p.lede{color:var(--tank-ink-dim)}
+
+.band .footnote{color:var(--tank-ink-faint)}   /* size + spacing come from 08-sections.css */
+/* In-text links on the dark ground. 11-band.css owns the band's ink roles, so
+   the dark half of the link idiom lives here rather than in 02-base.css. The
+   one instance is the dashboard band's lede copy on resources.html — the Marimo
+   notebook and the study-dashboard repo links in site-resources.js — plus any
+   prose link a future band writes. The base rule's two colours are both wrong
+   here: --accent-strong is dark green on dark green, and --mint is the pale mint
+   that NEVER themes (01a-theme.css), so it would draw a green hairline across a
+   yellow or red tank. The band takes its own accent instead: --accent-bright for
+   the text (what .band .eyebrow and the band's own .dash-link in
+   17c-dashboard.css already wear) and a 35 % wash of it for the hairline, so the
+   line reads as the word's shadow and not a second colour; hover pulls it to
+   white, the band's loudest ink. The 1px and its style come from the base rule —
+   only the colours are re-decided. */
+.band a:not([class]){color:var(--accent-bright);border-bottom-color:color-mix(in srgb,var(--accent-bright) 35%,transparent)}
+.band a:not([class]):hover,.band a:not([class]):focus-visible{border-bottom-color:#fff}

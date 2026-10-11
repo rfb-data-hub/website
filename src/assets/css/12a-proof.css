@@ -1,0 +1,22 @@
+/* ============================================================
+   Live readout — the hero's status bar: four plain display numbers on the
+   seam between hero and argument (home · section.readout). Its ground is
+   .glass-strip (01b-glass.css) and the band furniture (charge line, grid,
+   column rules, numerals, labels) is the figures idiom in 08a-band.css, which
+   sorts before this file, so what differs here wins the cascade. No links, no
+   hover, no transitions. Markup components/readout-item.html, data
+   site-index.js → communityStats; items carry [data-reveal] (02-reveal.js).
+   The numerals are the .figures-v [data-live] spans 05-community.js rewrites
+   with the live Discord/GitHub counts: text only, so nothing here may size to
+   a digit count.
+   ============================================================ */
+.readout{padding:30px 0 26px}   /* taller than the other bands: it sits on the hero seam */
+.readout-grid{--fig-cols:4}
+/* the column rules sit deeper here than the idiom's default 10px */
+.readout-item{padding:14px 26px 16px;text-align:center;--fig-rule-t:12px;--fig-rule-b:12px}
+.readout-mark{display:flex;justify-content:center;margin-bottom:11px}
+.readout-mark svg{width:19px;height:19px}   /* no opacity: the mark must be the
+   exact tank colour, and a 90 % wash over the glass shifts both of them */
+.readout-mark.dc svg{color:var(--pos)}   /* Discord · the yellow tank, exact */
+.readout-mark.gh svg{color:var(--neg)}   /* GitHub · the red tank, exact */
+

@@ -1,0 +1,39 @@
+<!-- The Reproducibility Dashboard spotlight — the dark #dashboard band of resources.html,
+     above the join card: src/data/site-resources.js → dashboard{} (eyebrow, heading,
+     lede, facts[].v/k, url, linkLabel, host, note, image.src/alt/credit/w/h — each
+     documented in that file) · 17c-dashboard.css on the band ground of 11-band.css.
+     No behaviour module of its own: 02-reveal.js owns the [data-reveal] state on the
+     text blocks, and the band's one interactive thing is the link out. The picture
+     backdrop follows the news band's rules in 11a-news.css: the figure stays a child of
+     the SECTION, never of the text column, and no ancestor of it may get a `transform`
+     (16-reveal.css animates [data-reveal] with translateY, so the band itself must never
+     carry it); .band-dash .wrap — not a column — carries position:relative + z-index:1
+     to paint above the absolutely positioned z-index:0 backdrop. The figure's wave mask
+     is GENERATED between the WAVE-MASK markers in 17c-dashboard.css by scripts/gen-wave-mask.js. -->
+<figure class="dash-photo">
+  <img src="{{dashboard.image.src}}" alt="{{dashboard.image.alt}}" loading="lazy" width="{{dashboard.image.w}}" height="{{dashboard.image.h}}">
+  <figcaption>{{dashboard.image.credit}}</figcaption>
+</figure>
+<div class="wrap">
+  <div class="sec-head" data-reveal>
+    <span class="eyebrow">{{dashboard.eyebrow}}</span>
+    <h2>{{dashboard.heading}}</h2>
+    <!-- the figure row: the .figures-grid/.figures-item idiom of 08a-band.css,
+         restyled dark by 17c-dashboard.css; .is-dark only swaps --fig-rule -->
+    <ol class="dash-facts figures-grid is-dark" data-reveal data-delay="80">
+      {{#each dashboard.facts}}<li class="dash-fact figures-item">
+        <span class="v figures-v">{{v}}</span>
+        <span class="k figures-k">{{k}}</span>
+      </li>
+      {{/each}}</ol>
+  </div>
+
+  <p class="lede">{{dashboard.lede}}</p>
+
+  <p class="dash-act" data-reveal data-delay="160">
+    <a class="dash-link cta-arrow" href="{{dashboard.url}}" rel="noopener" target="_blank">{{dashboard.linkLabel}} {{icons.arrowGo}}</a>
+    <span class="dash-host">{{dashboard.host}}</span>
+  </p>
+
+  <p class="footnote">{{dashboard.note}}</p>
+</div>

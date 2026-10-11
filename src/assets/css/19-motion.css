@@ -1,0 +1,14 @@
+/* ============================================================
+   Reduced motion — the site must be fully usable without
+   animation. The blanket rule kills every transition and
+   animation, including the reveal transition of 16-reveal.css,
+   whose hidden state the last rule then overrides so content
+   can never get stuck invisible. The behaviour scripts
+   (01-stream.js, 02-reveal.js, 04-news.js) test the same media
+   query and skip their animations outright.
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  html.js [data-reveal]{opacity:1;transform:none}
+}

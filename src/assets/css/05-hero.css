@@ -1,0 +1,72 @@
+/* ============================================================
+   Hero — the landing header of src/pages/index.html: copy
+   column, corner glow and the avatar-orbit layer.
+   The orbit's <img> swarm is generated markup between the
+   ORBIT:BEGIN/END markers in index.html (scripts/gen-orbit.py):
+   restyle it here, never edit the block. The hero card inside
+   .hero-card-orbit is src/components/hero-card.html, styled by
+   06-hero-card.css — which borrows @keyframes blink for .bulb.
+   Couplings: --hero-glow and the accent colours come from
+   01a-theme.css; 19-motion.css stops blink and cue under
+   reduced motion.
+   ============================================================ */
+/* ---------- hero layout ----------
+   .hero::before draws the dot grid, masked to a soft ellipse over
+   the orbit side; the narrow-width collapse of .hero-grid is
+   18-responsive.css. */
+.hero{position:relative;padding:150px 0 96px;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(12,38,29,.055) 1px,transparent 1.5px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
+  mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
+}
+/* ---------- corner glow ----------
+   One light body of the theme's electrolyte, shared by the home
+   hero and every sub-page hero (.page-hero, 17-page.css); the
+   colour is --hero-glow (01a-theme.css) so it follows the page
+   theme. */
+.hero::after,.page-hero::after{
+  content:"";position:absolute;width:640px;height:640px;left:-220px;top:-180px;border-radius:50%;
+  background:radial-gradient(circle,var(--hero-glow),transparent 65%);pointer-events:none;
+}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative;z-index:2}
+/* ---------- orbit layer ----------
+   The rings are generated markup between the ORBIT markers in
+   index.html (scripts/gen-orbit.py); .hero-copy sits above them.
+   The swarm stands still with a fixed tilt per avatar: an infinite
+   animation on 72 images keeps the page producing frames. */
+.hero-card-orbit{position:relative}
+.hero-copy{position:relative;z-index:1}
+.hero-floats{position:absolute;inset:0;pointer-events:none;z-index:0}
+/* The base centring for every avatar. The generated markup repeats
+   translate(-50%,-50%) inside its own inline `transform`, because an inline
+   transform replaces this whole declaration instead of adding to it. */
+.hero-floats img{position:absolute;border-radius:50%;transform:translate(-50%,-50%)}
+/* ---------- copy column ----------
+   .chip is the status pill above the headline, on the theme's
+   mint ground. */
+.chip{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--mint-soft);border:1px solid var(--mint);color:var(--accent-deep);
+  font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px;margin-bottom:26px;
+}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(2.9rem,6vw,4.55rem);margin-bottom:22px}
+.hero h1 .grad{
+  /* the two tanks: Discord gold → GitHub red, in the -deep variants that are
+     legible as text on light ground */
+  background:linear-gradient(100deg,var(--pos-deep),var(--neg-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .sub{color:var(--muted);font-size:clamp(1.02rem,1.6vw,1.16rem);max-width:52ch;margin-bottom:34px}
+/* ---------- buttons ----------
+   .cta-row packs the join-btns.html buttons — their skin is
+   03-nav.css; .scroll-cue is the anchor to the next section, its
+   arrow bobbing on the cue keyframes. */
+.cta-row{display:flex;flex-wrap:wrap;gap:14px}
+.scroll-cue{margin-top:56px;display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+.scroll-cue svg{animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}

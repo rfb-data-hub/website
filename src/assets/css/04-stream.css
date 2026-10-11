@@ -1,0 +1,44 @@
+/* ============================================================
+   The electrolyte stream — a page-long tube down the left margin, filled by
+   scrolling (pathLength=100 dash trick). 01-stream.js generates the path,
+   ending inside the footer's wave (components/footer.html): keep that pairing.
+
+   Colour lives in 01a-theme.css: the page theme (front matter `theme:`) sets
+   --stream-a/b/c + --stream-track-inner; --stream-track (empty tubing) is the
+   same neutral grey on every theme. This file wires the variables to the
+   strokes and stacks the page content above the svg.
+   Couplings: 01-stream.js reads the track's computed stroke-width, so the
+   stroke rules here are its source of truth; NARROW there ↔ 960px here.
+   ============================================================ */
+.page{position:relative}
+#stream{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+}
+.stream-track{fill:none;stroke:var(--stream-track);stroke-width:30;stroke-linecap:round}
+.stream-fill{
+  fill:none;stroke:url(#streamGrad);stroke-width:11;stroke-linecap:round;
+  stroke-dasharray:100;stroke-dashoffset:100;
+  opacity:.55;
+}
+/* the tubing's inner line: static, the electrolyte flows past it */
+.stream-track-inner{
+  fill:none;stroke:var(--stream-track-inner);stroke-width:11;stroke-linecap:round;opacity:.55;
+}
+/* the gradient stops — a CSS rule beats the stop-color attributes in
+   components/stream.html, so the ramp follows the theme */
+#streamGrad .stream-stop-a{stop-color:var(--stream-a)}
+#streamGrad .stream-stop-b{stop-color:var(--stream-b)}
+#streamGrad .stream-stop-c{stop-color:var(--stream-c)}
+/* Must equal NARROW in 01-stream.js: CSS cannot read the constant, so the
+   pairing is by convention. Below it every stroke halves. */
+@media (max-width:960px){
+  .stream-track{stroke-width:15}
+  .stream-fill{stroke-width:5.5}
+  .stream-track-inner{stroke-width:5.5}
+}
+/* Without JS the stream can never fill: hide the empty tube. The `js` class
+   comes from the inline script in layout.html. */
+html:not(.js) #stream{display:none}
+/* the page content sits above the absolutely-positioned #stream (z-index:0) */
+main{position:relative;z-index:2}

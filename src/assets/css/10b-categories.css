@@ -1,0 +1,19 @@
+/* ============================================================
+   The category cards on the home page only — re-accented in the GitHub red,
+   quiet until you touch it: hover fills the tile solid.
+   Scoped to `section.categories` (0,3,x, no !important): 10-cards.css owns the
+   tile itself, this file only re-colours the glyph, the border and the CTA.
+   Same markup as there (components/category-card.html, sites-general.js →
+   categories); resources.html renders that array as section.repo-band, which
+   this selector never reaches (17a-repos.css). No JS state class is hooked.
+   White on --neg is 3.3:1 — clears 1.4.11 (3:1) for the glyph; the 13px CTA is
+   under 1.4.3's 4.5:1, accepted deliberately: a darkened red is not GitHub red.
+   ============================================================ */
+
+/* at rest only the glyph moves, to --ink — what the card <h3> computes to */
+section.categories .cat .ic{color:var(--ink)}
+/* hover: the tile charges solid, the CTA follows it into red */
+section.categories .cat:hover{border-color:rgba(238,92,92,.45)}
+section.categories .cat:hover .ic{background:var(--neg);color:#fff}
+section.categories .cat .go{transition:color .25s}
+section.categories .cat:hover .go{color:var(--neg)}

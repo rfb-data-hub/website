@@ -1,0 +1,43 @@
+# ============================================================
+# .gitattributes
+# ------------------------------------------------------------
+# The important line in this file is the one that is NOT there: PDFs are
+# deliberately NOT tracked by Git LFS.
+#
+#   *.pdf filter=lfs diff=lfs merge=lfs -text     ← do not add this
+#
+# The site is deployed from public/, which the builder fills by COPYING the
+# PDFs in src/static/ (build.js step 4). Git LFS stores such a file as a
+# 130-byte pointer in the working tree and keeps the bytes in a separate
+# batch — and actions/checkout does NOT fetch LFS objects unless it is told
+# to (lfs: true). So an LFS-tracked minutes file would be copied into the
+# Pages artifact as a pointer, and visitors would download a text file where
+# a PDF should be. check.sh now sniffs the %PDF- header and fails the build
+# if that ever happens; this comment is why it exists.
+#
+# LFS would also add a quota to a site that has none: the free tier is about
+# 1 GiB of storage AND 1 GiB of bandwidth per month, and every CI checkout
+# that fetches LFS spends the bandwidth. Large documents that genuinely need
+# it belong outside the site instead — docs/authoring.md §2d.
+# ============================================================
+
+# Text files are stored with LF in the repository (matches .editorconfig).
+* text=auto
+
+# Everything below is binary: never diff it, never merge it, never touch a
+# byte of it. (The minutes PDFs in src/static/minutes/ are the reason this
+# section exists; the images are already in src/assets/img/.)
+*.pdf  -text
+*.png  -text
+*.jpg  -text
+*.jpeg -text
+*.gif  -text
+*.webp -text
+*.ico  -text
+*.woff -text
+*.woff2 -text
+*.zip  -text
+
+# SVG is XML, i.e. text — say so explicitly, because the rule above could
+# otherwise be extended to "everything in assets/img" by mistake.
+*.svg  text

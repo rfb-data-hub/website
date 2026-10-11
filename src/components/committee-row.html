@@ -1,0 +1,17 @@
+<!-- One committee row (committees.html #committees), repeated over committees[]
+     in src/data/site-committees.js. Fields: id (the row's anchor, linked from
+     the nav's Committees children in sites-general.js), num (the abbreviation),
+     title, desc, lastMeeting and cadence (the two badges — cadence is plain
+     wording because "bimonthly" is ambiguous).
+     The stagger is the loop index, read by 02-reveal.js.
+     Styles: 17-page.css (.rule-item/.meeting), single column at narrow widths
+     per 18-responsive.css. -->
+<div class="rule-item glass-card" id="committee-{{id}}" data-reveal data-delay="{{@index}}">
+            <span class="num">{{num}}</span>
+            <h3>{{title}}</h3>
+            <p>{{desc}}</p>
+            <div class="meetings">
+              <span class="meeting"><span class="meeting-k">Last meeting</span>{{lastMeeting}}</span>
+              <span class="meeting"><span class="meeting-k">Cadence</span>{{cadence}}</span>
+            </div>
+          </div>

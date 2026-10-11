@@ -1,0 +1,15 @@
+{
+  "name": "flow-battery-commons-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website of the Flow Battery Commons — a hand-built static site with a zero-dependency component builder.",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "check": "node scripts/build.js && bash scripts/check.sh",
+    "serve": "node scripts/build.js && bash scripts/serve.sh"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}

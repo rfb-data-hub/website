@@ -1,0 +1,13 @@
+/* ============================================================
+   Reveal-on-scroll — the hidden state for [data-reveal] elements.
+   Every rule is gated on html.js, the class the inline script in
+   src/layout.html adds before the body parses: without JS these
+   selectors never match and nothing is hidden. 02-reveal.js adds
+   .revealed as an element enters the viewport; the transition
+   delay it sets from data-delay comes from the `delay` field (or
+   an @index stagger) authored in src/data/*.js and rendered by
+   the components. 19-motion.css cancels the effect entirely under
+   reduced motion.
+   ============================================================ */
+html.js [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,.61,.36,1)}
+html.js [data-reveal].revealed{opacity:1;transform:none}

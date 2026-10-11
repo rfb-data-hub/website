@@ -1,0 +1,243 @@
+/* ============================================================
+   resources.html — the category band (#categories) and the live list
+   (#resources): one horizontal rail of repository cards per topic.
+   Markup: components/repo-cat.html (band tile), components/repo-group.html
+   (rail head and rail) and the repo-*-tpl templates in pages/resources.html
+   (card, loading, empty, error). Data: the `categories` array in
+   src/data/sites-general.js; the repository payload is built at runtime by
+   src/assets/js/07-repos.js, so every rule here must also hold while GitHub
+   has not answered. State hooked: .repo-cat.is-empty and [data-repo-count]
+   (07-repos.js), the arrows' [disabled] (07-rail.js via window.fbcRail).
+   Numbered 17a: after 17-page.css, before 18-responsive.css.
+   ============================================================ */
+
+/* ---------- the hashtag pill (band tile, rail head, card tag row) ----------
+   The .65 white fill is .rail-btn's (17-rail.css): pill and arrow are one family. */
+.repo-cat .tag,
+.repo-h .tag,
+.repo-tag{
+  display:inline-flex;align-items:baseline;
+  padding:3px 11px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(255,255,255,.65);
+  font-family:var(--font-body);font-size:11.5px;font-weight:600;
+  letter-spacing:.02em;color:var(--muted);
+}
+
+/* ---------- 1 · the category band (the figures idiom, 08a-band.css) ----------
+   THE STRIP IS THE SECTION, like .readout (12a-proof.css) and .chairs
+   (11b-chairs.css): the .glass-strip ground (01b-glass.css), its hairlines and
+   the charge line span the full width, the six columns inside .wrap. The glass
+   goes on the section, never on the grid: there the band insets at the column. */
+/* 08a-band.css owns the charge line, the grid, the column rules and the figure
+   type; only --fig-cols, the padding and the numeral size are this band's own */
+.repo-band{padding:26px 0 22px}   /* the same box .chairs takes (11b-chairs.css) */
+.repo-cats{--fig-cols:6}   /* one column per entry in `categories` (src/data/sites-general.js) */
+.repo-cat{padding:12px 22px 14px;text-align:center}   /* rules at the idiom's default inset */
+/* the cell is a link but must not read as one: :not([class]) is the specificity
+   `main a:not([class])` in 02-base.css claims; a hairline would rule the cell */
+.repo-cat a:not([class]){display:block;text-decoration:none;color:inherit;border-bottom:none}
+.repo-cat .ic{display:flex;justify-content:center;margin-bottom:11px;color:var(--accent-strong)}
+.repo-cat .ic svg{width:19px;height:19px}   /* no opacity: the mark is the accent */
+/* the live count, empty until 07-repos.js answers: min-height holds the six
+   columns on one baseline so the band cannot jump; six to a row, so smaller */
+.repo-cat .figures-v{display:block;font-size:clamp(1.7rem,2.6vw,2.3rem);min-height:1.05em}
+.repo-cat .figures-k{display:block}   /* both marks are <span>s in repo-cat.html */
+.repo-cat a:hover .k{color:var(--ink);text-decoration:underline}
+.repo-cat .tag{margin-top:10px}
+/* 07-repos.js toggles .is-empty when the live count comes back zero: the tile
+   recedes but stays a valid anchor for the rail below it */
+.repo-cat.is-empty{opacity:.5}
+/* the sentence is authored in pages/resources.html, not in a data file */
+.repo-band-note{margin-top:16px;text-align:center;font-size:12.5px;color:var(--faint)}
+.repo-band-note b{font-weight:600;color:var(--muted)}
+
+/* ---------- 2 · the live list: one rail per category ---------- */
+
+/* ---------- the live-count summary (07-repos.js writes it) ---------- */
+/* no padding override: the 96px section rhythm (08-sections.css) already
+   separates the strip from the list below it */
+.repo-summary{margin-top:16px;font-size:13px;color:var(--faint);font-variant-numeric:tabular-nums}
+/* the count line exists only once GitHub has answered: :empty collapses it so
+   the fallback link is never orphaned under a blank line */
+.repo-summary span{display:block;margin-bottom:6px}
+.repo-summary span:empty{display:none;margin-bottom:0}
+
+/* ---------- the rails, stacked ----------
+   One row per category, the minutes-rail shape (17-rail.css, whose other
+   instance is 17b-minutes.css) with cards instead of documents: a new
+   repository adds a card to a rail, not height to the page. No rule divides
+   the rows — the cards are the objects, and a hairline would fight their borders. */
+.repo-groups{display:grid;gap:44px;margin-top:46px}   /* plain whitespace, the .cat-grid rhythm (10-cards.css) */
+
+/* ---------- the rail head: the category and its live count ----------
+   .rail-h and .rail-t (17-rail.css): the category at the left, its escape
+   hatch and its arrows pushed to the right edge. The heading holds TEXT only
+   — the buttons are siblings in repo-group.html, so a screen reader does not
+   read "more repositories" as part of the category's name. */
+.repo-t{gap:10px}          /* tighter than .rail-t's 12px: icon, name and tag are one phrase */
+.repo-t .ic{display:flex;color:var(--accent-strong)}
+.repo-t .ic svg{width:18px;height:18px}
+.repo-t .k{font-weight:600;letter-spacing:-.01em}
+/* the same [data-repo-count] as the band tile, set small beside the name; it
+   is empty until 07-repos.js answers, and then it collapses so no gap is left */
+.repo-n{
+  font-family:var(--font-display);font-weight:600;font-size:12.5px;
+  color:var(--faint);font-variant-numeric:tabular-nums;
+}
+.repo-n::before{content:"·";margin-right:7px;color:var(--accent-bright)}
+.repo-n:empty{display:none}
+/* ---------- the arrows and the GitHub escape hatch ----------
+   --neg (GitHub red) belongs to the two things that really are GitHub links —
+   here and the card name's hover — and nowhere else on this page, the rule
+   10b-categories.css sets; every other mark takes --accent-strong. */
+.repo-side{gap:9px}   /* .rail-ctrl is 8px (17-rail.css); this row also carries a text link */
+.repo-gh{font-size:12.5px;font-weight:600;color:var(--accent-strong);text-decoration:none;transition:color .25s}
+.repo-gh:hover{color:var(--neg)}
+/* the rail's blanket hide (17-rail.css) is narrowed here: the arrows are
+   JS-only, the GitHub link in the same .rail-ctrl is not */
+html:not(.js) .repo-side{display:flex}
+html:not(.js) .repo-btn{display:none}
+/* the arrows are authored in repo-group.html and always rendered; the box, the
+   hover fill and the [disabled] state 07-rail.js sets are .rail-btn's (17-rail.css) */
+
+/* ---------- the rail: the size chain that reserves the card height ----------
+   Two name lines + three description lines + one meta line + three gaps + the
+   inset, authored, not emergent from the text metrics: every card is then as
+   tall as every other and the note reserves the same box, so the page cannot
+   jump when GitHub answers. It hangs on the ROW: one number moves cards + note. */
+.repo-group{
+  --repo-name:20px;     /* one name line: 15px display type on a 20px box */
+  --repo-desc:19px;     /* one description line: 13.5px on a 19px box */
+  --repo-meta:14px;     /* one meta line: the 10.5px caps on a 14px box */
+  --repo-gap:8px;       /* the card's only vertical rhythm: three of these in --repo-h */
+  --repo-inset:16px;    /* the card's padding-block, counted twice in --repo-h */
+  --repo-h:calc(var(--repo-name)*2 + var(--repo-desc)*3 + var(--repo-meta) + var(--repo-gap)*3 + var(--repo-inset)*2);
+}
+/* ---------- the card width: whole cards per view ----------
+   --repo-w is the rail minus its gaps, divided by --repo-per, so a view holds
+   exactly that many WHOLE cards; a fixed width saws the last one off at the
+   rail's edge, and a sawn-off card reads as a narrow card. The paging step
+   07-rail.js measures is one card plus one gap, so every snap lands flush. */
+.repo-rail{
+  --repo-per:4;         /* four whole cards at the desktop rail width; the breakpoints retune this */
+  --rail-gap:14px;      /* 07-rail.js adds this gap to the measured paging step */
+  --repo-w:calc((100% - (var(--repo-per) - 1) * var(--rail-gap)) / var(--repo-per));
+  gap:var(--rail-gap);
+  margin-top:14px;padding:10px 0 16px;
+}
+/* .rail (17-rail.css) is the scroller, the snap and the hidden scrollbar; the
+   padding gives a lifted card room, since an overflow box clips its content */
+.repo{flex:0 0 var(--repo-w);scroll-snap-align:start}
+
+/* ---------- one repository card ----------
+   The surface is .glass-card (01b-glass.css), the one .cat wears: its blur is
+   what lets the electrolyte stream behind the list read through the cards, and
+   its hairline is the only separation they need — no rule divides two cards or
+   two categories. Height comes from --repo-h; 15-fallbacks.css covers no-glass. */
+.repo-link{
+  display:block;height:100%;min-height:var(--repo-h);
+  padding:var(--repo-inset) 18px;
+  text-decoration:none;color:inherit;
+  transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s,border-color .3s;
+}
+/* the lift is .cat's; --shadow-soft and not --shadow: the scroller clips at its
+   padding box, and --shadow reaches ~24px down, past the rail's bottom padding */
+.repo-link:hover,.repo-link:focus-visible{
+  transform:translateY(-5px);box-shadow:var(--shadow-soft);border-color:var(--accent-bright);
+}
+.repo-line{display:flex;align-items:flex-start;gap:8px;min-height:calc(var(--repo-name)*2)}   /* the two name lines --repo-h counts */
+/* clamped to those two lines; 07-repos.js moves the cut text into the link's
+   aria-label, so the clamp hides nothing from a screen reader */
+.repo-name{
+  flex:1 1 auto;min-width:0;
+  font-family:var(--font-display);font-weight:600;
+  font-size:15px;line-height:var(--repo-name);color:var(--ink);overflow-wrap:break-word;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;
+  transition:color .25s;
+}
+.repo-go{
+  flex:none;display:flex;margin-top:4px;color:var(--faint);opacity:.55;   /* the arrow keeps its box; the name takes the squeeze */
+  transition:transform .25s,color .25s,opacity .25s;
+}
+.repo-go svg{width:13px;height:13px;stroke-width:2.2}   /* the external mark from icons.js, 2.2 as in .rail-btn (17-rail.css) */
+.repo-desc{
+  height:calc(var(--repo-desc)*3);margin-top:var(--repo-gap);   /* the three lines --repo-h reserves */
+  font-size:13.5px;line-height:var(--repo-desc);color:var(--muted);overflow:hidden;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;
+  transition:color .25s;
+}
+/* display:block is load-bearing: this is a <span>, and an inline box ignores
+   height, vertical margin and overflow, so it could not ellipsize at all */
+.repo-meta{
+  display:block;
+  height:var(--repo-meta);margin-top:var(--repo-gap);line-height:var(--repo-meta);
+  font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* every site topic the repository is filed under, INCLUDING the one it stands
+   in, else a single-topic repo shows an empty row; 07-repos.js caps at MAX_PILLS */
+.repo-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--repo-gap)}
+.repo-tags:empty{display:none}   /* 07-repos.js drops an unfilled pill row; this is the same case from CSS */
+.repo-tag{font-size:10.5px;padding:2px 9px}
+.repo-tag.is-new{border-color:var(--accent-bright);background:var(--mint-soft);color:var(--accent-strong)}   /* 07-repos.js adds .is-new under NEW_DAYS */
+/* a card is a link out of the site, so it may answer the cursor: name to --neg,
+   description to ink, the arrow steps out of its .55 opacity */
+.repo-link:hover .repo-name,.repo-link:focus-visible .repo-name{color:var(--neg)}
+.repo-link:hover .repo-desc,.repo-link:focus-visible .repo-desc{color:var(--ink)}
+.repo-link:hover .repo-go,.repo-link:focus-visible .repo-go{transform:translate(3px,-3px);opacity:1;color:var(--neg)}
+
+/* ---------- the honest states: loading, empty, error, no-JS ----------
+   repo-group.html ships the placeholder note; 07-repos.js replaces it with the
+   repo-*-tpl notes (pages/resources.html) or with cards. Each note inside a
+   rail reserves the card's box (--repo-h), so the row keeps its height in every
+   state — and a note stays plain text: a note is not a repository. */
+.repo-note{line-height:1.6;max-width:70ch}   /* a note is prose: it takes a reading measure */
+.repo-rail .repo-note{flex:0 0 auto;min-width:0;padding:var(--repo-inset) 0;min-height:var(--repo-h)}
+/* the no-JS note sits under the whole list, not in a rail, so it closes the
+   section with a hairline instead of reserving a card box */
+.repos > .wrap > noscript .repo-note{border-top:1px solid var(--line);margin-top:34px}
+
+/* ---------- responsive (this file owns its breakpoints, docs/authoring.md §3) ----------
+   Six columns is four-and-a-half on a laptop and two on a phone; the rules move
+   with the columns (11b-chairs.css folds the same way, to one column). */
+@media (max-width:1100px){
+  .repo-cats{--fig-cols:3}   /* six columns do not fit the laptop width: two rows of three */
+  /* the column rules move with the grid: none where a row starts, and the
+     22px inset matches the cell's own padding */
+  .repo-cat:nth-child(3n+1)::before{display:none}
+  .repo-cat:nth-child(n+4)::after{
+    content:"";position:absolute;left:22px;right:22px;top:0;height:1px;background:var(--line);
+  }
+}
+@media (max-width:960px){
+  .repo-rail{--repo-per:3}   /* the site's NARROW fold (04-stream.css); 07-rail.js re-measures the step */
+}
+@media (max-width:640px){
+  .repo-band{padding:20px 0 16px}
+  .repo-cats{--fig-cols:2}
+  .repo-cat{padding:12px 14px}
+  /* both selectors are (0,2,1) like the base rule in 08a-band.css, so order —
+     not specificity — decides; only the second column of a row keeps one */
+  .repo-cat + .repo-cat::before{display:none}
+  .repo-cat:nth-child(2n)::before{display:block}
+  .repo-cat:nth-child(n+3)::after{   /* the 14px inset follows the cell's padding above */
+    content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:var(--line);
+  }
+  .repo-cat .figures-v{font-size:1.6rem}   /* below the clamp's 1.7rem floor: two columns cannot hold it */
+  .repo-groups{gap:36px;margin-top:36px}
+  /* the head line wraps: the category name takes the first line, the escape hatch
+     and the arrows the second, still pushed to the right edge */
+  .repo-h{gap:9px}
+  .repo-t{gap:8px}
+  .repo-rail{--repo-per:2;--rail-gap:12px}
+  .repo-group{--repo-inset:14px}   /* the one number the size chain hangs on */
+  .repo-link{padding-inline:16px}
+  .repo-name{font-size:14px}
+  .repo-desc{font-size:13px}   /* the type shrinks, the reserved line boxes do not */
+}
+/* two cards is 164px each below 480px — too narrow to read three lines of
+   description in; one card across makes a swipe move exactly one repository. */
+@media (max-width:480px){
+  .repo-rail{--repo-per:1}
+}

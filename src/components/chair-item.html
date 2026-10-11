@@ -1,0 +1,22 @@
+<!-- One column of the committee-chairs band (committees.html #chairs): the
+     committee's name once, then its Chair and Co-chair as compact lines.
+     Repeated over committees[] in src/data/site-committees.js; fields: title,
+     chair{name,avatar}, coChair{name,avatar}. `avatar` is a bare file name —
+     this partial adds the assets/img/avatars/ prefix — and a "t.b.a." chair
+     ships avatar-tba.svg. The stagger is the loop index, read by 02-reveal.js.
+     Information, not UI: no link, no hover, no transition — same rule
+     as the home page's live readout. The avatars are decorative (empty
+     alt): the names are the adjacent text. Styles: 11b-chairs.css. -->
+<div class="chairs-col figures-item" data-reveal data-delay="{{@index}}">
+  <h3 class="chairs-title">{{title}}</h3>
+  <div class="chairs-row chair">
+    <img class="chairs-avatar" src="assets/img/avatars/{{chair.avatar}}" alt="" width="36" height="36" loading="lazy">
+    <span class="chairs-name">{{chair.name}}</span>
+    <span class="chairs-role">Chair</span>
+  </div>
+  <div class="chairs-row cochair">
+    <img class="chairs-avatar" src="assets/img/avatars/{{coChair.avatar}}" alt="" width="36" height="36" loading="lazy">
+    <span class="chairs-name">{{coChair.name}}</span>
+    <span class="chairs-role">Co-chair</span>
+  </div>
+</div>

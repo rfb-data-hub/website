@@ -1,0 +1,12 @@
+<!-- One figure of the live readout strip under the home hero (index.html
+     section.readout). Data: src/data/site-index.js → communityStats[]. Fields:
+     cls (dc | gh — the mark colour, mapped in 12a-proof.css), icon (the SVG
+     build.js resolves from iconKey in icons.js), live (the [data-live] key
+     05-community.js fills with the count), value (the no-JS fallback it
+     replaces), label, and delay (the reveal stagger 02-reveal.js reads).
+     Styles: 12a-proof.css on the shared figures idiom (08a-band.css). -->
+<div class="readout-item figures-item" data-reveal data-delay="{{delay}}">
+            <span class="readout-mark {{cls}}">{{icon}}</span>
+            <div class="figures-v" data-live="{{live}}">{{value}}</div>
+            <div class="figures-k">{{label}}</div>
+          </div>

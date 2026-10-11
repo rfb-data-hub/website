@@ -1,0 +1,16 @@
+Published committee minutes as PDF. This directory is copied VERBATIM into
+public/ by scripts/build.js (step 4, fs.copyFileSync — binary-safe), so a file
+here is served at <site>/minutes/<name>.pdf.
+
+  name      the ISO date first, then what it is:
+            2026-08-27-minutes-cc.pdf
+            lowercase ASCII, hyphens, NO spaces (scripts/check.sh word-splits
+            its extracted link list, and Pages URLs are case-sensitive)
+  size      compress to <= 1 MB and keep a text layer; a larger document does
+            not belong here — see docs/authoring.md §2d
+  link      one entry in src/data/site-committees.js with a RELATIVE href
+            ("minutes/2026-08-27-minutes-cc.pdf") — check.sh then fails CI
+            if the file is missing or misnamed
+
+Public the moment you commit, and permanent in git history. Full walkthrough:
+docs/authoring.md §2d · decision: docs/adr/0004-minutes-pdfs-in-the-site.md

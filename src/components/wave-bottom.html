@@ -1,0 +1,10 @@
+<!-- Lower cap of a dark band (index.html #news, resources.html #dashboard): the
+     same two-tone wave as components/wave-top.html, turned over by 07-waves.css
+     (scaleY(-1) on the wrapper), so the foam edge stays on the band's outside.
+     Decorative: aria-hidden; the fills follow the page theme (--tank /
+     --tank-foam in 01a-theme.css).
+     scripts/gen-wave-mask.js reads its dark body path for the band photos'
+     masks. Styles: 07-waves.css. -->
+<div class="wave-bottom" aria-hidden="true">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path class="wave-foam" data-wave="foam" fill="#166534" opacity=".35" d="M0 70 L0 16 C190 38 380 6 570 20 C750 40 930 4 1110 22 C1270 40 1390 12 1440 26 L1440 70 Z"/><path class="wave-body" data-wave="body" fill="#0E3B2E" d="M0 70 L0 30 C180 52 360 12 540 32 C720 52 900 14 1080 34 C1240 52 1360 24 1440 40 L1440 70 Z"/></svg>
+</div>

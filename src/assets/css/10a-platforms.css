@@ -1,0 +1,79 @@
+/* ============================================================
+   The two platforms — Discord and GitHub as two open rows on the section glass
+   (home · section.platforms#platforms, "Where to find us").
+   The brand key in `cls` picks the logo side, the reveal direction and the
+   colour: dc = --pos (yellow tank), gh = --neg (red tank), mark and CTA
+   alike — same convention as the tank electrolytes in 06-hero-card.css.
+   Markup components/platform-row.html, data sites-general.js → platforms.
+   The [data-live] spans inside .platform-meta are the live Discord/GitHub
+   counts 05-community.js writes: it replaces text only, so nothing here may
+   size to them. The rows' [data-reveal] is 02-reveal.js + 16-reveal.css.
+   ============================================================ */
+/* the section's ground is .glass-wash (01b-glass.css); the rows carry no card
+   chrome (components/platform-row.html) and their hairlines are .rows
+   (08-sections.css) */
+.platform-rows{
+  --slide:64px;                 /* reveal distance, see the media queries */
+  display:grid;
+}
+.platform{
+  display:flex;align-items:center;gap:44px;
+  padding:40px 0;color:inherit;text-decoration:none;
+}
+.platform.gh{flex-direction:row-reverse;text-align:right}
+
+.platform-mark{flex:none;display:flex;transition:transform .3s}
+.platform-mark svg{width:92px;height:92px}
+.platform:hover .platform-mark{transform:scale(1.05)}
+.platform.dc .platform-mark svg{color:var(--pos)}
+.platform.gh .platform-mark svg{color:var(--neg)}
+
+.platform-body{display:grid;gap:8px;flex:1;min-width:0}
+.platform-name{font-family:var(--font-display);font-size:1.4rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.platform-desc{font-size:15.5px;line-height:1.65;color:var(--muted);max-width:66ch}
+.platform-meta{
+  font-size:12.5px;font-weight:600;letter-spacing:.05em;color:var(--faint);
+  font-variant-numeric:tabular-nums;
+}
+.platform.gh .platform-desc,.platform.gh .platform-meta{margin-left:auto}
+.platform-cta{
+  --cta-gap:7px;
+  justify-self:start;margin-top:10px;
+  font-size:13.5px;color:var(--accent-strong);transition:color .25s;
+}
+.platform-cta svg{width:13px;height:13px}
+.platform.gh .platform-cta{justify-self:end}
+/* :focus-visible and :active as well, so keyboard and tap get the mark's colour */
+.platform.dc:hover .platform-cta,.platform.dc:focus-visible .platform-cta,.platform.dc:active .platform-cta{color:var(--pos)}
+.platform.gh:hover .platform-cta,.platform.gh:focus-visible .platform-cta,.platform.gh:active .platform-cta{color:var(--neg)}
+/* the row answers, not the CTA: .cta-arrow's nudge is kept here as the wider
+   trigger, and the flipped row composes it with its own mirror */
+.platform:hover .platform-cta svg{transform:translateX(4px)}
+/* flipped row: the arrow leads out to the left, and these two come last
+   so they beat the plain-row hover rule */
+.platform.gh .platform-cta svg{order:-1;transform:scaleX(-1)}
+.platform.gh:hover .platform-cta svg{transform:scaleX(-1) translateX(4px)}
+
+/* reveal from the outside in, each row toward the side its text sits on;
+   02-reveal.js adds .revealed and :not(.revealed) drops the slide rule, so
+   .revealed's transform:none in 16-reveal.css wins unaided (html.js comes
+   from the inline script in src/layout.html) */
+html.js .platform-rows .platform.dc[data-reveal]:not(.revealed){transform:translateX(calc(var(--slide) * -1))}
+html.js .platform-rows .platform.gh[data-reveal]:not(.revealed){transform:translateX(var(--slide))}
+
+@media (max-width:960px){
+  .platform-rows{--slide:44px}
+  .platform{padding:30px 0;gap:28px}
+  .platform-mark svg{width:64px;height:64px}
+  .platform-name{font-size:1.25rem}
+}
+@media (max-width:700px){
+  /* one column: the mark stacks above the text, left-aligned; the slide
+     shrinks to a hint — there is no room to travel across */
+  .platform-rows{--slide:24px}
+  .platform,.platform.gh{flex-direction:column;align-items:flex-start;text-align:left;gap:20px}
+  .platform.gh .platform-desc,.platform.gh .platform-meta{margin-left:0}
+  .platform.gh .platform-cta{justify-self:start}
+  .platform.gh .platform-cta svg{order:0;transform:none}
+  .platform.gh:hover .platform-cta svg{transform:translateX(4px)}
+}

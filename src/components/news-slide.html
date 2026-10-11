@@ -1,0 +1,23 @@
+<!-- One slide of the News & events deck: index.html #news, the home page's dark band.
+     Data: src/data/site-index.js → news[].
+     Fields: id, tag, dateLabel, place, title, lede, href, linkLabel, blank,
+     and an optional image { src, alt, credit, w, h }.
+     04-news.js owns the deck: it moves .is-active between the slides, so this
+     markup carries no state of its own and stays a plain list without JS.
+     The picture is a backdrop on the right edge of the band, not a box next
+     to the text — keep it a child of the slide (so it cross-fades with its
+     text) and never add a `transform` to the slide or an ancestor of it
+     (why: 11a-news.css). -->
+<article class="news-slide" id="news-{{id}}">
+  {{#if image}}<figure class="news-photo">
+    <img src="{{image.src}}" alt="{{image.alt}}" loading="lazy" width="{{image.w}}" height="{{image.h}}">
+    <figcaption>{{image.credit}}</figcaption>
+  </figure>
+  {{/if}}<div class="news-text">
+    <span class="news-tag">{{tag}}</span>
+    <h3 class="news-title">{{title}}</h3>
+    <p class="news-meta">{{dateLabel}} · {{place}}</p>
+    <p class="news-lede">{{lede}}</p>
+    <a class="news-link cta-arrow" href="{{href}}"{{#if blank}} target="_blank" rel="noopener"{{/if}}>{{linkLabel}} {{icons.arrowGo}}</a>
+  </div>
+</article>

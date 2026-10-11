@@ -1,0 +1,52 @@
+/* ============================================================
+   Base — reset, typography, page furniture
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}   /* anchors land below the fixed nav: 64px in 03-nav.css, plus a gap */
+body{
+  font-family:var(--font-body);
+  font-size:16.5px;line-height:1.65;
+  color:var(--ink);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--mint);color:var(--g900)}
+
+.wrap{max-width:1160px;margin-inline:auto;padding-inline:24px}
+
+h1,h2,h3{font-family:var(--font-display);line-height:1.08;letter-spacing:-.015em}
+h2{font-size:clamp(1.9rem,3.6vw,2.7rem);margin-bottom:14px}
+h3{font-size:1.06rem;letter-spacing:0;line-height:1.3}
+p.lede{color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.14rem);max-width:56ch}
+
+/* ---------- eyebrow: the small-caps label above a section heading ----------
+   Hairline dash + --accent-strong text. Used by components/join-card.html,
+   components/dash-spot.html and the page sections of index, committees
+   and resources; its colour follows the page theme (01a-theme.css). */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-strong);margin-bottom:18px;
+}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);border-radius:2px}
+
+a{color:inherit}
+/* In-text links — an anchor with no class of its own is PROSE, so it gets the
+   house idiom: accent text, no underline, and a pale mint hairline that on
+   hover/focus pulls up to the colour of the text it belongs to. Prose links are
+   semibold: the weight is what makes them readable as links at small sizes.
+   Anchors that wear a class own their own look — .dash-link in
+   17c-dashboard.css, the .cta-arrow calls to action in 08-sections.css,
+   the .repo-link cards in 17a-repos.css — and the
+   :not([class]) is what keeps this rule off them. The dark bands override the
+   two colours in 11-band.css; the reduced-motion blanket in 19-motion.css
+   silences the transition. */
+main a:not([class]){color:var(--accent-strong);font-weight:600;text-decoration:none;border-bottom:1px solid var(--mint);transition:border-color .15s ease,color .15s ease}
+main a:not([class]):hover,main a:not([class]):focus-visible{border-bottom-color:var(--accent-strong)}
+/* src/layout.html's first element: keyboard focus reaches it before the nav */
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--g900);color:#fff;padding:10px 18px;border-radius:0 0 10px 0;
+}
+.skip:focus{left:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}

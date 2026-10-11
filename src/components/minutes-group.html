@@ -1,0 +1,29 @@
+<!-- One committee of the minutes section (committees.html #minutes): the committee as the
+     row head, its published minutes as a horizontal rail. Fields: num, title,
+     minutes[]{href,dateLabel,year}, icons.chevronL/chevronR; [data-reveal]/[data-delay] are
+     02-reveal.js's. build.js files the flat minutes[] of src/data/site-committees.js under
+     its committee id and stops the build on an unknown one, so a row is always a real
+     committee. Rail shape and hairline rows: 17b-minutes.css and 17-rail.css, which also
+     hides .rail-ctrl without JS — the arrows are markup, never injected, and only their
+     [disabled] state moves (07-rail.js, called per row by 07a-minutes.js). The year menu is
+     NOT here — the single section-wide one above the rows (pages/committees.html).
+     The head line is a div and the arrows its siblings, not the heading's children: a
+     button inside an <h3> is read out as heading text; role="list" is load-bearing because
+     list-style:none strips list semantics in VoiceOver/Safari. -->
+<div class="minutes-group" data-reveal data-delay="{{@index}}">
+  <div class="minutes-h rail-h">
+    <h3 class="minutes-t rail-t"><span class="num">{{num}}</span><span class="k">{{title}}</span></h3>
+    <span class="minutes-ctrl rail-ctrl">
+      <button class="minutes-btn rail-btn" type="button" data-minutes-prev aria-label="Newer minutes of the {{title}}">
+        {{icons.chevronL}}
+      </button>
+      <button class="minutes-btn rail-btn" type="button" data-minutes-next aria-label="Older minutes of the {{title}}">
+        {{icons.chevronR}}
+      </button>
+    </span>
+  </div>
+  {{#if minutes}}<ul class="minutes-rail rail" role="list" data-minutes aria-label="Published minutes of the {{title}}">
+    {{#each minutes}}{{> minute-item}}
+    {{/each}}</ul>
+  <p class="minutes-note rail-note" data-minutes-note hidden aria-live="polite">No minutes from this year.</p>{{else}}<p class="minutes-note rail-note">No minutes have been published by this committee yet.</p>{{/if}}
+</div>

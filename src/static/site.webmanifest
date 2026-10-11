@@ -1,0 +1,12 @@
+{
+  "name": "Flow Battery Commons",
+  "short_name": "FBC",
+  "description": "The open, vendor-neutral community for flow battery research.",
+  "start_url": "index.html",
+  "display": "minimal-ui",
+  "background_color": "#F6F9F7",
+  "theme_color": "#0E3B2E",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

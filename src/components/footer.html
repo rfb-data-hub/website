@@ -1,0 +1,36 @@
+<!-- ============================ FOOTER ============================ -->
+<!-- The link columns are DERIVED, not authored: build.js → prepareData builds
+     footerCols from sites-general.js → nav (one column per menu group, landing
+     link first, then its children) plus a closing column from platforms[].
+     So the footer offers exactly the pages the menu offers, on every page,
+     with the same resolved hrefs and the same "soon" muting as the menu
+     (nav.html renders those rows the same way); one nav edit lands in both.
+     Rules for that shared list: docs/authoring.md §2b. Styles: 14-footer.css.
+     The year is the [data-footer-year] span, rewritten at load by 06-year.js. -->
+  <footer>
+    <div class="foot-wave" aria-hidden="true">
+      {{> wave-top}}
+    </div>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="{{homeHref}}">
+            <img class="logo" src="assets/img/logo.svg" width="30" height="30" alt="">
+            <span>Flow Battery Commons</span>
+          </a>
+          <p>{{footerBlurb}}</p>
+        </div>
+        {{#each footerCols}}<div class="foot-col">
+          <h4>{{title}}</h4>
+          <ul>
+            {{#if landing}}<li><a href="{{landing.href}}">{{landing.label}}</a></li>{{/if}}
+            {{#each links}}<li>{{#if soon}}<span class="foot-soon">{{label}}<span class="soon-pill">soon</span></span>{{else}}<a href="{{href}}">{{label}}</a>{{/if}}</li>
+            {{/each}}</ul>
+        </div>
+        {{/each}}</div>
+      <div class="foot-bottom">
+        <span>© <span data-footer-year>{{year}}</span> Flow Battery Commons</span>
+        <span class="lic">{{footerLicence}}</span>
+      </div>
+    </div>
+  </footer>

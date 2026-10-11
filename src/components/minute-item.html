@@ -1,0 +1,21 @@
+<!-- One published minutes document — an entry of the rail in
+     components/minutes-group.html (committees.html #minutes). Data:
+     src/data/site-committees.js → minutes[]: href (the PDF, shipped from src/static/
+     minutes/), year and dateLabel, the last two derived from the ISO date by build.js.
+     Styles: 17b-minutes.css. The filter key is data-minute-year, read by 07a-minutes.js,
+     never data-year: 06-year.js claims that shorter name site-wide for the footer's year.
+     The whole entry IS the link — a minutes document has nothing to say beyond
+     its date — and every entry wears the same icons.js doc glyph, so the row
+     reads as documents rather than as a list of links.
+     The committee is NOT named here: inside a loop the template engine resolves
+     an unknown field against the page front matter, so the title there would be
+     the PAGE title; the committee is named once, in the row head above. -->
+<li class="minute" data-minute-year="{{year}}">
+  <a class="minute-link" href="{{href}}" rel="noopener" target="_blank" aria-label="Minutes of the meeting on {{dateLabel}}, opens in a new tab">
+    <span class="minute-ic">{{icons.doc}}</span>
+    <span class="minute-line">
+      <span class="minute-date">{{dateLabel}}</span>
+      <span class="minute-go">{{icons.externalGo}}</span>
+    </span>
+  </a>
+</li>

@@ -1,0 +1,17 @@
+<!-- One resource category card (home · #categories), repeated over categories[]
+     in src/data/sites-general.js. Fields: href (resources.html — the same
+     items as band and rails there), icon (SVG markup the builder resolved
+     from the entry's iconKey via src/data/icons.js), title, desc, cta, delay
+     (reveal stagger in ms, read by 02-reveal.js); the CTA arrow is the shared
+     arrowGo mark.
+     The same six items are the rails on resources.html
+     (components/repo-group.html) — one array, two renderings, so a category
+     name must change in all of them at once.
+     Styles: 10-cards.css owns the tile, 10b-categories.css re-accents it in
+     GitHub red inside the home page's categories section. -->
+<a class="cat glass-card" href="{{href}}" data-reveal data-delay="{{delay}}">
+  <span class="ic">{{icon}}</span>
+  <h3>{{title}}</h3>
+  <p>{{desc}}</p>
+  <span class="go cta-arrow">{{cta}} {{icons.arrowGo}}</span>
+</a>

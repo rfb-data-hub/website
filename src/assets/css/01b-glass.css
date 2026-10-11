@@ -1,0 +1,29 @@
+/* ============================================================
+   Frosted glass surfaces — the three translucent ground recipes the site's cards and section bands are painted with.
+   .glass-card: hero card, category card, committee row, repo link.
+   .glass-strip: the figures bands (readout, chairs, repo band).
+   .glass-wash: the platforms and minutes sections.
+   An element takes its ground from exactly one of the three.
+   Layout, padding, radius overrides and content live in the component's own later-numbered file, which wins the cascade at equal specificity.
+   01-tokens.css defines the --glass-* and --wash-* recipes; nothing else in src/ reads them.
+   15-fallbacks.css degrades all three where backdrop-filter is unsupported, so a new glass element needs no fallback line of its own.
+   backdrop-filter is applied to the whole box, one filter per element.
+   It re-runs its shader on every frame anything behind the box moves; behind these surfaces only the page ground and the scroll-driven stream move, so the cost is paid while the reader scrolls.
+   ============================================================ */
+.glass-card{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-line);border-radius:var(--radius);
+}
+/* the band itself is the glass, not a card sitting in it: no radius, hairlines only */
+.glass-strip{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border-block:1px solid var(--line);
+}
+/* the section is a page-ground veil, not a surface on it: gradient ground, stronger blur (14px against the card's 10px) */
+.glass-wash{
+  background:var(--wash-bg);
+  -webkit-backdrop-filter:var(--wash-blur);backdrop-filter:var(--wash-blur);
+  border-block:1px solid var(--line);
+}

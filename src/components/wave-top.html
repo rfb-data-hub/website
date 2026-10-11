@@ -1,0 +1,11 @@
+<!-- Two-tone wave: pale crest drawn first, dark body on top → foam edge, no seam.
+     Upper cap of a dark band (index.html #news, resources.html #dashboard) and,
+     wrapped in footer.html's .foot-wave box, the footer's cap as well.
+     Decorative: aria-hidden, and the two-tone fills follow the page theme
+     (--tank / --tank-foam in 01a-theme.css).
+     scripts/gen-wave-mask.js reads the dark body path here and copies its curve
+     into the band photos' CSS masks, so path and mask blocks must stay equal.
+     Styles: 07-waves.css, footer box 14-footer.css. -->
+<div class="wave-top" aria-hidden="true">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path class="wave-foam" data-wave="foam" fill="#166534" opacity=".35" d="M0 70 L0 20 C170 4 350 44 530 22 C710 4 890 46 1070 24 C1250 6 1370 34 1440 18 L1440 70 Z"/><path class="wave-body" data-wave="body" fill="#0E3B2E" d="M0 70 L0 34 C160 12 340 52 520 34 C700 16 880 56 1060 36 C1220 18 1340 44 1440 28 L1440 70 Z"/></svg>
+</div>

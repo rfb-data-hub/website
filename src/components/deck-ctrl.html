@@ -1,0 +1,21 @@
+<!-- The news deck's controls — the arrows and the dot row of the News & events
+     band in index.html, included inside .news-deck after the slides and styled by
+     11a-news.css. 04-news.js owns the behaviour and the state: it looks the controls
+     up from its [data-news] deck element, so this partial must stay a child of that
+     element; it reads [data-news-prev], [data-news-next] and [data-news-go="<n>"],
+     and marks the current dot with [aria-current="true"] and the current slide with
+     .is-active. Without the `js` class that src/layout.html puts on <html>,
+     11a-news.css hides .news-ctrl — the arrows do nothing without script. One dot per
+     entry of news[] (src/data/site-index.js), so the dot count is the slide count; a
+     dot's aria-label is that entry's title. -->
+<div class="news-ctrl">
+            <button class="news-btn" type="button" data-news-prev aria-label="Previous news item">
+              {{icons.chevronL}}
+            </button>
+            <div class="news-dots">
+              {{#each news}}<button class="news-dot" type="button" data-news-go="{{@index}}" aria-label="{{title}}"><span></span></button>
+              {{/each}}</div>
+            <button class="news-btn" type="button" data-news-next aria-label="Next news item">
+              {{icons.chevronR}}
+            </button>
+          </div>

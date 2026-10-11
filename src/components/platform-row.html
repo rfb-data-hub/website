@@ -1,0 +1,17 @@
+<!-- One of the commons' two online homes — a "platform" row of the
+     "Where to find us" section: index.html #platforms.
+     Data: src/data/sites-general.js → platforms[].
+     Fields: cls (dc | gh — names the BRAND only: the colour, which side the
+     mark sits on and which side the row reveals from are all assigned in
+     10a-platforms.css), icon (build.js inlines it from the data's iconKey),
+     name, href, desc, meta (may hold [data-live] spans, 05-community.js fills
+     them), cta, delay (the [data-reveal] stagger, 02-reveal.js). -->
+<a class="platform {{cls}}" href="{{href}}" rel="noopener" target="_blank" data-reveal data-delay="{{delay}}">
+  <span class="platform-mark">{{icon}}</span>
+  <span class="platform-body">
+    <span class="platform-name">{{name}}</span>
+    <span class="platform-desc">{{desc}}</span>
+    <span class="platform-meta">{{meta}}</span>
+    <span class="platform-cta cta-arrow">{{cta}} {{icons.arrowGo}}</span>
+  </span>
+</a>

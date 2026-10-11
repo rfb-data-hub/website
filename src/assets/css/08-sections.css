@@ -1,0 +1,18 @@
+/* ============================================================
+   Section furniture shared across pages: the vertical rhythm of <section>,
+   the heading block, the hairline row list (.rows) and the text-CTA arrow
+   idiom (.cta-arrow — taken up by category-card, platform-row, news-slide
+   and dash-spot, each styling the voice in its own file).
+   ============================================================ */
+section{padding:96px 0}
+.sec-head{max-width:640px;margin-bottom:56px}
+.footnote{margin-top:20px;font-size:12.5px;color:var(--faint)}
+/* hairline row list: container top rule + one rule between siblings; used by
+   platform rows, FAQ list, minutes groups */
+.rows{border-top:1px solid var(--line)}
+.rows > * + *{border-top:1px solid var(--line)}
+/* text CTA with a trailing arrow mark: the nudge lives here, the voice (size,
+   colour, measure) stays in the instance; --cta-gap for a wider word set */
+.cta-arrow{display:inline-flex;align-items:center;gap:var(--cta-gap,6px);font-weight:600;text-decoration:none}
+.cta-arrow svg{flex:none;transition:transform .25s}
+.cta-arrow:hover svg{transform:translateX(4px)}

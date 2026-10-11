@@ -1,0 +1,50 @@
+/* ============================================================
+   Aims — the home "Why a digital commons?" band (index only): pages/index.html
+   repeats components/aim-item.html over aimItems in src/data/site-index.js
+   (the ordinals are authored data, not list-style — the <ol> is
+   decoration-free). Breakpoints live here, not in 18-responsive.css:
+   component rules whose class names are unique to this band.
+   ============================================================ */
+.aims{padding-top:48px}
+.aims-list{
+  position:relative;
+  list-style:none;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  margin-top:44px;padding-top:28px;
+}
+.aims-list::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--pos-deep),var(--neg-deep));
+}
+.aim-item{padding:0 26px}
+.aim-item:first-child{padding-left:0}
+.aim-item + .aim-item{border-left:1px solid var(--line)}
+.aim-item .num{
+  display:block;margin-bottom:12px;
+  font-family:var(--font-display);font-weight:700;font-size:12px;
+  letter-spacing:.14em;color:var(--accent);
+}
+/* min-height keeps the four aim titles on one shared baseline: the 4-column
+   grid (≥1081px) is the only layout narrow enough for a title to wrap. */
+.aim-item h3{font-size:clamp(1.16rem,1.7vw,1.42rem);margin-bottom:10px}
+@media (min-width:1081px){
+  .aim-item h3{min-height:2.4em}
+}
+.aim-item .gloss{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.aim-item .why{font-size:14px;line-height:1.6;color:var(--muted)}
+
+/* two columns from 1080 down: the rule between a pair stays, the one that
+   would open a new row goes */
+@media (max-width:1080px){
+  .aims-list{grid-template-columns:repeat(2,1fr);row-gap:36px}
+  /* specificity: both selectors are 0-2-0 like `.aim-item + .aim-item`,
+     and they come later, so they win the border-left fight */
+  .aim-item:nth-child(odd){border-left:0;padding-left:0}
+  .aim-item:nth-child(even){border-left:1px solid var(--line);padding-left:26px}
+}
+@media (max-width:640px){
+  .aims-list{grid-template-columns:1fr;row-gap:26px;padding-top:24px}
+  /* :nth-child(n) is 0-2-0, so it out-specifies both the `+ ` sibling
+     rule and the even-column rule above; one column needs no rules between */
+  .aim-item:nth-child(n){border-left:0;padding:0}
+}

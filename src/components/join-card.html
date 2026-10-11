@@ -1,0 +1,22 @@
+<!-- Join card — the conversion point at the end of every page (the #join
+     section of index/resources/committees). Filled from the join key in
+     src/data/sites-general.js: eyebrow, title, text, note — static prose, no
+     live counts here — and the two buttons of the nested join-btns partial.
+     Two platforms, no forms: Discord (comms) + GitHub (data hub).
+     Styles: 13-join.css; the crest paths draw in the page theme's pale tints
+     (--card-edge / --card-crest in 01a-theme.css), so their fill attributes
+     are the no-CSS fallback. The whole card is one [data-reveal] element
+     (02-reveal.js). -->
+<div class="join-card" data-reveal>
+  <svg class="jwave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path class="jwave-edge" fill="#DCF2E4" d="M0 120 L0 70 C200 40 420 96 640 72 C860 48 1060 100 1260 76 C1340 67 1400 78 1440 72 L1440 120 Z"/>
+    <path class="jwave-crest" fill="#BFE7CD" d="M0 120 L0 92 C240 70 480 110 720 90 C960 70 1200 108 1440 88 L1440 120 Z"/>
+  </svg>
+  <span class="eyebrow" style="justify-content:center;display:flex">{{join.eyebrow}}</span>
+  <h2>{{join.title}}</h2>
+  <p>{{join.text}}</p>
+  <div class="join-btns">
+    {{> join-btns}}
+  </div>
+  <p class="join-note">{{join.note}}</p>
+</div>

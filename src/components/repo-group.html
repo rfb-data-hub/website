@@ -1,0 +1,31 @@
+<!-- One category of the live repository list (resources.html): its head line, then ONE
+     horizontal rail of repository cards — the minutes-group.html rail shape, with cards
+     instead of documents. Data: src/data/sites-general.js → categories[]; fields topic,
+     title, icon, ghSearch (the org topic search, the "Search on GitHub" escape hatch).
+     Rail shape and the always-rendered arrows: 17-rail.css + 17a-repos.css ·
+     docs/authoring.md §2c; 07-rail.js owns the [disabled] state, 07-repos.js the
+     cards. The buttons are siblings of the head line, never children of the <h3>: a
+     button inside a heading is read out as heading text. role="list" is load-bearing:
+     list-style:none strips the list semantics in VoiceOver/Safari. The <ul> holds the
+     no-JS placeholder, which 07-repos.js replaces with cards cloned from
+     <template id="repo-row-tpl"> in pages/resources.html; the note reserves the card
+     height (--repo-h in 17a-repos.css). The id is the nav/footer anchor (#cat-<topic>). -->
+<div class="repo-group" id="cat-{{topic}}">
+  <div class="repo-h rail-h">
+    <h3 class="repo-t rail-t"><span class="ic">{{icon}}</span><span class="k">{{title}}</span></h3>
+    <span class="tag">#{{topic}}</span>
+    <span class="repo-n" data-repo-count="{{topic}}"></span>
+    <span class="repo-side rail-ctrl">
+      <a class="repo-gh" href="{{ghSearch}}" rel="noopener" target="_blank">Search on GitHub</a>
+      <button class="repo-btn rail-btn" type="button" data-repo-prev aria-label="Previous repositories in {{title}}">
+        {{icons.chevronL}}
+      </button>
+      <button class="repo-btn rail-btn" type="button" data-repo-next aria-label="More repositories in {{title}}">
+        {{icons.chevronR}}
+      </button>
+    </span>
+  </div>
+  <ul class="repo-rail rail" role="list" data-repo-list="{{topic}}" aria-label="Repositories filed under {{title}}">
+    <li class="repo-note rail-note">The list is loaded live from GitHub and needs JavaScript — until then: <a href="{{ghSearch}}" rel="noopener" target="_blank">{{title}} on GitHub</a>.</li>
+  </ul>
+</div>

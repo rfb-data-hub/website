@@ -1,0 +1,51 @@
+/* ============================================================
+   Sub-pages — the shared furniture of every page after the home:
+   resources.html and committees.html. Built from the home's components, so
+   almost no styles of their own.
+   .page-hero is components/page-hero.html, rendered from each page's own
+   front matter: `h1` (may carry a <span class="grad">), `sub`, and the
+   optional `chip`; the chip itself is styled in 05-hero.css.
+   .rule-list / .rule-item is components/committee-row.html, one row per
+   entry of the `committees` array in src/data/site-committees.js.
+   ============================================================ */
+
+/* ---------- the hero: components/page-hero.html ---------- */
+.page-hero{position:relative;padding:150px 0 64px;overflow:hidden}
+/* above the dot pattern and the corner glow (05-hero.css) — the home hero does
+   the same with .hero-grid{z-index:2} */
+.page-hero .wrap{position:relative;z-index:1}
+.page-hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(12,38,29,.055) 1px,transparent 1.5px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
+  mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
+}
+.page-hero h1{font-size:clamp(2.4rem,5vw,3.7rem);margin-bottom:20px}
+.page-hero h1 .grad{
+  /* same gold → red ramp as the home hero (05-hero.css) */
+  background:linear-gradient(100deg,var(--pos-deep),var(--neg-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.page-hero .sub{color:var(--muted);font-size:clamp(1.02rem,1.6vw,1.16rem);max-width:56ch}
+
+/* ---------- the committee rows: components/committee-row.html ----------
+   One row per committee, fed by `committees` in src/data/site-committees.js;
+   the ground is .glass-card (01b-glass.css). */
+.rule-list{display:grid;gap:14px;margin-top:36px}
+.rule-item{
+  padding:22px 26px;box-shadow:var(--shadow-soft);
+  display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:baseline;
+}
+.rule-item .num{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--accent);letter-spacing:.1em}
+.rule-item h3{grid-column:2;margin-bottom:4px}
+.rule-item p{grid-column:2;font-size:14.5px;color:var(--muted)}
+/* meeting badges — hairline pills, information not UI (no links, no hover) */
+.rule-item .meetings{grid-column:2;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.meeting{
+  display:inline-flex;align-items:baseline;gap:8px;
+  padding:5px 13px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(255,255,255,.65);
+  font-size:12.5px;font-weight:600;color:var(--ink);
+}
+.meeting-k{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}

@@ -1,0 +1,33 @@
+<!-- ============================ NAV ============================ -->
+<!-- Menu data: sites-general.js → nav (parents with optional children[]).
+     Dropdown styles: 03a-navmenu.css · behaviour: 03-navmenu.js.
+     A parent link is a real link (its href is the group's landing page);
+     03-navmenu.js turns the first tap into a menu-open on devices without
+     hover. The hamburger button is CSS-hidden on the desktop.
+     The brand's href is homeHref — "#top" on the home page, "index.html"
+     on a sub-page (build.js → prepareData); the footer's brand uses the same
+     value. The footer's link columns come from this same nav data. -->
+<nav id="nav" aria-label="Main">
+  <div class="wrap nav-inner">
+    <a class="brand" href="{{homeHref}}" aria-label="Flow Battery Commons — home">
+      <!-- The site logo, src/assets/img/logo.svg: a referenced image rather
+           than an inline copy, so one file holds one palette and ~5 kB of
+           paths stay out of every page. Size is set here (the box is reserved
+           before the file loads) and in 03-nav.css. -->
+      <img class="logo" src="assets/img/logo.svg" width="40" height="40" alt="">
+      <span>Flow Battery Commons<small>Online Research Community</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+      {{icons.bars}}
+    </button>
+    <ul class="nav-links" id="navMenu">
+      {{#each nav}}<li class="nav-item{{#if children}} has-menu{{/if}}">
+        <a class="nav-top" href="{{href}}"{{#if current}} aria-current="page"{{/if}}{{#if children}} aria-expanded="false"{{/if}}>{{label}}{{#if children}}<span class="chev">{{icons.caret}}</span>{{/if}}</a>
+        {{#if children}}<ul class="nav-menu">
+          {{#each children}}<li>{{#if soon}}<span class="nav-soon">{{label}}<span class="soon-pill">soon</span></span>{{else}}<a href="{{href}}">{{label}}</a>{{/if}}</li>
+          {{/each}}</ul>
+        {{/if}}
+      </li>
+      {{/each}}</ul>
+  </div>
+</nav>

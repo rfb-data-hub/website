@@ -1,0 +1,34 @@
+/* ============================================================
+   FAQ — native <details>/<summary>: no JS, keyboard- and screen-reader-accessible.
+   Rows divided by hairline rules only — the .rows utility (08-sections.css).
+   Opening rotates the plus 45° into a cross; the circle stays put.
+   Home page only (index.html → section#faq): markup components/faq-item.html,
+   data site-index.js → faq (q / a / delay). Each row carries [data-reveal],
+   hidden until 02-reveal.js adds .revealed (16-reveal.css); the open state is
+   the native [open] attribute, which no script touches.
+   ============================================================ */
+.faq-list{display:grid}
+
+.faq-item summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:28px;
+  padding:32px 0;font-family:var(--font-display);font-weight:600;font-size:16.5px;line-height:1.45;color:var(--ink);
+}
+.faq-item summary::-webkit-details-marker{display:none}
+
+.faq-item .plus{
+  flex:none;display:flex;color:var(--accent-strong);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1);
+}
+.faq-item .plus svg{width:20px;height:20px;stroke-width:1.7}   /* the shared plus mark, sized here */
+/* [open] after :hover, so a hovered open row keeps its cross */
+.faq-item:hover .plus{transform:scale(1.08)}
+.faq-item[open] .plus{transform:rotate(45deg)}
+.faq-item[open]:hover .plus{transform:rotate(45deg) scale(1.08)}
+
+.faq-item .faq-a{padding:0 0 32px;font-size:14.5px;line-height:1.7;color:var(--muted);max-width:78ch}
+
+@media (max-width:700px){
+  /* component-level breakpoint: kept here, not in 18-responsive.css */
+  .faq-item summary{padding:24px 0;gap:20px;font-size:15.5px}
+  .faq-item .faq-a{padding-bottom:24px}
+}

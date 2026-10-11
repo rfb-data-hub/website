@@ -1,0 +1,13 @@
+<!-- Sub-page hero, included by resources.html and committees.html. Its fields
+     come from each page's own front matter: chip (OPTIONAL — pages without it
+     simply start at the headline), h1 (may contain a <span class="grad">) and
+     sub. Styles: 17-page.css; the chip itself is styled in 05-hero.css.
+     The id="top" anchor keeps the brand link working on every page:
+     build.js → prepareData collapses a link to this page to #top. -->
+<header class="page-hero" id="top">
+  <div class="wrap">
+    {{#if chip}}<span class="chip"><span class="dot"></span>{{chip}}</span>{{/if}}
+    <h1>{{h1}}</h1>
+    <p class="sub">{{sub}}</p>
+  </div>
+</header>

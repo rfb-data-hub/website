@@ -1,0 +1,56 @@
+/* ============================================================
+   Footer — the tank the electrolyte returns to.
+   Renders components/footer.html at the bottom of every page.
+   Colours are the page theme's --tank-* (01a-theme.css); the wave is the
+   shared components/wave-top.html partial, whose .wave-foam/.wave-body
+   paths pick the fill up in 07-waves.css.
+   Its link columns are not authored here: build.js derives footerCols from
+   the nav array of sites-general.js (docs/authoring.md §2b), so this file
+   styles a VARIABLE number of columns — see .foot-grid.
+   06-year.js rewrites the [data-footer-year] span at load.
+   ============================================================ */
+footer{position:relative;z-index:2;background:var(--tank);color:var(--tank-ink);padding:64px 0 36px}
+footer .brand{color:#fff}
+/* the same artwork as the nav (src/assets/img/logo.svg), one notch smaller;
+   its light plate is what makes it read on the dark ground */
+footer .brand .logo{width:30px;height:30px}
+.foot-grid{display:flex;flex-wrap:wrap;gap:40px 36px;margin-bottom:48px}
+/* Columns are WRAPPED, not counted: the footer renders one column per menu
+   group (build.js derives them from sites-general.js → nav), so how many there are is a
+   content decision, made in the data. A track list would have to be recounted
+   by hand the day a fifth group appears; flex-basis + wrap cannot go stale. */
+.foot-brand{flex:1 1 260px;min-width:0}
+.foot-col{flex:1 1 165px;min-width:0}
+.foot-brand p{font-size:14px;color:var(--tank-ink-dim);max-width:34ch;margin-top:14px}
+footer h4{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--tank-ink-faint);margin-bottom:16px;font-family:var(--font-body)}
+footer ul{list-style:none;display:grid;gap:10px}
+footer ul a{font-size:14px;color:var(--tank-ink-dim);text-decoration:none;transition:color .2s}
+footer ul a:hover{color:#fff}
+/* Every row in a column — the group's own landing page ("Overview") included —
+   is styled uniformly by the `footer ul a` rule above: the landing row is the
+   first link of the list, not a repeat of the column heading. */
+/* a soon:true menu row reaches here too (build.js copies the flags). The pill
+   itself is 03a-navmenu.css's .soon-pill — one GitHub red site-wide; this only
+   lays it out inline, since outside a flex row its margin-left:auto is 0. */
+footer .foot-soon{font-size:14px;color:var(--tank-ink-faint)}
+footer .soon-pill{margin-left:8px}
+/* Breakpoints are DELIBERATE, not left to the wrap: with five shrinkable
+   columns a natural wrap can leave the last one alone on its row, stretched
+   to the full width — which looks like a bug at some viewport widths and not
+   at others. So each step is pinned, and the steps are even:
+   wide      brand beside the four link columns
+   ≤1100px   brand becomes a masthead, the four columns keep one row
+   ≤760px    columns 2-up
+   ≤460px    one column per row */
+@media (max-width:1100px){
+  .foot-brand{flex:1 1 100%}
+}
+@media (max-width:760px){
+  .foot-col{flex:1 1 calc(50% - 18px)}
+}
+@media (max-width:460px){
+  .foot-brand,.foot-col{flex:1 1 100%}
+  .foot-grid{gap:32px}
+}
+.foot-bottom{border-top:1px solid var(--tank-line);padding-top:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--tank-ink-faint)}
+.foot-bottom .lic b{color:var(--tank-ink);font-weight:600}

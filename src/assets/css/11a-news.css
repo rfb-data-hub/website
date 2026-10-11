@@ -1,0 +1,185 @@
+/* ============================================================
+   News & events deck — the content of the home page's dark band (index.html
+   #news): label, one slide at a time, control row. Slides: the partial
+   components/news-slide.html, one per item of the `news` array in
+   src/data/site-index.js; the control row: components/deck-ctrl.html.
+   All slides share ONE grid cell (each `grid-area:1/1`), so paging never
+   moves the page, and the longest lede sets every slide's height. 04-news.js
+   adds .is-ready (stack on) and .is-active (which slide is visible) and sets
+   [aria-current] on the dot it paged to; with no JS the band stays a plain
+   list and .news-ctrl is hidden. The picture's visible crop is the width cap
+   on `.news-photo img` — the ~46% site-index.js quotes when choosing w/h.
+   ============================================================ */
+
+/* ---------- the band as a stage ----------
+   min-height, not a fixed height: a long lede must push the band taller, not overflow. */
+.band-news{
+  display:flex;flex-direction:column;
+  padding:60px 0 46px;min-height:clamp(600px,80vh,860px);
+}
+/* width:100% is load-bearing: `.band-news` is a column flex container, so `.wrap`
+   is a cross-axis flex item and the base `.wrap`'s margin-inline:auto cancels the
+   default stretch — without a definite width the band collapses to max-content. */
+.band-news .wrap{flex:1 1 auto;width:100%;display:flex;flex-direction:column;min-width:0}
+.band-news .sec-head{margin-bottom:22px}
+/* an h2 wearing the eyebrow look: keeps the section's place in the outline
+   without a headline; the two-class selector outranks `.band h2` */
+.band-news .eyebrow{font-family:var(--font-body);font-weight:600;color:var(--accent-bright);margin:0}
+/* everything that is not the photo opts back into the stacking order: an
+   absolutely positioned z-index:0 element paints above in-flow content. The wave
+   caps are the layer below: z-index:-1 in the isolated .band — 07-waves.css */
+.band-news .sec-head,.news-ctrl{position:relative;z-index:1}
+
+/* ---------- the deck fills the band, so the controls land at the bottom ----------
+   CRITICAL: no `transform` on the deck, the stage, a slide or any ancestor — a
+   transformed ancestor becomes the containing block for the absolutely positioned
+   photo backdrop and collapses it to the text column. Hence motion on `.news-text`
+   and an opacity-only scroll reveal for the deck. */
+.news-deck{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+html.js .band-news .news-deck[data-reveal]{transform:none}
+
+/* align-content:start, not center: reads from the label down, and with the slides
+   sharing one grid cell this keeps their text on the same line when paging */
+.news-stage{flex:1 1 auto;display:grid;align-content:start}
+.news-slide + .news-slide{margin-top:34px}      /* the no-JS / pre-init list */
+/* list fallback (no JS, un-run JS, or a one-item deck): make the slide the
+   containing block, or every backdrop would paint on the band itself */
+.news-stage:not(.is-ready) .news-slide{position:relative}
+.news-stage:not(.is-ready) .news-photo{top:0;bottom:0;-webkit-mask-image:none;mask-image:none}
+html.js .news-stage.is-ready .news-slide{
+  grid-area:1/1;margin-top:0;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .5s ease,visibility 0s linear .5s;
+}
+html.js .news-stage.is-ready .news-slide.is-active{
+  opacity:1;visibility:visible;pointer-events:auto;
+  transition:opacity .5s ease,visibility 0s;
+}
+html.js .news-stage.is-ready .news-text{transform:translateY(12px);transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+html.js .news-stage.is-ready .news-slide.is-active .news-text{transform:none}
+
+/* ---------- the slide: one text column (components/news-slide.html) ----------
+   keeps the band's .sec-head measure (640px); the rest of the band is the picture's */
+.news-slide{display:grid;grid-template-columns:minmax(0,640px)}
+.news-text{position:relative;z-index:1;display:grid;align-content:start;min-width:0}
+.news-tag{
+  display:inline-flex;align-items:center;gap:9px;margin-bottom:15px;
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent-bright);
+}
+.news-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent-bright)}
+.news-title{
+  font-family:var(--font-display);font-weight:700;color:#fff;
+  font-size:clamp(1.45rem,2.6vw,2.1rem);line-height:1.14;letter-spacing:-.015em;
+  margin-bottom:10px;
+}
+.news-meta{font-size:13px;color:var(--tank-ink-faint);margin-bottom:16px}
+.news-lede{font-size:16px;line-height:1.72;color:var(--tank-ink-dim);max-width:62ch}
+.news-link{
+  --cta-gap:8px;
+  justify-self:start;margin-top:22px;
+  font-size:14px;color:var(--accent-bright);
+  border-bottom:1px solid color-mix(in srgb, var(--accent-bright) 35%, transparent);padding-bottom:3px;
+  transition:color .25s,border-color .25s;
+}
+.news-link:hover{color:#fff;border-color:#fff}
+.news-link svg{width:13px;height:13px}
+
+/* ---------- the picture: a backdrop, not a box ----------
+   Bleeds to the viewport's right edge and fades out to the left in the band's own
+   colour, so it has no visible edge; never interactive, never a layout input. The
+   width cap keeps the crop honest on very wide screens. */
+.news-photo{
+  position:absolute;left:0;right:0;top:calc(1px - var(--wave-h));bottom:calc(1px - var(--wave-h));
+  z-index:0;margin:0;overflow:hidden;pointer-events:none;
+  /* UNION of three mask layers (upper cap, solid middle band, flipped lower cap): a
+     lost layer costs only its strip. GENERATED by scripts/gen-wave-mask.js — re-run it. */
+  /* WAVE-MASK:BEGIN generated by scripts/gen-wave-mask.js — do not hand-edit */
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='70' viewBox='0 0 1440 70' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 70 L0 34 C160 12 340 52 520 34 C700 16 880 56 1060 36 C1220 18 1340 44 1440 28 L1440 70 Z'/%3E%3C/svg%3E"),linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='70' viewBox='0 0 1440 70' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' transform='translate(0,70) scale(1,-1)' d='M0 70 L0 30 C180 52 360 12 540 32 C720 52 900 14 1080 34 C1240 52 1360 24 1440 40 L1440 70 Z'/%3E%3C/svg%3E");
+  -webkit-mask-size:100% 70px,100% calc(100% - 138px),100% 70px;
+  -webkit-mask-position:left top,0 69px,left bottom;
+  -webkit-mask-repeat:no-repeat;
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='70' viewBox='0 0 1440 70' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 70 L0 34 C160 12 340 52 520 34 C700 16 880 56 1060 36 C1220 18 1340 44 1440 28 L1440 70 Z'/%3E%3C/svg%3E"),linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='70' viewBox='0 0 1440 70' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' transform='translate(0,70) scale(1,-1)' d='M0 70 L0 30 C180 52 360 12 540 32 C720 52 900 14 1080 34 C1240 52 1360 24 1440 40 L1440 70 Z'/%3E%3C/svg%3E");
+          mask-size:100% 70px,100% calc(100% - 138px),100% 70px;
+          mask-position:left top,0 69px,left bottom;
+          mask-repeat:no-repeat;
+  /* WAVE-MASK:END */
+}
+.news-photo img{
+  /* the data's width/height attributes are overridden here: this box is the
+     crop, object-fit does the rest — so the file's ratio need not match. */
+  position:absolute;top:0;bottom:0;right:0;width:min(46%,760px);height:100%;
+  object-fit:cover;object-position:50% 44%;   /* keep the faces, lose ceiling and floor */
+}
+.news-photo::after{
+  content:"";position:absolute;top:0;bottom:0;right:0;width:min(46%,760px);
+  /* two layers: a flat tint that pulls the picture into the band's palette, and
+   the horizontal fade that dissolves its left edge into the dark. */
+  background:
+    linear-gradient(color-mix(in srgb, var(--tank) 20%, transparent),color-mix(in srgb, var(--tank) 34%, transparent)),
+    linear-gradient(90deg,var(--tank) 0,color-mix(in srgb, var(--tank) 92%, transparent) 12%,
+      color-mix(in srgb, var(--tank) 55%, transparent) 28%,color-mix(in srgb, var(--tank) 14%, transparent) 44%,transparent 58%);
+}
+/* the credit line; bottom:84px keeps it clear of the bottom wave */
+.news-photo figcaption{
+  position:absolute;right:16px;bottom:84px;z-index:1;
+  font-size:10.5px;letter-spacing:.04em;color:color-mix(in srgb, var(--tank-ink) 62%, transparent);
+  text-shadow:0 1px 10px color-mix(in srgb, var(--tank) 95%, transparent);
+}
+/* Degradation: an engine with neither mask syntax gets the straight-edged version.
+   `left:auto` is what makes it straight: with left AND right set, the width is ignored. */
+@supports not (mask-image:linear-gradient(#000,#000)){
+  @supports not (-webkit-mask-image:linear-gradient(#000,#000)){
+    .news-photo{top:0;bottom:0;left:auto;width:min(46%,760px)}
+    .news-photo img,.news-photo::after{width:100%}
+  }
+}
+
+/* ---------- the controls (the only interactive things in the band) ----------
+   components/deck-ctrl.html: 04-news.js binds [data-news-prev], [data-news-next]
+   and each dot's [data-news-go="<index>"], and marks the shown dot with
+   [aria-current="true"] — the state this file styles. `html.js` is set by
+   src/layout.html, so a page without the script never shows a dead control row. */
+.news-ctrl{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:auto;padding-top:34px;
+}
+html:not(.js) .news-ctrl{display:none}
+.news-btn{
+  flex:none;width:42px;height:42px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.05);border:1px solid var(--tank-line);color:var(--tank-ink);
+  transition:background .25s,border-color .25s,color .25s,transform .25s;
+}
+.news-btn svg{width:16px;height:16px}
+.news-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.news-btn:active{transform:translateY(1px)}
+.news-dots{display:flex;align-items:center;margin:0 8px}
+.news-dot{
+  width:26px;height:26px;padding:0;background:none;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.news-dot span{width:8px;height:8px;border-radius:50%;background:color-mix(in srgb, var(--tank-ink-dim) 32%, transparent);transition:background .25s,transform .25s}
+.news-dot:hover span{background:color-mix(in srgb, var(--tank-ink-dim) 62%, transparent)}
+.news-dot[aria-current="true"] span{background:var(--accent-bright);transform:scale(1.5)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  /* below a desktop the text would run into the transparent end of the fade —
+     narrow both, don't overlap */
+  .news-slide{grid-template-columns:minmax(0,520px)}
+  /* narrow the PICTURE, never the backdrop box: the mask is sized to
+     `.news-photo`, so a width there would squash the wave out of step with the caps */
+  .news-photo img,.news-photo::after{width:min(44%,560px)}
+}
+@media (max-width:960px){
+  /* no backdrop: below this the text needs every pixel of width */
+  .band-news{min-height:0;padding:44px 0 40px}
+  .band-news .sec-head{margin-bottom:20px}
+  .news-slide{grid-template-columns:minmax(0,1fr)}
+  .news-photo{display:none}
+  .news-ctrl{margin-top:34px;padding-top:0}
+}
+@media (max-width:560px){
+  .news-lede{font-size:15.5px}
+}

@@ -1,0 +1,17 @@
+<!-- FAQ accordion row (home · #faq), repeated over faq[] in
+     src/data/site-index.js. Fields: q (summary line), a (the answer, inline
+     <b>/<a> allowed), delay (reveal stagger in ms, read by 02-reveal.js).
+     Native <details>, zero JS: the open state is the browser's own [open]
+     attribute, which no script touches. No card: the rows sit
+     straight on the section ground and are divided from their neighbour by
+     a hairline rule, the same style as the platform rows (components/
+     platform-row.html, styles 20-faq.css).
+     The affordance is the plus mark from src/data/icons.js inside a circle.
+     Only the plus turns when the row opens (45° → a cross); the circle is the
+     static target. -->
+<details class="faq-item" data-reveal data-delay="{{delay}}">
+  <summary>{{q}}
+    <span class="plus">{{icons.plus}}</span>
+  </summary>
+  <div class="faq-a">{{a}}</div>
+</details>

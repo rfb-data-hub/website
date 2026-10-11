@@ -1,0 +1,67 @@
+/* ============================================================
+   Navigation — the fixed top bar (brand, menu links, join buttons)
+   and the scroll-progress charge bar every page carries.
+   Styles the markup of components/nav.html and components/join-btns.html;
+   the dropdown panel rules live in 03a-navmenu.css, which overrides this
+   file by source order and so must keep sorting after it.
+   The nav.scrolled class and #chargeBar's scaleX transform are written by
+   assets/js/01-stream.js; the button highlights read the page theme's
+   --accent roles from 01a-theme.css.
+   ============================================================ */
+/* ---------- charge bar ----------
+   Scroll-progress line: 01-stream.js writes its transform on every frame;
+   scaleX(0) here is the top-of-page state. */
+#chargeBar{
+  position:fixed;top:0;left:0;z-index:70;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--g600),var(--g500) 70%,var(--pos));
+  transform:scaleX(0);transform-origin:left center;
+}
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;height:64px;
+  background:rgba(246,249,247,.82);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  /* fixed + backdrop-filter needs its own compositor layer, or the bar swims mid-scroll */
+  will-change:transform;
+  border-bottom:1px solid transparent;
+  /* border/shadow only: transitioning background-color re-rasterises the blur */
+  transition:border-color .3s,box-shadow .3s;
+}
+nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -18px rgba(12,38,29,.25)}
+/* height:100%, not 64px: the bar is border-box, so its content box is 63px
+   once the bottom border is drawn. */
+.nav-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-family:var(--font-display);font-weight:700;font-size:15.5px;letter-spacing:-.01em;color:var(--ink)}
+.brand svg,.brand .logo{display:block;flex:none}
+/* logo sized to the brand's two text lines; the attributes in nav.html match */
+.brand .logo{width:40px;height:40px}
+.brand small{display:block;font-family:var(--font-body);font-weight:500;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:30px;list-style:none}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--g700)}
+.nav-links a[aria-current="page"]{color:var(--g700);font-weight:600}
+/* ---------- button base ----------
+   The pill geometry the platform buttons below extend; join-btns.html
+   renders the only .btn markup. */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--font-body);font-size:14.5px;font-weight:600;
+  padding:12px 24px;border-radius:999px;border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s,color .2s;
+}
+.btn:active{transform:translateY(1px)}
+.btn svg{flex:none;opacity:.9}
+/* The two platforms (join-btns.html): neutral by default — on the green theme
+   both stay neutral. The page theme highlights the platform the page is about:
+   yellow → Discord, red → GitHub (roles from 01a-theme.css). */
+.btn-dc,.btn-gh{border-color:var(--line);color:var(--ink);background:rgba(255,255,255,.6)}
+.btn-dc:hover,.btn-gh:hover{border-color:var(--accent);color:var(--accent-deep)}
+/* on hover the platform identity is always visible — Discord yellow, GitHub red */
+.btn-dc:hover{background:var(--pos-deep);color:#fff;border-color:transparent;box-shadow:0 12px 24px -14px rgba(217,182,10,.7)}
+.btn-gh:hover{background:var(--neg-deep);color:#fff;border-color:transparent;box-shadow:0 12px 24px -14px rgba(217,69,69,.7)}
+[data-theme="yellow"] .btn-dc,
+[data-theme="red"] .btn-gh{
+  background:var(--accent-deep);color:#fff;border-color:transparent;
+  box-shadow:0 12px 24px -14px color-mix(in srgb, var(--accent-deep) 70%, transparent);
+}
+[data-theme="yellow"] .btn-dc:hover{background:var(--pos-deep);box-shadow:0 16px 30px -14px rgba(217,182,10,.7)}
+[data-theme="red"] .btn-gh:hover{background:var(--neg-deep);box-shadow:0 16px 30px -14px rgba(217,69,69,.7)}

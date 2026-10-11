@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- Layout — the single document skeleton that build.js renders every
+     src/pages/*.html body into, filling the content slot below and writing
+     public/<page>.html. The nav, stream and footer partials therefore appear
+     on every page in this order, inside the .page wrapper whose height
+     01-stream.js measures.
+     The head carries no per-page assets: cssHref and jsHref point at the two
+     bundles build.js concatenates from src/assets in filename order.
+     Three hooks below are contracts with src/assets — html.js, body
+     data-theme and #chargeBar; each names its counterpart files in place. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{cssHref}}">
+<!-- Runs before the body parses: html.js is the switch every progressive
+     enhancement keys on — 04-stream, 10a-platforms, 11a-news, 16-reveal,
+     17-rail, 17a-repos, 17b-minutes and 19-motion all style html.js or
+     html:not(.js), so without this line those sections show their no-JS form. -->
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<!-- data-github-org / data-discord-invite are the one route from
+     src/data/sites-general.js to the scripts that call those two APIs
+     (05-community.js, 07-repos.js) — the literals are never typed into a JS file. -->
+<!-- data-theme comes from the page's front matter `theme:` and repaints the
+     palette: 01a-theme.css owns the variable swap, 03-nav.css the CTA tints. -->
+<body {{#if theme}}data-theme="{{theme}}"{{/if}} data-github-org="{{githubOrg}}" data-discord-invite="{{discordInvite}}">
+<a class="skip" href="#main">Skip to content</a>
+<!-- #chargeBar: 01-stream.js writes its scaleX from scroll progress;
+     03-nav.css owns the fixed position, height and gradient. -->
+<div id="chargeBar" aria-hidden="true"></div>
+
+{{> nav}}
+
+<div class="page">
+
+  {{> stream}}
+
+  <main id="main">
+{{content}}
+  </main>
+
+  {{> footer}}
+</div>
+
+<script src="{{jsHref}}" defer></script>
+</body>
+</html>

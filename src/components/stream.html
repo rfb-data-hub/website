@@ -1,0 +1,31 @@
+    <!-- The electrolyte stream: a page-long tube down the left margin whose fill
+       tracks scrolling. Rendered on every page from layout.html; no viewBox,
+       so user units = CSS px. The contract with 01-stream.js is these names:
+       it selects #streamFill, .stream-track and .stream-track-inner plus
+       #streamGrad, rewrites their d and the gradient's y2 to the real tube
+       length, and reads the stroke widths back from 04-stream.css — which also
+       hides the whole svg under html:not(.js). The static d= below is the
+       initial path until rebuild() replaces it (without JS the stream is
+       hidden) and never needs editing; the rounded cap of the fill is the
+       electrolyte front, not a separate marker. Rationale: docs/authoring.md §4. -->
+  <svg id="stream" aria-hidden="true">
+    <defs>
+      <!-- gradientUnits="userSpaceOnUse" on purpose, not the default
+           objectBoundingBox: on narrow screens the tube is straight, and a
+           vertical line has a ZERO-WIDTH bounding box — a gradient referenced
+           from a zero-area bbox renders nothing. rebuild() sets y2 to the real
+           tube length; 9000 here is the initial value before that first run. -->
+      <linearGradient id="streamGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="9000">
+        <!-- The stops are coloured from the page theme: 01a-theme.css sets
+             --stream-a/b/c per <body data-theme="…">, which layout.html emits
+             from front matter `theme: yellow|red` (absent = default green).
+             The hex attributes are the no-CSS fallback only. -->
+        <stop class="stream-stop-a" offset="0" stop-color="#1F8A4C"/>
+        <stop class="stream-stop-b" offset=".55" stop-color="#166534"/>
+        <stop class="stream-stop-c" offset="1" stop-color="#0E3B2E"/>
+      </linearGradient>
+    </defs>
+    <path class="stream-track" d="M120 640 C120 1300 60 1600 70 2200 C80 2800 150 3000 140 3600 C130 4200 50 4400 60 5000 C70 5600 150 5800 145 6400 C140 7000 60 7200 70 7800 C80 8400 150 8550 140 8960"/>
+    <path class="stream-track-inner" d="M120 640 C120 1300 60 1600 70 2200 C80 2800 150 3000 140 3600 C130 4200 50 4400 60 5000 C70 5600 150 5800 145 6400 C140 7000 60 7200 70 7800 C80 8400 150 8550 140 8960"/>
+    <path id="streamFill" class="stream-fill" pathLength="100" d="M120 640 C120 1300 60 1600 70 2200 C80 2800 150 3000 140 3600 C130 4200 50 4400 60 5000 C70 5600 150 5800 145 6400 C140 7000 60 7200 70 7800 C80 8400 150 8550 140 8960"/>
+  </svg>
