@@ -135,7 +135,7 @@ module.exports = {
 
      `href` is the tile's link target (resources.html, which renders these
      same items). `ghSearch` is the org topic search behind the group's
-     "Search on GitHub" escape hatch, derived after the array from topic +
+     "Explore on GitHub" escape hatch, derived after the array from topic +
      GITHUB_ORG; `type=repositories` and `fork:true` are load-bearing — without
      the first the page reports "0 results" over real rows, and GitHub hides
      forks from search by default while 07-repos.js lists them.
