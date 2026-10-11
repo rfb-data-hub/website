@@ -32,6 +32,9 @@
    type; only --fig-cols, the padding and the numeral size are this band's own */
 .repo-band{padding:26px 0 22px}   /* the same box .chairs takes (11b-chairs.css) */
 .repo-cats{--fig-cols:6}   /* one column per entry in `categories` (src/data/sites-general.js) */
+/* A grid item's automatic minimum size is its min-content, so a 1fr track cannot
+   shrink below a tile's longest word and the strip overflows the wrap: free it. */
+.repo-cats>*{min-width:0}
 .repo-cat{padding:12px 22px 14px;text-align:center}   /* rules at the idiom's default inset */
 /* the cell is a link but must not read as one: :not([class]) is the specificity
    `main a:not([class])` in 02-base.css claims; a hairline would rule the cell */
@@ -68,6 +71,9 @@
    repository adds a card to a rail, not height to the page. No rule divides
    the rows — the cards are the objects, and a hairline would fight their borders. */
 .repo-groups{display:grid;gap:44px;margin-top:46px}   /* plain whitespace, the .cat-grid rhythm (10-cards.css) */
+/* The same automatic minimum size on every flex/grid child of the path: a head
+   line or a card that cannot shrink below its own text widens the page. */
+.repo-groups>*,.repo-h>*,.repo-side>*,.repo-rail>*{min-width:0}
 
 /* ---------- the rail head: the category and its live count ----------
    .rail-h and .rail-t (17-rail.css): the category at the left, its escape
