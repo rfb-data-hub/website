@@ -44,8 +44,8 @@ module.exports = {
     {
       num: "02",
       title: "Exchange",
-      gloss: "Sharing knowledge.",
-      desc: "Academic research communities consist of swiftly changing groups of individuals. Not all knowledge can be captured in publications or protocols. Providing a place to ask quick questions and to get help ensures that valuable experience is not lost as people move along their career paths.",
+      gloss: "Sharing knowledge & resources.",
+      desc: "Academic research communities consist of swiftly changing groups of individuals. Not all knowledge can be captured in publications or protocols. Providing a place to ask questions and exchange resources ensures that valuable experiences are not lost as people move along their career paths.",
       delay: 80,
     },
     {
