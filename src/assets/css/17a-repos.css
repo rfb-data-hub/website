@@ -103,10 +103,9 @@ html:not(.js) .repo-side{display:flex}
 html:not(.js) button.repo-btn{display:none}
 /* the arrows are authored in repo-group.html and always rendered; the box, the
    hover fill and the [disabled] state 07-rail.js sets are .rail-btn's (17-rail.css) */
-/* The brand mark fills its circle: at 100% the silhouette's own round outline
-   coincides with the ground, so it reads as a cut-out, not as a small icon on it. */
-.repo-side>a.rail-btn{overflow:hidden}   /* clips the square svg corners the border-radius leaves outside */
-.repo-side>a.rail-btn svg{width:100%;height:100%}
+/* The mark sits inside the ground, not cut out of it: 20px in the 32px disc leaves a
+   light ring, so the circle takes the arrows' polarity — dark mark on light ground. */
+.repo-side>a.rail-btn svg{width:20px;height:20px}
 
 /* ---------- the rail: the size chain that reserves the card height ----------
    Two name lines + three description lines + one meta line + three gaps + the
