@@ -12,13 +12,21 @@
       ============================================================ */
 "use strict";
 
-/* The two external homes of the commons, named once: the org and the invite
-   code are the ONLY literals here, the two URLs are built from them. build.js
-   passes both keys to the layout, where they land on <body> as
-   data-github-org / data-discord-invite for 05-community.js and 07-repos.js
-   to read (docs/authoring.md §5). */
+/* The two external homes of the commons, named once: the org, the invite code
+   and the excluded repository are the ONLY literals here, the two URLs are
+   built from them. build.js passes all three keys to the layout, where they
+   land on <body> as data-github-org / data-discord-invite /
+   data-github-exclude for 05-community.js and 07-repos.js to read
+   (docs/authoring.md §5). */
 const GITHUB_ORG = "rfb-data-hub";
 const DISCORD_INVITE = "SgTcQcfSgn";
+/* Repositories the live counters must not count. The org's profile repo
+   (.github) carries GitHub topics but is not something a member browses, so
+   it is left out of the resources list AND out of the home readout's
+   repository figure — one literal, so the two pages can never disagree.
+   Consumers: data-repos-exclude (07-repos.js) and data-github-exclude
+   (05-community.js), both rendered by layout.html from the key below. */
+const GITHUB_EXCLUDE = ".github";
 const DISCORD_URL = "https://discord.gg/" + DISCORD_INVITE;
 const GITHUB_URL = "https://github.com/" + GITHUB_ORG;
 
@@ -115,6 +123,11 @@ module.exports = {
 
 
   discordInvite: DISCORD_INVITE,
+
+  /* comma list, riding the same <body> route as the pair above: which
+     repositories the live figures must not count, so the rule is authored in
+     data and never typed into a script */
+  githubExclude: GITHUB_EXCLUDE,
 
   /* ---------- home · Community resources (#categories) ----------
      ONE array, three renderings. The home page draws it as cards

@@ -37,7 +37,7 @@ sub: Every digital resource the community members (re)share on the GitHub organi
          to the page. 07-repos.js fills the rails from the organisation's GitHub API (one GET
          per API page, cached in sessionStorage); the <noscript> line and the rails'
          placeholders are what a visitor sees when it cannot answer. -->
-    <section class="repos" id="resources" data-repos data-repos-exclude=".github">
+    <section class="repos" id="resources" data-repos data-repos-exclude="{{githubExclude}}">
       <div class="wrap">
         <div class="sec-head" data-reveal>
           <span class="eyebrow">Public repositories</span>

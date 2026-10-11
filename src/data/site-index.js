@@ -19,7 +19,11 @@ module.exports = {
      components/readout-item.html · styles 12a-proof.css. live = the data-live
      key 05-community.js fills, value its no-JS fallback; iconKey names an
      icon in icons.js; delay = the reveal stagger 02-reveal.js reads; cls =
-     dc/gh, the mark-colour mapping lives in 12a-proof.css / 10a-platforms.css. */
+     dc/gh, the mark-colour mapping lives in 12a-proof.css / 10a-platforms.css.
+     github:repos is the number of LISTED repositories (archived and the names
+     in githubExclude excluded), the same rule 07-repos.js applies on the
+     resources page — not the organisation's public_repos, which is one higher
+     here because it counts .github. Keep the fallback in step with that rule. */
   communityStats: [
     { cls: "dc", iconKey: "discordBrand", live: "discord:members", value: "92", label: "Members", delay: 0 },
     { cls: "dc", iconKey: "discordBrand", live: "discord:online", value: "9", label: "Online now", delay: 80 },

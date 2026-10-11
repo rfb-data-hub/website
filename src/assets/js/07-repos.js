@@ -36,7 +36,10 @@
   function clean(s) { return (s || '').replace(/^\s+|\s+$/g, ''); }
 
   /* not resources: the org's profile repo (.github) carries topics but is not
-     something a member browses; data-repos-exclude is authored in pages/resources.html */
+     something a member browses. data-repos-exclude is rendered on the section
+     in pages/resources.html from sites-general.js → githubExclude — the same
+     list 05-community.js subtracts from the home readout's repository figure,
+     so the two pages always count the same set. */
   var SKIP = clean(ROOT.getAttribute('data-repos-exclude')).split(',').map(clean).filter(Boolean);
 
   var LISTS   = [].slice.call(ROOT.querySelectorAll('[data-repo-list]'));

@@ -29,12 +29,13 @@
      html:not(.js), so without this line those sections show their no-JS form. -->
 <script>document.documentElement.classList.add('js');</script>
 </head>
-<!-- data-github-org / data-discord-invite are the one route from
-     src/data/sites-general.js to the scripts that call those two APIs
-     (05-community.js, 07-repos.js) — the literals are never typed into a JS file. -->
+<!-- data-github-org / data-discord-invite / data-github-exclude are the one
+     route from src/data/sites-general.js to the scripts that call those two
+     APIs (05-community.js, 07-repos.js) — the literals are never typed into a
+     JS file. githubExclude names the repositories neither may count. -->
 <!-- data-theme comes from the page's front matter `theme:` and repaints the
      palette: 01a-theme.css owns the variable swap, 03-nav.css the CTA tints. -->
-<body {{#if theme}}data-theme="{{theme}}"{{/if}} data-github-org="{{githubOrg}}" data-discord-invite="{{discordInvite}}">
+<body {{#if theme}}data-theme="{{theme}}"{{/if}} data-github-org="{{githubOrg}}" data-github-exclude="{{githubExclude}}" data-discord-invite="{{discordInvite}}">
 <a class="skip" href="#main">Skip to content</a>
 <!-- #chargeBar: 01-stream.js writes its scaleX from scroll progress;
      03-nav.css owns the fixed position, height and gradient. -->
