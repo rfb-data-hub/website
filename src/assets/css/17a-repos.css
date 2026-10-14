@@ -117,10 +117,12 @@ html:not(.js) button.repo-btn{display:none}
   --repo-name:20px;     /* one name line: 15px display type on a 20px box */
   --repo-desc:19px;     /* one description line: 13.5px on a 19px box */
   --repo-meta:14px;     /* one meta line: the 10.5px caps on a 14px box */
-  --repo-tags:22px;     /* the pill row's box, and what the fork label lifts itself by */
+  --repo-tags:22px;     /* the pill row's box, and the line the fork label sits on */
   --repo-gap:8px;       /* the card's only vertical rhythm: three of these in --repo-h */
   --repo-inset:16px;    /* the card's padding-block, counted twice in --repo-h */
-  --repo-pad:18px;      /* the card's padding-inline; the fork label sets its right edge from it */
+  --repo-pad:18px;      /* the card's padding-inline; the fork label keeps off it at both ends */
+  --repo-mark:14px;     /* the fork glyph's box, and what the label steps left of it */
+  --repo-tip-gap:8px;   /* label box to mark; the caret takes 5px of it */
   --repo-h:calc(var(--repo-name)*2 + var(--repo-desc)*3 + var(--repo-meta) + var(--repo-gap)*3 + var(--repo-inset)*2);
 }
 /* ---------- the card width: whole cards per view ----------
@@ -204,38 +206,51 @@ html:not(.js) button.repo-btn{display:none}
   display:inline-flex;align-items:center;color:var(--faint);opacity:.7;
   transition:color .25s,opacity .25s;
 }
-.repo-fork svg{width:14px;height:14px;stroke-width:2.2}   /* icons.js fork, 2.2 as in .repo-go */
-.repo-fork:hover{color:var(--accent-strong);opacity:1}
+.repo-fork svg{width:var(--repo-mark);height:var(--repo-mark);stroke-width:2.2}   /* icons.js fork, 2.2 as in .repo-go */
+/* the label is the mark's child and inherits its opacity, so keyboard focus has to
+   lift the mark too — otherwise the label opens washed out at .7 */
+.repo-fork:hover,
+.repo-link:focus-visible .repo-fork{color:var(--accent-strong);opacity:1}
 /* The name is a label, not a link: the card already is one, and an anchor inside
    an anchor is invalid markup. It opens on the mark's own hover, and on the card's
    keyboard focus, because the mark is not a tab stop of its own. A touch visitor
    gets no hover — 07-repos.js puts the same name in the link's aria-label.
    It measures from the CARD, not from the mark: a 14px containing block leaves an
    absolutely positioned box no room to size itself in, and the label then grows
-   past the card and the rail clips it. right/bottom park it above the pill row,
-   flush with the text column, and width:max-content keeps it off the shrink-to-fit
-   path entirely. */
+   past the card and the rail clips it.
+   It sits LEFT of the mark, on the pill row's own line: right parks its box one
+   --repo-tip-gap to the left of the glyph, bottom puts it on the row's midline and
+   translateY(50%) centres it there, so it holds the mark's line whatever the
+   label's own type does; the 4px entrance shares that transform. The card bounds
+   it: max-width is the room between the text column's left edge and that right
+   offset, so the label can never reach a neighbour card or the scroller's edge,
+   where it would be cut off. A name too long for that room ellipsizes, and the
+   link's aria-label still carries the whole of it. */
 .repo-fork-name{
-  position:absolute;right:var(--repo-pad);z-index:2;
-  bottom:calc(var(--repo-inset) + var(--repo-tags) + 9px);
-  width:max-content;max-width:min(240px,78vw);
+  position:absolute;z-index:2;
+  right:calc(var(--repo-pad) + var(--repo-mark) + var(--repo-tip-gap));
+  bottom:calc(var(--repo-inset) + var(--repo-tags)/2);
+  transform:translate(4px,50%);          /* 50% centres on the row, 4px is the entrance */
+  width:max-content;
+  max-width:calc(100% - var(--repo-pad)*2 - var(--repo-mark) - var(--repo-tip-gap));
   padding:4px 9px;border-radius:8px;
   background:var(--ink);color:var(--paper);
   font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.01em;
   line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   box-shadow:var(--shadow-soft);
-  opacity:0;visibility:hidden;transform:translateY(3px);pointer-events:none;
+  opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .18s,transform .18s,visibility .18s;
 }
 /* inside the card on purpose: .rail is a scroller, and anything reaching past its
-   padding box is cut off — the pill row is the last row, so above it is still card */
-.repo-fork-name::after{   /* the caret, over the mark it names */
-  content:"";position:absolute;right:5px;top:100%;
-  border:5px solid transparent;border-top-color:var(--ink);border-bottom:0;
+   padding box is cut off — the pill row is the last row, so the label's line is
+   still card */
+.repo-fork-name::after{   /* the caret, pointing right at the mark it names */
+  content:"";position:absolute;left:100%;top:50%;margin-top:-5px;
+  border:5px solid transparent;border-left-color:var(--ink);border-right:0;
 }
 .repo-fork:hover .repo-fork-name,
-.repo-link:focus-visible .repo-fork-name{opacity:1;visibility:visible;transform:none}
-.repo-fork-name:empty{display:none}   /* origin unresolved: no empty bubble */
+.repo-link:focus-visible .repo-fork-name{opacity:1;visibility:visible;transform:translateY(50%)}
+.repo-fork-name:empty{display:none}   /* no origin resolved: the mark stands alone, no empty bubble */
 /* a card is a link out of the site, so it may answer the cursor: name to --neg,
    description to ink, the arrow steps out of its .55 opacity */
 .repo-link:hover .repo-name,.repo-link:focus-visible .repo-name{color:var(--neg)}

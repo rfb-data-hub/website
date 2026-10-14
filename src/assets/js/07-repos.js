@@ -32,6 +32,8 @@
   var MAX_FORKS = 8;            /* how many shown forks may ask for their origin: every answer
                                    is one of the visitor's 60 requests/hour, so a fork-heavy
                                    organisation caps what it costs instead of spending all. */
+  var FORK_WORDS = 'mirrored from';   /* the phrase on the hover label and in the link's
+                                   aria-label; one const so the two cannot drift apart */
   var TTL = 5 * 60 * 1000;      /* five minutes: a new topic shows up the same day, and a
                                    refetch costs one of the visitor's 60 requests/hour. */
   var TIMEOUT = 12000;          /* the whole sequence, not one page */
@@ -177,10 +179,11 @@
 
   /* one home for the label: the origin can arrive after the card was built, and
      the name must not be read out twice by a screen reader, so it lives in the
-     link's name and nowhere else (the mark itself is aria-hidden) */
+     link's name and nowhere else (the mark and its label are aria-hidden).
+     Same phrase as the visible label, by way of FORK_WORDS. */
   function ariaFor(said, r) {
     var up = upstreamName(r);
-    return said + (up ? ' — fork of ' + up : '') + ', opens in a new tab';
+    return said + (up ? ' — ' + FORK_WORDS + ' ' + up : '') + ', opens in a new tab';
   }
 
   /* ---------- one card, cloned from the template ---------- */
@@ -241,12 +244,14 @@
 
   function cardFor(name) { return CARDS[name] || (CARDS[name] = []); }
 
-  /* textContent, as everywhere else: the name arrived from a network */
+  /* "mirrored from <org>/<repo>" — only the name arrived from a network, so the
+     whole line goes in as textContent. No name, no label: the empty span is what
+     17a-repos.css hides, which is why an upstream-less fork shows the mark alone. */
   function setFork(li, r) {
     var up = upstreamName(r);
     if (!up) return;
     var tip = li.querySelector('.repo-fork-name');
-    if (tip) tip.textContent = up;
+    if (tip) tip.textContent = FORK_WORDS + ' ' + up;
   }
 
   function paintFork(r) {
