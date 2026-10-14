@@ -218,21 +218,21 @@ html:not(.js) button.repo-btn{display:none}
    It measures from the CARD, not from the mark: a 14px containing block leaves an
    absolutely positioned box no room to size itself in, and the label then grows
    past the card and the rail clips it.
-   It sits LEFT of the mark, on the pill row's own line: right parks its box one
-   --repo-tip-gap to the left of the glyph, bottom puts it on the row's midline and
-   translateY(50%) centres it there, so it holds the mark's line whatever the
-   label's own type does; the 4px entrance shares that transform. The card bounds
-   it: max-width is the room between the text column's left edge and that right
-   offset, so the label can never reach a neighbour card or the scroller's edge,
-   where it would be cut off. A name too long for that room ellipsizes, and the
-   link's aria-label still carries the whole of it. */
+   It sits LEFT of the mark, on the pill row's own line, and it takes that whole
+   line: left and right together stretch it across the text column — left flush
+   with the column's edge, right one --repo-tip-gap from the glyph — so it covers
+   the pills rather than landing on top of them. bottom puts it on the row's
+   midline and translateY(50%) centres it there, so it holds the mark's line
+   whatever the label's own type does; the 4px entrance shares that transform.
+   Both edges are the card's, so the label can never reach a neighbour card or the
+   scroller's edge, where it would be cut off. A name too long for the column
+   ellipsizes, and the link's aria-label still carries the whole of it. */
 .repo-fork-name{
   position:absolute;z-index:2;
+  left:var(--repo-pad);
   right:calc(var(--repo-pad) + var(--repo-mark) + var(--repo-tip-gap));
   bottom:calc(var(--repo-inset) + var(--repo-tags)/2);
   transform:translate(4px,50%);          /* 50% centres on the row, 4px is the entrance */
-  width:max-content;
-  max-width:calc(100% - var(--repo-pad)*2 - var(--repo-mark) - var(--repo-tip-gap));
   padding:4px 9px;border-radius:8px;
   background:var(--ink);color:var(--paper);
   font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.01em;
