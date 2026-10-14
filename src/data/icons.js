@@ -6,7 +6,7 @@
      and communityStats[] (site-index.js); the builder resolves the key
      to markup and inserts it raw into the card.
    · small marks (arrowGo, chevronL/R, externalGo, caret, bars, doc,
-     plus) — one 24-grid svg each, used straight from a template as
+     plus, fork) — one 24-grid svg each, used straight from a template as
      {{icons.arrowGo}} (pattern: components/join-btns.html); they carry
      no width/height — per-instance size and stroke-weight live in CSS.
    ============================================================ */
@@ -61,6 +61,11 @@ const marks = {
     '<path d="M8.4 11.9h7.2M8.4 14.8h7.2M8.4 17.7h4.3"/>',
   plus: /* FAQ affordance: the circle is the static target, only the plus turns */
     '<circle cx="12" cy="12" r="11"/><path d="M12 7.5v9M7.5 12h9"/>',
+  fork: /* a repository copied from another: two heads, one common trunk.
+           Symmetric, so it does not read as `branch` (the card glyph above,
+           which leans to one side) at the 14px the repo card draws it at. */
+    '<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="12" cy="18" r="2.6"/>' +
+    '<path d="M6 8.6v2.8a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4V8.6"/>',
 };
 
 for (const key of Object.keys(marks)) icons[key] = OPEN_MARKS + marks[key] + "</svg>";

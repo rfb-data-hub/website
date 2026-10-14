@@ -3,7 +3,8 @@
    (#resources): one horizontal rail of repository cards per topic.
    Markup: components/repo-cat.html (band tile), components/repo-group.html
    (rail head and rail) and the repo-*-tpl templates in pages/resources.html
-   (card, loading, empty, error). Data: the `categories` array in
+   (card, loading, empty, error). Icons: the externalGo and fork marks in
+   src/data/icons.js. Data: the `categories` array in
    src/data/sites-general.js; the repository payload is built at runtime by
    src/assets/js/07-repos.js, so every rule here must also hold while GitHub
    has not answered. State hooked: .repo-cat.is-empty and [data-repo-count]
@@ -116,8 +117,10 @@ html:not(.js) button.repo-btn{display:none}
   --repo-name:20px;     /* one name line: 15px display type on a 20px box */
   --repo-desc:19px;     /* one description line: 13.5px on a 19px box */
   --repo-meta:14px;     /* one meta line: the 10.5px caps on a 14px box */
+  --repo-tags:22px;     /* the pill row's box, and what the fork label lifts itself by */
   --repo-gap:8px;       /* the card's only vertical rhythm: three of these in --repo-h */
   --repo-inset:16px;    /* the card's padding-block, counted twice in --repo-h */
+  --repo-pad:18px;      /* the card's padding-inline; the fork label sets its right edge from it */
   --repo-h:calc(var(--repo-name)*2 + var(--repo-desc)*3 + var(--repo-meta) + var(--repo-gap)*3 + var(--repo-inset)*2);
 }
 /* ---------- the card width: whole cards per view ----------
@@ -143,7 +146,8 @@ html:not(.js) button.repo-btn{display:none}
    two categories. Height comes from --repo-h; 15-fallbacks.css covers no-glass. */
 .repo-link{
   display:block;height:100%;min-height:var(--repo-h);
-  padding:var(--repo-inset) 18px;
+  padding:var(--repo-inset) var(--repo-pad);
+  position:relative;                  /* .glass-card already sets this (01b-glass.css); repeated because the fork label measures from it */
   text-decoration:none;color:inherit;
   transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s,border-color .3s;
 }
@@ -188,6 +192,50 @@ html:not(.js) button.repo-btn{display:none}
 .repo-tags:empty{display:none}   /* 07-repos.js drops an unfilled pill row; this is the same case from CSS */
 .repo-tag{font-size:10.5px;padding:2px 9px}
 .repo-tag.is-new{border-color:var(--accent-bright);color:var(--accent-strong)}   /* 07-repos.js adds .is-new under NEW_DAYS */
+
+/* ---------- the fork mark, at the right end of that same row ----------
+   A forked repository is filed here but written elsewhere, and the list call only
+   says fork:true — the origin comes from a second call (07-repos.js resolveForks),
+   so the mark appears with the card and the name arrives a moment later.
+   order:1 outranks the pills' implicit 0 and margin-left:auto takes the free space,
+   so the mark sits in the card's lower right corner whether the pills wrap or not. */
+.repo-fork{
+  order:1;flex:none;margin-left:auto;
+  display:inline-flex;align-items:center;color:var(--faint);opacity:.7;
+  transition:color .25s,opacity .25s;
+}
+.repo-fork svg{width:14px;height:14px;stroke-width:2.2}   /* icons.js fork, 2.2 as in .repo-go */
+.repo-fork:hover{color:var(--accent-strong);opacity:1}
+/* The name is a label, not a link: the card already is one, and an anchor inside
+   an anchor is invalid markup. It opens on the mark's own hover, and on the card's
+   keyboard focus, because the mark is not a tab stop of its own. A touch visitor
+   gets no hover — 07-repos.js puts the same name in the link's aria-label.
+   It measures from the CARD, not from the mark: a 14px containing block leaves an
+   absolutely positioned box no room to size itself in, and the label then grows
+   past the card and the rail clips it. right/bottom park it above the pill row,
+   flush with the text column, and width:max-content keeps it off the shrink-to-fit
+   path entirely. */
+.repo-fork-name{
+  position:absolute;right:var(--repo-pad);z-index:2;
+  bottom:calc(var(--repo-inset) + var(--repo-tags) + 9px);
+  width:max-content;max-width:min(240px,78vw);
+  padding:4px 9px;border-radius:8px;
+  background:var(--ink);color:var(--paper);
+  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.01em;
+  line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  box-shadow:var(--shadow-soft);
+  opacity:0;visibility:hidden;transform:translateY(3px);pointer-events:none;
+  transition:opacity .18s,transform .18s,visibility .18s;
+}
+/* inside the card on purpose: .rail is a scroller, and anything reaching past its
+   padding box is cut off — the pill row is the last row, so above it is still card */
+.repo-fork-name::after{   /* the caret, over the mark it names */
+  content:"";position:absolute;right:5px;top:100%;
+  border:5px solid transparent;border-top-color:var(--ink);border-bottom:0;
+}
+.repo-fork:hover .repo-fork-name,
+.repo-link:focus-visible .repo-fork-name{opacity:1;visibility:visible;transform:none}
+.repo-fork-name:empty{display:none}   /* origin unresolved: no empty bubble */
 /* a card is a link out of the site, so it may answer the cursor: name to --neg,
    description to ink, the arrow steps out of its .55 opacity */
 .repo-link:hover .repo-name,.repo-link:focus-visible .repo-name{color:var(--neg)}
@@ -238,8 +286,7 @@ html:not(.js) button.repo-btn{display:none}
   .repo-h{gap:9px}
   .repo-t{gap:8px}
   .repo-rail{--repo-per:2;--rail-gap:12px}
-  .repo-group{--repo-inset:14px}   /* the one number the size chain hangs on */
-  .repo-link{padding-inline:16px}
+  .repo-group{--repo-inset:14px;--repo-pad:16px}   /* the one numbers the size chain hangs on */
   .repo-name{font-size:14px}
   .repo-desc{font-size:13px}   /* the type shrinks, the reserved line boxes do not */
 }

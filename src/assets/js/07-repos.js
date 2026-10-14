@@ -7,8 +7,11 @@
    from data-repo-list (components/repo-group.html ← categories in
    sites-general.js) and the org from <body data-github-org> (layout.html ←
    githubOrg there); fills the repo-*-tpl markup (pages/resources.html) into
-   the rails, counts (repo-cat.html) and summary. 17a-repos.css styles the
-   result, 07-rail.js pages it; network strings enter via textContent only.
+   the rails, counts (repo-cat.html) and summary. A forked repository costs
+   one further GET — the list says only fork:true, its origin lives in the
+   repository's own payload — asked for once the cards are on screen and
+   capped at MAX_FORKS. 17a-repos.css styles the result, 07-rail.js pages it;
+   network strings enter via textContent only.
    ============================================================ */
 (function(){
   "use strict";
@@ -26,12 +29,16 @@
   var NEW_DAYS = 30;            /* a repository younger than this says "new" */
   var MAX_PILLS = 3;            /* the pill row is a hint, not the topic list: three is what
                                    fits one line in a --repo-w card (17a-repos.css). */
+  var MAX_FORKS = 8;            /* how many shown forks may ask for their origin: every answer
+                                   is one of the visitor's 60 requests/hour, so a fork-heavy
+                                   organisation caps what it costs instead of spending all. */
   var TTL = 5 * 60 * 1000;      /* five minutes: a new topic shows up the same day, and a
                                    refetch costs one of the visitor's 60 requests/hour. */
   var TIMEOUT = 12000;          /* the whole sequence, not one page */
   /* bump the .vN suffix whenever slim()'s shape changes: a cached payload
-     written by an older shape must not be read back into a newer card. */
-  var CACHE_KEY = 'fbc.repos.' + ORG + '.v2';
+     written by an older shape must not be read back into a newer card.
+     v3 added fork, api, and the upstream a resolved fork caches under upstream. */
+  var CACHE_KEY = 'fbc.repos.' + ORG + '.v3';
 
   function clean(s) { return (s || '').replace(/^\s+|\s+$/g, ''); }
 
@@ -94,7 +101,9 @@
   }
 
   /* keep the cache small and the shape stable — never store a whole
-     GitHub repo object (it is ~6 kB of fields this page does not use) */
+     GitHub repo object (it is ~6 kB of fields this page does not use).
+     fork is kept because the card marks a fork; api because it is the address
+     the origin has to be read from (see resolveForks). */
   function slim(repos) {
     return repos.map(function (r) {
       return {
@@ -105,7 +114,9 @@
         pushed_at: r.pushed_at || '',
         created_at: r.created_at || '',
         stars: r.stargazers_count || 0,
-        archived: !!r.archived
+        archived: !!r.archived,
+        fork: !!r.fork,
+        api: r.url || ''
       };
     });
   }
@@ -152,6 +163,26 @@
     return !isNaN(t) && (Date.now() - t) / 86400000 < NEW_DAYS;
   }
 
+  /* ---------- the fork's origin ----------
+     The list answers fork:true and stops there: parent and source appear only in
+     the repository's own payload — not in /orgs/<org>/repos, not in
+     /search/repositories, not in /repos/<o>/<r>/forks (probed 2026-10-14) — so the
+     origin of a fork that is actually on screen costs one further GET. parent is
+     the repository this one was forked from, source the head of the chain; parent
+     first, source as the fallback, because a fork whose upstream was deleted or
+     detached can carry one and not the other — and then it carries neither, which
+     is why the mark must be able to stand without a name. */
+
+  function upstreamName(r) { return (r.upstream && r.upstream.name) || ''; }
+
+  /* one home for the label: the origin can arrive after the card was built, and
+     the name must not be read out twice by a screen reader, so it lives in the
+     link's name and nowhere else (the mark itself is aria-hidden) */
+  function ariaFor(said, r) {
+    var up = upstreamName(r);
+    return said + (up ? ' — fork of ' + up : '') + ', opens in a new tab';
+  }
+
   /* ---------- one card, cloned from the template ---------- */
 
   function rowFor(r) {
@@ -179,18 +210,90 @@
     var said = r.name;
     if (r.description) said += ' — ' + r.description;
     if (bits.length) said += ' (' + bits.join(', ') + ')';
-    link.setAttribute('aria-label', said + ', opens in a new tab');
+    link.setAttribute('aria-label', ariaFor(said, r));
 
     /* the pills are every site category this repo is filed under, INCLUDING the
        one it stands in; a repo with no site topic gets none, and that is the truth. */
     var cats = catTopics(r).slice(0, MAX_PILLS);
-    var fresh = isNew(r.created_at);
-    if (cats.length || fresh) {
-      if (fresh) tags.appendChild(pill('new', 'repo-tag is-new'));
-      cats.forEach(function (topic) { tags.appendChild(pill('#' + topic, 'repo-tag')); });
-    } else drop(tags);
+    if (isNew(r.created_at)) tags.appendChild(pill('new', 'repo-tag is-new'));
+    cats.forEach(function (topic) { tags.appendChild(pill('#' + topic, 'repo-tag')); });
 
+    /* the fork mark moves out of the template's spare corner into the pill row, and
+       a plain repository loses it; the row is dropped only once it holds nothing.
+       The guard is for a hand-edited template: a null here would throw inside
+       render() and leave every rail on "Querying GitHub…". */
+    var forkEl = f.querySelector('.repo-fork');
+    if (forkEl) {
+      if (r.fork) tags.appendChild(forkEl); else drop(forkEl);
+    }
+    if (tags.children.length === 0) drop(tags);
+    if (r.fork) setFork(li, r);           /* from the cache, if it was resolved before */
+
+    cardFor(r.name).push({ li: li, said: said });
     return li;
+  }
+
+  /* ---------- the cards, by name ----------
+     An origin is painted into cards that are already on screen, and a repository
+     filed under two topics has one card in each of the two rails, so the map holds
+     a list per name. render() rebuilds it; nothing else writes it. */
+  var CARDS = Object.create(null);
+
+  function cardFor(name) { return CARDS[name] || (CARDS[name] = []); }
+
+  /* textContent, as everywhere else: the name arrived from a network */
+  function setFork(li, r) {
+    var up = upstreamName(r);
+    if (!up) return;
+    var tip = li.querySelector('.repo-fork-name');
+    if (tip) tip.textContent = up;
+  }
+
+  function paintFork(r) {
+    cardFor(r.name).forEach(function (card) {
+      setFork(card.li, r);
+      var link = card.li.querySelector('.repo-link');
+      if (link) link.setAttribute('aria-label', ariaFor(card.said, r));
+    });
+  }
+
+  function getRepo(url, done) {
+    fetch(url, { headers: { Accept: 'application/vnd.github+json' } })
+      .then(function (res) {
+        /* the same two codes load() reads as a spent budget */
+        if (res.status === 403 || res.status === 429) throw new Error('rate-limited');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (d) {
+        /* an error page or a proxy can answer with an array: no parent in it */
+        done(null, Array.isArray(d) ? null : d);
+      })
+      .catch(function (e) { done(e || new Error('failed')); });
+  }
+
+  /* one request per shown fork, in sequence and no more than MAX_FORKS deep: the
+     first failure ends the walk, because a 403 means the visitor's hourly budget is
+     spent and the remaining marks are better nameless than rate-limit noise.
+     shown is what may be asked about (an archived or excluded fork is not on the
+     page, so it is not worth a request); all is what goes back into the cache, so
+     the five-minute payload keeps the repositories this page did not file. */
+  function resolveForks(shown, all) {
+    var todo = shown.filter(function (r) { return r.fork && r.api && !r.checked; })
+                    .slice(0, MAX_FORKS);
+    (function step() {
+      var r = todo.shift();
+      if (!r) return;
+      getRepo(r.api, function (err, d) {
+        if (err) return;                  /* the mark stays, the name stays out */
+        var up = d && (d.parent || d.source);
+        r.checked = true;                 /* asked and answered: not asked again this TTL */
+        if (up && up.full_name) r.upstream = { name: up.full_name, url: up.html_url || '' };
+        paintFork(r);
+        writeCache(all);                  /* keep what was paid for, even if the next one fails */
+        step();
+      });
+    })();
   }
 
   /* ---------- the rails ----------
@@ -211,6 +314,7 @@
 
   function render(repos) {
     var kept = repos.filter(keep);
+    CARDS = Object.create(null);          /* the cards below are the ones paintFork may touch */
 
     RAILS.forEach(function (rail) {
       var ul = rail.ul;
@@ -239,6 +343,7 @@
     }
 
     syncAll();
+    resolveForks(kept, repos);            /* the marks are up; their names come after */
   }
 
   /* ---------- error and offline states ----------
