@@ -251,7 +251,7 @@ module.exports = {
   join: {
     eyebrow: "How to join this online community",
     title: "Join the commons",
-    text: "The community has two central online locations: Discord is where the commons talks (e.g. questions, building cooperations, event planning, regular meetings). The GitHub organisation is where our data and resources live.",
+    text: "The community uses two online platforms: A Discord server is where the commons talks (e.g. questions, building cooperations, event planning, regular meetings). A GitHub organisation is where our data and resources live.",
     discordLabel: "Commons Discord",
     discordUrl: DISCORD_URL,
     githubLabel: "Commons Data Hub",
