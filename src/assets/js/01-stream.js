@@ -123,6 +123,7 @@
   function rebuild(){
     if (!hasStream) return;
     var W = page.offsetWidth || 1, H = page.offsetHeight || 1;
+    var edge = contentEdge();
     /* the tube ends inside the footer's wave: the +12 buries its cap under
        components/wave-top.html, which components/footer.html renders first. */
     var foot = document.querySelector('footer');
@@ -145,7 +146,6 @@
            there, so from there on the tube follows the text it belongs to.
            The legacy term is what keeps every laptop width pixel-identical. */
       var legacy = Math.max(26, Math.min(130, W*0.085 - 20));
-      var edge = contentEdge();
       X0  = isNaN(edge) ? legacy
                         : Math.max(legacy, edge - GAP - AMP - trackStroke()/2);
     }
@@ -153,6 +153,11 @@
     track.setAttribute('d', d);
     fill.setAttribute('d', d);
     inner.setAttribute('d', d);
+    /* Publish the tube's centreline for the one layer that aligns to it
+       instead of measuring it: the hero's corner glow (05-hero.css). It has
+       to come from here — CSS re-deriving the column's edge from 100vw would
+       count the scrollbar, which the tube (and therefore this) does not. */
+    document.documentElement.style.setProperty('--stream-x', X0.toFixed(1) + 'px');
     tubeLen = Hs;
     buildArc(Hs);
     /* Fill at scroll 0 = mid-height of the h1's first line: the tube starts

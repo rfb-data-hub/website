@@ -214,6 +214,7 @@ The stream (`{{> stream}}` + `assets/js/01-stream.js`) appears on every page; it
 
 **Page themes.** A page declares its theme in the front matter: `theme: yellow` (committee pages) or `theme: red` (resource pages); no key means green, the default. The layout turns the key into `<body data-theme="…">`, and `01a-theme.css` repaints: the stream (`--stream-a/b/c`, `--stream-track-inner`; the empty tubing `--stream-track` stays neutral light grey on every theme), the footer tank (`--tank-*`), the dark bands (`.band` and its wave caps wear the `--tank` colours and `--tank-ink*` text roles), the accent colours (`--accent`, `--accent-strong`, `--accent-deep`, `--accent-bright`, plus `--hero-glow`, the accent at 14 %), the join card (`--card-wash`/`--card-edge`/`--card-crest`), and the join buttons (`.btn-dc`/`.btn-gh`: the platform the page is about gets the solid highlight — yellow → Discord, red → GitHub, green → both neutral; the platform glyphs never change) and the charge bar (the `--stream-a/b/c` ramp, so it repaints with the stream). The ramp's bottom stop always equals `--tank`. Not themed: mint backgrounds, the brand ramps (gold→red headline, yellow·green·red hairlines), the platform marks (Discord yellow, GitHub red) and the nav's own glass; the header comment of `01a-theme.css` keeps the list.
 
+
 ## 5. Implementation notes
 
 - An absolutely-positioned decorative `<svg>` inside a sized wrapper needs explicit `width:100%;height:100%`. A viewBox alone sizes by aspect ratio and detaches the wave from its band at other viewport widths.
