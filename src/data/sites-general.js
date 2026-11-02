@@ -38,7 +38,7 @@ module.exports = {
      value — the ground, the ink, the commons' accent and the empty tube.
      Switching the whole site is this line; the page themes (yellow, red)
      sit on top of whichever neutral is chosen. */
-  neutral: "blue",
+  neutral: "green",
 
   /* ---------- navigation — and with it the footer ----------
      Three grouped menus (markup: components/nav.html, styles:
