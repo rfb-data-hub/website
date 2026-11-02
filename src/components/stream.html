@@ -18,11 +18,12 @@
       <linearGradient id="streamGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="9000">
         <!-- The stops are coloured from the page theme: 01a-theme.css sets
              --stream-a/b/c per <body data-theme="…">, which layout.html emits
-             from front matter `theme: yellow|red` (absent = default blue).
-             The hex attributes are the no-CSS fallback only. -->
-        <stop class="stream-stop-a" offset="0" stop-color="#1F7FA8"/>
-        <stop class="stream-stop-b" offset=".55" stop-color="#145C82"/>
-        <stop class="stream-stop-c" offset="1" stop-color="#0A2A3A"/>
+             from front matter `theme: yellow|red` (absent = the neutral).
+             The attributes are the no-CSS fallback only, and build.js fills
+             them from the token layer, so they cannot drift. -->
+        <stop class="stream-stop-a" offset="0" stop-color="{{token:--stream-a}}"/>
+        <stop class="stream-stop-b" offset=".55" stop-color="{{token:--stream-b}}"/>
+        <stop class="stream-stop-c" offset="1" stop-color="{{token:--stream-c}}"/>
       </linearGradient>
     </defs>
     <path class="stream-track" d="M120 640 C120 1300 60 1600 70 2200 C80 2800 150 3000 140 3600 C130 4200 50 4400 60 5000 C70 5600 150 5800 145 6400 C140 7000 60 7200 70 7800 C80 8400 150 8550 140 8960"/>

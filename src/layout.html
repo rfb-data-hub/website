@@ -34,8 +34,10 @@
      APIs (05-community.js, 07-repos.js) — the literals are never typed into a
      JS file. githubExclude names the repositories neither may count. -->
 <!-- data-theme comes from the page's front matter `theme:` and repaints the
-     palette: 01a-theme.css owns the variable swap, 03-nav.css the CTA tints. -->
-<body {{#if theme}}data-theme="{{theme}}"{{/if}} data-github-org="{{githubOrg}}" data-github-exclude="{{githubExclude}}" data-discord-invite="{{discordInvite}}">
+     liquid: 01a-theme.css owns the variable swap, 03-nav.css the CTA tints.
+     data-neutral comes from `neutral:` in src/data/sites-general.js and picks
+     the ground the whole site sits on (blue | green) — one value, every page. -->
+<body {{#if theme}}data-theme="{{theme}}"{{/if}} data-neutral="{{neutral}}" data-github-org="{{githubOrg}}" data-github-exclude="{{githubExclude}}" data-discord-invite="{{discordInvite}}">
 <a class="skip" href="#main">Skip to content</a>
 <!-- #chargeBar: 01-stream.js writes its scaleX from scroll progress;
      03-nav.css owns the fixed position, height and gradient. -->

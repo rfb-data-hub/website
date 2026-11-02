@@ -35,11 +35,12 @@ else
 fi
 
 # ---------- no unrendered template tags ----------
-# The build never renders src/static, so a tag copied from there reaches
+# The build substitutes tokens in src/static's *.html and *.webmanifest but
+# renders nothing else there, so a tag copied into one of those reaches
 # public/ unchecked — this is the check that catches it.
-if grep -rn '{{' "$OUT" --include='*.html' >/dev/null 2>&1; then
+if grep -rn '{{' "$OUT" --include='*.html' --include='*.webmanifest' >/dev/null 2>&1; then
   err "unrendered template tags in output:"
-  grep -rn '{{' "$OUT" --include='*.html' | head -5 >&2
+  grep -rn '{{' "$OUT" --include='*.html' --include='*.webmanifest' | head -5 >&2
 else
   ok "no template tags left"
 fi
@@ -242,26 +243,60 @@ else
   done
 fi
 
-# ---------- every data-theme has a rule ----------
-# A page's front matter `theme:` becomes <body data-theme="…"> and the value
-# is passed through unchecked: a typo (`theme: bleu`) or a theme block renamed
-# without its pages renders the default palette in silence, which looks like a
-# design choice rather than a bug. So compare the values the pages emit with
-# the [data-theme="…"] selectors in the bundle. The default theme is addressable
-# (`:root,[data-theme="blue"]`), so naming it explicitly is legal too.
-themes_used=$(grep -rhoE '^<body[^>]*data-theme="[^"]+"' "$OUT" --include='*.html' \
-              | sed -E 's/.*data-theme="//; s/"$//' | sort -u)
-themes_css=$(grep -oE '\[data-theme="[^"]+"\]' "$OUT/assets/css/app.css" \
-             | sed -E 's/.*="//; s/"\]$//' | sort -u)
-themes_bad=""
-for t in $themes_used; do
-  printf '%s\n' "$themes_css" | grep -qx "$t" || themes_bad="$themes_bad $t"
+# ---------- every data-theme / data-neutral has a rule ----------
+# A page's front matter `theme:` becomes <body data-theme="…">, and the
+# site-wide `neutral:` becomes data-neutral="…"; both values are passed
+# through unchecked, so a typo (`theme: bleu`, `neutral: gren`) or a block
+# renamed without its pages renders the default palette in silence, which
+# looks like a design choice rather than a bug. Compare the values the pages
+# emit with the [attr="…"] selectors in the bundle.
+check_attr() {
+  attr=$1
+  used=$(grep -rhoE "^<body[^>]*$attr=\"[^\"]+\"" "$OUT" --include='*.html' \
+         | sed -E "s/.*$attr=\"//; s/\"$//" | sort -u)
+  css=$(grep -oE "\\[$attr=\"[^\"]+\"\\]" "$OUT/assets/css/app.css" \
+        | sed -E 's/.*="//; s/"\]$//' | sort -u)
+  bad=""
+  for t in $used; do
+    printf '%s\n' "$css" | grep -qx "$t" || bad="$bad $t"
+  done
+  if [ -z "$bad" ]; then
+    ok "every $attr has a rule in app.css"
+  else
+    for t in $bad; do
+      err "$attr=\"$t\" has no [$attr=\"$t\"] rule in app.css — a typo in the data, or a block renamed without its pages (01a-theme.css)"
+    done
+  fi
+}
+check_attr data-theme
+check_attr data-neutral
+
+# ---------- the two neutrals declare the same tokens ----------
+# A neutral is a complete palette: the ground from 01-tokens.css's invariants
+# plus every role the page themes do not set. If green gains a token blue has
+# (or loses one), the switch silently inherits a value from the other neutral
+# — a green page with a blue shadow, say. So the two blocks must declare the
+# same set, and this is what keeps the alternative from rotting.
+neutral_block() {
+  awk -v sel="$1" 'index($0, sel) == 1 { on = 1 } on { print } on && /^}/ { exit }' \
+    "$OUT/assets/css/app.css"
+}
+blue_tokens=$(neutral_block ':root,[data-neutral="blue"]{' \
+              | grep -oE '^\s+--[a-z0-9-]+' | tr -d ' ' | sort)
+green_tokens=$(neutral_block '[data-neutral="green"]{' \
+               | grep -oE '^\s+--[a-z0-9-]+' | tr -d ' ' | sort)
+neutral_bad=""
+for t in $blue_tokens; do
+  printf '%s\n' "$green_tokens" | grep -qx -- "$t" || neutral_bad="$neutral_bad $t:missing-in-green"
 done
-if [ -z "$themes_bad" ]; then
-  ok "every data-theme has a rule in app.css"
+for t in $green_tokens; do
+  printf '%s\n' "$blue_tokens" | grep -qx -- "$t" || neutral_bad="$neutral_bad $t:only-in-green"
+done
+if [ -z "$neutral_bad" ]; then
+  ok "both neutrals declare the same tokens"
 else
-  for t in $themes_bad; do
-    err "data-theme=\"$t\" has no [data-theme=\"$t\"] rule in app.css — a typo in the front matter, or a theme block renamed without its pages (01a-theme.css)"
+  for x in $neutral_bad; do
+    err "neutral token ${x%%:*} is ${x#*:} — the blue and green blocks in 01a-theme.css must declare the same set"
   done
 fi
 

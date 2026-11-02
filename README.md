@@ -61,7 +61,7 @@ Full walkthrough (template syntax, front matter, adding a page): **[docs/authori
 
 The site follows a single design language, recorded in [ADR 0000](docs/adr/0000-website-design-language.md): the page is modelled on a flow battery — two tanks (the community's two platforms) feeding a central cell, with the reader's scroll as the fluid. Its practical rules:
 
-- The palette derives from the community logo and is defined once in `src/assets/css/01-tokens.css`. Each page selects an accent via front matter (`theme: yellow` / `theme: red`; no key = the default blue).
+- The palette derives from the community logo: the invariants in `src/assets/css/01-tokens.css`, the two neutrals and the page themes in `01a-theme.css`. The site's neutral is one value (`neutral:` in `src/data/sites-general.js`); each page selects a platform accent via front matter (`theme: yellow` / `theme: red`).
 - Brand marks use the site's own tank colours — Discord yellow (`--pos`), GitHub red (`--neg`) — not the platforms' corporate colours.
 - The electrolyte stream appears on every page and pairs with the footer tank; new sections follow the existing layout patterns (bands, rails, hairline rows; defined in [docs/authoring.md](docs/authoring.md)) rather than introducing one-off styles.
 - Changes to the visual language are recorded as ADRs.

@@ -4,8 +4,8 @@
   "description": "The open, vendor-neutral community for flow battery research.",
   "start_url": "index.html",
   "display": "minimal-ui",
-  "background_color": "#F4F9FC",
-  "theme_color": "#0A2A3A",
+  "background_color": "{{token:--bg}}",
+  "theme_color": "{{token:--tank}}",
   "icons": [
     { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
   ]

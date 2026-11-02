@@ -1,27 +1,48 @@
 /* ============================================================
-   Page themes — the token sets that repaint a page for the platform
-   it is about, selected by <body data-theme>, which src/layout.html
-   emits from the page's front matter `theme:` (no key = blue).
+   Themes — two axes, both a variable swap on <body>:
+
+   · the NEUTRAL (data-neutral, site-wide): the ground, the ink, the
+     commons' own accent and the empty tube. `neutral:` in
+     src/data/sites-general.js picks it — blue (the logo's water) is the
+     default, green (its land) the alternative. Both blocks declare the
+     same set, so a switch is one value and nothing is left behind.
+   · the PAGE THEME (data-theme, per page): the platform the page is
+     about, from front matter `theme:` — yellow Discord, red GitHub. It
+     repaints the liquid and leaves the ground alone.
+
    Concatenated right after 01-tokens.css; later files read themeable
-   colour only through these roles, so a new theme must redefine each
-   one except --stream-track, the neutral empty tubing. Consumers:
-   04-stream.css, 05-hero.css, 13-join.css, 03-nav.css (the charge bar
-   reuses --stream-a/b/c) and the tank grounds —
-   07-waves.css, 11-band.css, 11a-news.css, 14-footer.css,
+   colour only through these roles. Consumers: 04-stream.css, 05-hero.css,
+   13-join.css, 03-nav.css (the charge bar reuses --stream-a/b/c) and the
+   tank grounds — 07-waves.css, 11-band.css, 11a-news.css, 14-footer.css,
    17c-dashboard.css. 03-nav.css also reads the attribute itself.
-   Never themed: the neutral tints and ramp (01-tokens.css), the status
-   colours.
+   Never themed: the status colours, the platform marks, --paper.
    ============================================================ */
 
 /* ---------- blue: the neutral commons default ----------
    The logo's water, not its land. No platform is the page's subject, so
    03-nav.css keeps both .btn-dc and .btn-gh neutral. The brand glyphs are
    currentColor and follow the button's text colour; the platform hover
-   fills stay fixed (--pos-deep / --neg-deep, 01-tokens.css).
-   The default is addressable: a page may say `theme: blue` and land here,
-   which is what makes the neutral swappable — a future default can take
-   :root while blue stays available as a named theme. */
-:root,[data-theme="blue"]{
+   fills stay fixed (--pos-deep / --neg-deep, 01-tokens.css). */
+:root,[data-neutral="blue"]{
+  /* ---------- the ground ---------- */
+  --bg:#F4F9FC;
+  --ink:#0A2433;
+  --muted:#3D5766;
+  --faint:#6A8291;
+  /* the ramp: 900 = the tank, 700 = the text-safe weight, 600 = the accent,
+     300 = the pale weight; 500 is the free step between accent and pale */
+  --n900:#0A2A3A;
+  --n700:#145C82;
+  --n600:#1F7FA8;
+  --n500:#2E93BF;
+  --n300:#87C9E7;
+  --tint:#D6ECF7;
+  --tint-soft:#EAF5FB;
+  --line:#D8E6EE;
+  --wash-bg:linear-gradient(180deg,rgba(244,249,252,.45),rgba(234,245,251,.5) 55%,rgba(244,249,252,.45));
+  --shadow:0 24px 48px -24px rgba(10,36,51,.16);
+  --shadow-soft:0 10px 30px -12px rgba(10,36,51,.12);
+  /* ---------- the commons' own accent ---------- */
   --accent:#1F7FA8;          /* marker and label weight */
   --accent-strong:#145C82;   /* the text-safe weight */
   --accent-deep:#0F4460;     /* the hover-fill weight */
@@ -39,11 +60,11 @@
   --stream-a:#1F7FA8;
   --stream-b:#145C82;
   --stream-c:var(--tank);
-  /* the tubing's inner shading stroke, neutral on every theme */
-  --stream-track-inner:#CBD9E4;
-  /* the empty tubing: a cool grey at the page's own hue, on EVERY theme.
-     A true neutral grey reads warm — dirty plastic — against the blue ground. */
+  /* the tube: greys at the ground's own hue. A true neutral grey reads
+     warm — dirty plastic — against a tinted ground, so each neutral
+     carries its own pair. */
   --stream-track:#E1EAF1;
+  --stream-track-inner:#CBD9E4;
   /* the hero's corner glow (05-hero.css): a tint of --accent */
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   /* the join card's pale tints (13-join.css): background wash, hairline
@@ -51,6 +72,55 @@
   --card-wash:#EAF5FB;
   --card-edge:#D6ECF7;
   --card-crest:#B3DCF0;
+}
+
+/* ---------- green: the alternative neutral ----------
+   The logo's land mass, kept as the second neutral so the site can be
+   switched back without a branch: `neutral: "green"` in
+   src/data/sites-general.js. It declares the same set as the blue block —
+   check.sh fails the build if the two drift apart — and its tube greys are
+   tuned to the green ground, as the blue pair is to the blue one. */
+[data-neutral="green"]{
+  /* ---------- the ground ---------- */
+  --bg:#F6F9F7;
+  --ink:#0C261D;
+  --muted:#40584F;
+  --faint:#6B8178;
+  --n900:#0E3B2E;
+  --n700:#14532D;
+  --n600:#1F8A4C;
+  --n500:#3FAE6B;
+  --n300:#7FD1A2;
+  --tint:#DCF2E4;
+  --tint-soft:#EAF6EE;
+  --line:#DCE7E0;
+  --wash-bg:linear-gradient(180deg,rgba(246,249,247,.45),rgba(234,246,238,.5) 55%,rgba(246,249,247,.45));
+  --shadow:0 24px 48px -24px rgba(12,38,29,.16);
+  --shadow-soft:0 10px 30px -12px rgba(12,38,29,.12);
+  /* ---------- the commons' own accent ---------- */
+  --accent:#1F8A4C;
+  --accent-strong:#166534;
+  --accent-deep:#14532D;
+  --accent-bright:#7FD1A2;
+  /* the tank */
+  --tank:#0E3B2E;
+  --tank-foam:#166534;
+  --tank-ink:#EAF6EE;
+  --tank-ink-dim:#A9C7B8;
+  --tank-ink-faint:#7FA98F;
+  --tank-line:rgba(167,224,190,.22);
+  /* electrolyte ramp */
+  --stream-a:#1F8A4C;
+  --stream-b:#166534;
+  --stream-c:var(--tank);
+  /* the tube: greys at the green ground's hue */
+  --stream-track:#E8E9E8;
+  --stream-track-inner:#D5D5D5;
+  --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
+  /* the join card */
+  --card-wash:#EAF6EE;
+  --card-edge:#DCF2E4;
+  --card-crest:#BFE7CD;
 }
 
 /* ---------- yellow: Discord / communication / committees ----------
@@ -70,7 +140,6 @@
   --stream-b:#D9B60A;
   --stream-c:var(--tank);    /* re-declared per theme on purpose: declared
                                 once on :root it would resolve the neutral --tank */
-  --stream-track-inner:#CBD9E4;
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   --card-wash:#FAF4D8;
   --card-edge:#F4E7B2;
@@ -93,7 +162,6 @@
   --stream-a:#EE5C5C;
   --stream-b:#D94545;
   --stream-c:var(--tank);
-  --stream-track-inner:#CBD9E4;
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   --card-wash:#FCEAE8;
   --card-edge:#F7D2CD;

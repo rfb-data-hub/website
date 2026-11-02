@@ -31,6 +31,15 @@ const DISCORD_URL = "https://discord.gg/" + DISCORD_INVITE;
 const GITHUB_URL = "https://github.com/" + GITHUB_ORG;
 
 module.exports = {
+  /* ---------- the neutral: the site's own colour ----------
+     The one site-wide colour decision, and the only one no page makes:
+     "blue" (the logo's water) or "green" (its land). layout.html emits it
+     as <body data-neutral="…">, and 01a-theme.css holds one block per
+     value — the ground, the ink, the commons' accent and the empty tube.
+     Switching the whole site is this line; the page themes (yellow, red)
+     sit on top of whichever neutral is chosen. */
+  neutral: "blue",
+
   /* ---------- navigation — and with it the footer ----------
      Three grouped menus (markup: components/nav.html, styles:
      03a-navmenu.css, behaviour: 03-navmenu.js). A parent's href is where

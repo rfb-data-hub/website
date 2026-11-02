@@ -1,39 +1,27 @@
 /* ============================================================
-   Design tokens — the single place the palette, radii, shadows,
-   fonts and glass recipes are decided.
+   Design tokens — the invariants: the paper, the brand pair, the
+   status colours, radii, fonts and the glass recipes.
+   Everything that changes with the site's neutral — the ground,
+   the ink, the ramp, the tints, the shadows, the wash — lives in
+   01a-theme.css, next to the page themes, because that is the file
+   a neutral switch edits.
    Concatenated first by scripts/build.js, so every later file in
    src/assets/css/ may read these through var(); nothing here
    selects anything.
-   Couplings: 01a-theme.css repaints the colour roles per page
-   theme; the glass recipes are consumed only by 01b-glass.css,
+   Couplings: 01a-theme.css declares the neutral and the page
+   themes; the glass recipes are consumed only by 01b-glass.css,
    whose translucent surfaces 15-fallbacks.css degrades to opaque.
    ============================================================ */
 :root{
-  /* ---------- page colours ---------- */
-  --bg:#F4F9FC;
+  /* ---------- paper: the one surface that never changes ---------- */
   --paper:#FFFFFF;
-  --ink:#0A2433;
-  --muted:#3D5766;
-  --faint:#6A8291;
-  /* ---------- neutral ramp (the logo's water) ----------
-     The globe's blue, deepened until it can carry text. Green is the logo's
-     land mass, not a neutral: it appears in the artwork only, and is free
-     for a meaning of its own. */
-  --n900:#0A2A3A;
-  --n700:#145C82;
-  --n600:#1F7FA8;
-  --n500:#2E93BF;
-  --n300:#87C9E7;
-  --tint:#D6ECF7;
-  --tint-soft:#EAF5FB;
-  --line:#D8E6EE;
   /* ---------- frosted-glass recipes ---------- */
   /* Applied by 01b-glass.css to .glass-card/.glass-strip/.glass-wash;
-     15-fallbacks.css degrades the same surfaces. */
+     15-fallbacks.css degrades the same surfaces. --wash-bg is tinted by
+     the neutral, so it lives with the neutral in 01a-theme.css. */
   --glass-bg:rgba(255,255,255,.55);
   --glass-line:rgba(255,255,255,.7);
   --glass-blur:blur(10px) saturate(1.15);
-  --wash-bg:linear-gradient(180deg,rgba(244,249,252,.45),rgba(234,245,251,.5) 55%,rgba(244,249,252,.45));
   --wash-blur:blur(14px) saturate(1.2);
 
   /* ---------- status colours ---------- */
@@ -41,13 +29,11 @@
   --pos-deep:#D9B60A;
   --neg:#EE5C5C;
   --neg-deep:#D94545;
-  /* ---------- wave cap, radius, shadow, fonts ---------- */
+  /* ---------- wave cap, radius, fonts ---------- */
   /* one height for the wave caps (07-waves.css), the offset they cost the next
      band (13-join.css) and the photo masks (11a-news.css, 17c-dashboard.css) */
   --wave-h:70px;
   --radius:16px;
-  --shadow:0 24px 48px -24px rgba(10,36,51,.16);
-  --shadow-soft:0 10px 30px -12px rgba(10,36,51,.12);
   --font-display:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
 }

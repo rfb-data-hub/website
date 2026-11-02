@@ -33,7 +33,7 @@ However, the original colors were slightly too intense to serve as brand colors.
 - `--pos-deep` / `--neg-deep` exist only where the bright pair would not
   carry on light ground (the headline ramp, hairlines, small labels).
 
-The logo's tanks were recoloured to exactly those two tokens — the only edit made to the artwork. **Blue is the commons' own neutral colour**, and it is the logo's globe: the ocean the land sits in. The default page theme, the ink and the pale grounds all come from it, as a single ramp in `01-tokens.css` (`--n900` … `--n300`, `--tint`, `--tint-soft`) built up from the globe's own #87C9E7. Green is the globe's land mass — the shore, not the fluid — so it is not a neutral: it stays inside the artwork until something on the site actually means *land*. The rationale for serving the logo instead of designing around it: the logo is the community's prior art, made by its founders. Aligning with it costs nothing and buys recognition. 
+The logo's tanks were recoloured to exactly those two tokens — the only edit made to the artwork. **Blue is the commons' own neutral colour**, and it is the logo's globe: the ocean the land sits in. The ground, the ink and the pale surfaces all come from it, as a single ramp (`--n900` … `--n300`, `--tint`, `--tint-soft`) built up from the globe's own #87C9E7. Green is the globe's land mass — the shore, not the fluid — so it is not the *default* neutral; it is kept as the alternative, one value away (`neutral:` in `src/data/sites-general.js`), for the day the site wants the land's colour back. The rationale for serving the logo instead of designing around it: the logo is the community's prior art, made by its founders. Aligning with it costs nothing and buys recognition. 
 
 **Colour is semantics, never decoration.** The rules that keep the metaphor
 legible:
@@ -43,14 +43,8 @@ legible:
 - Brand colour appears only as a **mark or an interaction accent** (hover,
   CTA), never as resting decoration. A page that is yellow or red everywhere
   is a page *about a platform*, not a general information.
-- **Page themes** (`01a-theme.css`): a page declares `theme: yellow|red` in
-  its front matter — the committees page (the Discord side) is yellow, the
-  resources page (the GitHub side) is red, home is blue — and the theme
-  repaints the stream, the footer tank, the dark bands, the accents and the
-  join card. What is *never* themed: the neutral tints and ramp, the
-  yellow·blue·red hairline ramps, the nav chrome, and the two platform marks. The platforms
-  are the one fixed truth against which the themes are read.
-- The empty tubing (`--stream-track`) stays the same cool grey on every theme — a grey at the page's own hue, never a true neutral, which reads warm against the blue ground: the tube is infrastructure, the liquid is content.
+- **Two axes, not one.** The *neutral* is site-wide — blue or green, one value in `src/data/sites-general.js` — and sets the ground, the ink, the commons' accent and the empty tube. The *page theme* is per page: a page declares `theme: yellow|red` in its front matter — the committees page (the Discord side) is yellow, the resources page (the GitHub side) is red, home takes the neutral — and the theme repaints the stream, the footer tank, the dark bands, the accents and the join card, leaving the ground alone. What neither touches: the yellow·blue·red hairline ramps, the nav chrome, and the two platform marks. The platforms are the one fixed truth against which the themes are read.
+- The empty tubing (`--stream-track`) stays a cool grey at the ground's own hue on every page theme — never a true neutral, which reads warm against a tinted ground: the tube is infrastructure, the liquid is content. Each neutral carries its own pair.
 
 **Surfaces: glass and liquid.** Most UI elements the reader touches resemble glass and liquids — translucent light sections with hairline rules (`--line`), 16 px radii, soft low shadows, one typeface pair (Sora for display, Inter for body). Dark bands are the liquid: they wear the tank colour and join by two-tone wave caps (`07-waves.css`, `11-band.css`), so band, footer and stream read as *one body of electrolyte* behind the page; light sections are glass the stream shows through. Motion obeys the same law: reveals rise like a filling level, counters charge up, and all of it yields to `prefers-reduced-motion`.
 
@@ -59,6 +53,6 @@ legible:
 + Every design question now has a test: *what does the flow battery do here?* A new section decides whether it wears the theme's liquid or stays neutral; a new accent must mean something before it is allowed to look good.
 + The metaphor is self-explaining to exactly the audience the site is for — people who study these tanks read the hero without a caption — and stays quiet for everyone else.
 + The palette is closed and auditable: two brand tokens, one neutral ramp, one set of theme variables, with the invariants written into the CSS files that own them, so a contributor can check a change against the prose.
-− The metaphor **constrains**: yellow and red are reserved for the platforms, so neither is available as a generic warning/success/decoration colour. The logo's land green is left unassigned — the site's neutral is deliberately the globe's water, not its land — and it waits for a meaning of its own. And a third platform would not be a colour choice: two tanks is the identity, three is a redesign.
+− The metaphor **constrains**: yellow and red are reserved for the platforms, so neither is available as a generic warning/success/decoration colour. The logo's land green is the alternative neutral, not a semantic accent — the site's neutral is deliberately the globe's water, and green is one value away if the land's colour is ever wanted back. And a third platform would not be a colour choice: two tanks is the identity, three is a redesign.
 − The stream is the most fragile element on the site (runtime geometry, gradient edge cases, per-breakpoint rules — `docs/authoring.md` §4). 
 − Tokens and logo are one fact in two files: changing a tank colour in `01-tokens.css` without editing `src/assets/img/logo.svg` (or the reverse) silently breaks the identity. The logo's header comment names the tokens its tanks wear; keep it that way.

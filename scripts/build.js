@@ -184,6 +184,7 @@ function loadData(pageName) {
 const RE_IF = /\{\{#if\s+([\w.@]+)\s*\}\}/;   // {{#if flag}}…{{else}}…{{/if}}
 const RE_PARTIAL = /\{\{>\s*([\w-]+)\s*\}\}/g;  // {{> name}} → src/components/name.html
 const RE_VAR = /\{\{\s*([\w.@]+)\s*\}\}/g;      // {{name}}, dotted {{a.b}}, scalar item {{.}}
+const RE_TOKEN = /\{\{\s*token:(--[a-z0-9-]+)\s*\}\}/g;  // {{token:--tank}} → a CSS value
 
 /* ---------- block matching ---------- */
 
@@ -242,6 +243,65 @@ function lookup(name, ctx, root, where) {
     if (v !== undefined) return v;
   }
   throw new Error(`Unresolved template variable "{{${name}}}" while rendering ${where}`);
+}
+
+/* ---------- design tokens ---------- */
+
+/* {{token:--name}} inserts a token's value, so the two places that cannot
+   read var() stop being hand copies: src/static/404.html (self-contained,
+   no bundle) and the no-CSS fallback attributes in src/components. Values
+   are read from the CSS itself — 01-tokens.css's :root, then the neutral
+   block the site is set to — so a green site's 404 is green too. A
+   `var(--x)` value is followed to its source; an unknown name throws. */
+
+function cssDeclarations(css, selector) {
+  const out = new Map();
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const re = /([^{}]+)\{([^{}]*)\}/g;
+  let m;
+  while ((m = re.exec(clean))) {
+    if (!selector(m[1].trim())) continue;
+    for (const d of m[2].match(/--[a-z0-9-]+\s*:[^;]+/g) || []) {
+      const i = d.indexOf(":");
+      out.set(d.slice(0, i).trim(), d.slice(i + 1).trim());
+    }
+  }
+  return out;
+}
+
+/* The neutral is site-wide and lives in the data layer, so the token map is
+   resolved once, from the same value layout.html puts on <body>. */
+function siteNeutral() {
+  const mod = require(path.join(DATA, "sites-general.js"));
+  if (mod.neutral !== "blue" && mod.neutral !== "green") {
+    throw new Error('src/data/sites-general.js must set `neutral: "blue"` or `neutral: "green"`');
+  }
+  return mod.neutral;
+}
+
+let TOKENS = null;
+function tokenMap() {
+  if (TOKENS) return TOKENS;
+  const map = new Map();
+  const add = (m) => { for (const [k, v] of m) map.set(k, v); };
+  add(cssDeclarations(read(path.join(ASSETS, "css", "01-tokens.css")), (s) => s === ":root"));
+  const theme = read(path.join(ASSETS, "css", "01a-theme.css"));
+  add(cssDeclarations(theme, (s) => s.includes(":root")));
+  const neutral = siteNeutral();
+  if (neutral !== "blue") {
+    add(cssDeclarations(theme, (s) => s.includes(`[data-neutral="${neutral}"]`)));
+  }
+  TOKENS = map;
+  return map;
+}
+
+function tokenValue(name, where) {
+  const v = tokenMap().get(name);
+  if (v === undefined) {
+    throw new Error(`Unknown design token ${name} in ${where} — is it declared in 01-tokens.css or 01a-theme.css?`);
+  }
+  const ref = /^var\((--[a-z0-9-]+)\)$/.exec(v);
+  return ref ? tokenValue(ref[1], where) : v;
 }
 
 /* ---------- render ---------- */
@@ -312,6 +372,9 @@ function render(tpl, ctx, root, where) {
     if (typeof v === "object") throw new Error(`{{${name}}} in ${where} resolves to an object — did you mean to loop it with {{#each ${name}}}?`);
     return String(v);
   });
+
+  // tokens — {{token:--name}} from the CSS layer (see design tokens above)
+  out = out.replace(RE_TOKEN, (_m, name) => tokenValue(name, where));
 
   // a surviving {{…}} is a tag this grammar does not define: a wrong name
   // throws above, an unknown shape must not ship as literal braces
@@ -539,10 +602,11 @@ function build() {
     report.push([f, html.length]);
   }
 
-  // 4. static: copied verbatim and never rendered, so a template tag in one
-  //    of these is not the build's to catch — check.sh greps `{{` over the
-  //    *.html in public/ (404.html included); the non-HTML static files are
-  //    only checked for existence (required) and size (minutes PDFs).
+  // 4. static: copied verbatim except for {{token:--name}}, which the two
+  //    self-contained files need (404.html has no bundle to read var()
+  //    from, site.webmanifest is JSON) — so a token edit reaches them
+  //    without a hand copy. Everything else is byte-identical; check.sh
+  //    greps `{{` over the *.html and *.webmanifest in public/.
   if (fs.existsSync(STATIC)) {
     for (const p of walk(STATIC)) {
       const rel = path.relative(STATIC, p);
@@ -550,7 +614,13 @@ function build() {
          document: GitHub renders it in the folder, the site must not serve
          it at /minutes/README.md (docs/authoring.md §2d). */
       if (rel === path.join("minutes", "README.md")) continue;
-      copyFile(p, path.join(OUT, rel));
+      if (rel.endsWith(".html") || rel.endsWith(".webmanifest")) {
+        const text = read(p).replace(RE_TOKEN, (_m, name) => tokenValue(name, `static:${rel}`));
+        fs.mkdirSync(path.dirname(path.join(OUT, rel)), { recursive: true });
+        fs.writeFileSync(path.join(OUT, rel), text);
+      } else {
+        copyFile(p, path.join(OUT, rel));
+      }
     }
   }
 

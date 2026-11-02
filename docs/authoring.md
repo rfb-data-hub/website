@@ -45,7 +45,7 @@ Front matter is the `---` block at the top of a page file:
 ---
 title: Page title — Flow Battery Commons
 description: page summary for search engines, ~150 chars
-theme: blue (the default — may be omitted) | yellow | red
+theme: yellow | red (omit for the neutral)
 chip: badge text for the page-hero
 h1: Visible <span class="grad">headline</span>
 sub: Intro paragraph.
@@ -242,18 +242,14 @@ The stream (`{{> stream}}` + `assets/js/01-stream.js`) appears on every page; it
 - At the same breakpoint all strokes halve (track 30→15, fill 11→5.5, inner line 11→5.5); colour and opacity are identical at every width. The media query in `04-stream.css` and `NARROW` in `01-stream.js` must use the same value (`960px` today; change both together if the straight tube should start at a different width). Stroke widths are read from CSS by `trackStroke()`; keep `.stream-track` the widest of the three strokes.
 - If a page must not have the stream, it must also drop the `.page` wrapper; never hide one without the other.
 
-**Page themes.** A page declares its theme in the front matter: `theme: yellow` (committee pages) or `theme: red` (resource pages); no key means blue, the default. The layout turns the key into `<body data-theme="…">`, and `01a-theme.css` repaints: the stream (`--stream-a/b/c`, `--stream-track-inner`; the empty tubing `--stream-track` stays the same cool light grey on every theme), the footer tank (`--tank-*`), the dark bands (`.band` and its wave caps wear the `--tank` colours and `--tank-ink*` text roles), the accent colours (`--accent`, `--accent-strong`, `--accent-deep`, `--accent-bright`, plus `--hero-glow`, the accent at 14 %), the join card (`--card-wash`/`--card-edge`/`--card-crest`), and the join buttons (`.btn-dc`/`.btn-gh`: the platform the page is about gets the solid highlight — yellow → Discord, red → GitHub, blue → both neutral; the platform glyphs never change) and the charge bar (the `--stream-a/b/c` ramp, so it repaints with the stream). The ramp's bottom stop always equals `--tank`. Not themed: the neutral tints and ramp, the brand ramps (gold→red headline, yellow·blue·red hairlines), the platform marks (Discord yellow, GitHub red) and the nav's own glass; the header comment of `01a-theme.css` keeps the list.
+**The neutral and the page themes.** Two axes, both a variable swap on `<body>`:
 
-**Changing the neutral.** The default theme *is* the neutral, and it is the one theme no page has to name: pages say only `theme: yellow` or `theme: red`, so a page without a key follows whatever the default is. Repainting the neutral — say, back to green — therefore touches no page, only these, in this order:
+- The **neutral** is site-wide and comes from `neutral:` in `src/data/sites-general.js` — `"blue"` (the logo's water, the default) or `"green"` (its land). It sets the ground (`--bg`, `--ink`, `--muted`, `--faint`, `--line`, `--tint*`, the `--n*` ramp, the shadows, `--wash-bg`), the commons' own accent (`--accent*`, `--tank*`, `--stream-a/b`, the tube's greys, `--card-*`). Switching the whole site is that one line: the two blocks in `01a-theme.css` declare the same set, and `check.sh` fails the build if they drift apart.
+- The **page theme** is per page, from the front matter: `theme: yellow` (committee pages) or `theme: red` (resource pages); no key means the neutral. It repaints the liquid and leaves the ground alone: the stream (`--stream-a/b/c`), the footer tank (`--tank-*`), the dark bands (`.band` and its wave caps wear the `--tank` colours and `--tank-ink*` text roles), the accent colours (`--accent`, `--accent-strong`, `--accent-deep`, `--accent-bright`, plus `--hero-glow`, the accent at 14 %), the join card (`--card-wash`/`--card-edge`/`--card-crest`), the join buttons (`.btn-dc`/`.btn-gh`: the platform the page is about gets the solid highlight — yellow → Discord, red → GitHub, the neutral → both; the platform glyphs never change) and the charge bar (the `--stream-a/b/c` ramp, so it repaints with the stream). The ramp's bottom stop always equals `--tank`. The page theme never touches the ground or the tube — those are the neutral's — nor the brand ramps (gold→red headline, yellow·blue·red hairlines), the platform marks (Discord yellow, GitHub red) or the nav's own glass; the header comment of `01a-theme.css` keeps the list.
 
-1. `01-tokens.css` — `--bg`, `--ink`, `--muted`, `--faint`, the `--n*` ramp, `--tint`/`--tint-soft`, `--line`, the two shadows and `--wash-bg`.
-2. `01a-theme.css` — the `:root,[data-theme="blue"]` block: `--accent*`, `--tank*`, `--stream-a/b`, `--stream-track-inner`, `--card-*`. The tube's greys are tuned to the ground's hue, so they move with it.
-3. `src/static/404.html` — its `<style>` and glyph literals; it reads no tokens.
-4. `src/static/site.webmanifest` — `theme_color`, `background_color`.
-5. `src/components/stream.html`, `wave-top.html`, `wave-bottom.html`, `join-card.html` — the `stop-color`/`fill` fallbacks.
-6. `docs/adr/0000-website-design-language.md` and this section — the prose.
+**No hand copies.** The places that cannot read `var()` — `src/static/404.html` (self-contained, no bundle), `site.webmanifest`, and the no-CSS fallback attributes in `stream.html`, `wave-top.html`, `wave-bottom.html` and `join-card.html` — carry `{{token:--name}}` placeholders that `build.js` fills from the CSS at build time, resolved against the neutral the site is set to. A green site's 404 is green, and a token edit reaches all of them without a second edit.
 
-`check.sh` guards the contract from the other side: every `data-theme` a page emits must have a `[data-theme="…"]` rule in the bundle, so a renamed block or a typo fails the build instead of silently rendering the default.
+`check.sh` guards the contract from the other side: every `data-theme` and `data-neutral` value a page emits must have a matching rule in the bundle, and the two neutral blocks must declare the same token set — so a typo, a renamed block or a half-updated palette fails the build instead of rendering the default in silence.
 
 
 ## 5. Implementation notes
