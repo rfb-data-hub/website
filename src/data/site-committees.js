@@ -55,9 +55,9 @@ module.exports = {
     },
     {
       id: "research",
-      num: "FBR",
-      code: "fbr",
-      title: "Flow Battery Research Committee",
+      num: "RC",
+      code: "rc",
+      title: "Research Committee",
       desc: "Coordinates the joint research activities of the community, in particular the international round-robin studies. Prepares shared measurement protocols and recommendations for reporting experimental results.",
       lastMeeting: "27 Aug 2026",
       cadence: "Every two months",
@@ -116,7 +116,7 @@ module.exports = {
     /* ---- Data Infrastructure Committee ---- */
     // { committee: "data-infrastructure", date: "<YYYY-MM-DD>", href: "<PATH_TO_MINUTES_PDF>" },
 
-    /* ---- Flow Battery Research Committee ---- */
+    /* ---- Research Committee ---- */
     // { committee: "research", date: "<YYYY-MM-DD>", href: "<PATH_TO_MINUTES_PDF>" },
   ],
 };

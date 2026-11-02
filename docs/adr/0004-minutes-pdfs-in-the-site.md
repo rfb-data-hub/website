@@ -19,7 +19,7 @@ Two properties of this repository decide the storage question. `public/` is **bu
 
 ## Decision
 
-**A published minutes PDF is part of the site.** It lives in `src/static/minutes/`, named `<YYYY-MM-DD>-minutes-<code>.pdf` — lowercase ASCII, hyphens, no spaces, the meeting date first and the committee's `code` (`cc`, `dic`, `fbr`) last. The file is compressed to ≤ 1 MB with a text layer and linked with a **relative** href (`minutes/2026-08-27-minutes-cc.pdf`).
+**A published minutes PDF is part of the site.** It lives in `src/static/minutes/`, named `<YYYY-MM-DD>-minutes-<code>.pdf` — lowercase ASCII, hyphens, no spaces, the meeting date first and the committee's `code` (`cc`, `dic`, `rc`) last. The file is compressed to ≤ 1 MB with a text layer and linked with a **relative** href (`minutes/2026-08-27-minutes-cc.pdf`).
 
 **The filename is the entry.** `build.js` scans `src/static/minutes/` for names matching the pattern, resolves the code against `committees[].code`, validates the date as a real calendar day, and files the document under that committee with the date as sort key, printed date and year-filter value. Publishing a document therefore needs no edit to `src/data/site-committees.js`. The build log names every discovered document, and the build stops on an unknown code, an impossible date, or two files for the same committee and date.
 

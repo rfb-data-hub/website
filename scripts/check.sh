@@ -156,7 +156,7 @@ if [ -z "$unlinked" ]; then
   ok "every published minutes PDF is linked from committees.html"
 else
   for f in $unlinked; do
-    err "minutes/$f is not linked from committees.html — name it <YYYY-MM-DD>-minutes-<cc|dic|fbr>.pdf, or reference it from an authored entry in src/data/site-committees.js (docs/authoring.md §2d)"
+    err "minutes/$f is not linked from committees.html — name it <YYYY-MM-DD>-minutes-<cc|dic|rc>.pdf, or reference it from an authored entry in src/data/site-committees.js (docs/authoring.md §2d)"
   done
 fi
 

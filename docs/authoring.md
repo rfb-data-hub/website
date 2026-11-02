@@ -144,7 +144,7 @@ A minutes document is published by putting a correctly named PDF in `src/static/
 | --- | --- | --- |
 | Community Committee | `cc` | `2026-11-02-minutes-cc.pdf` |
 | Data Infrastructure Committee | `dic` | `2026-11-02-minutes-dic.pdf` |
-| Flow Battery Research Committee | `fbr` | `2026-11-02-minutes-fbr.pdf` |
+| Research Committee | `rc` | `2026-11-02-minutes-rc.pdf` |
 
 - The date is the meeting date: the sort key (newest first), the printed date ("27 Aug 2026"), the value the year menu filters on, and part of the permanent URL.
 - `code` is a field of each committee in `src/data/site-committees.js`, not `num`: `num` is a display label and may change, while a code is a published URL token.

@@ -85,7 +85,7 @@ module.exports = {
       children: [
         { label: "Community Committee (CC)", href: "committees.html#committee-community" },
         { label: "Data Infrastructure Committee (DIC)", href: "committees.html#committee-data-infrastructure" },
-        { label: "Flow Battery Research Committee (FBR)", href: "committees.html#committee-research" },
+        { label: "Research Committee (RC)", href: "committees.html#committee-research" },
         { label: "Committee minutes", href: "committees.html#minutes" },
       ],
     },
