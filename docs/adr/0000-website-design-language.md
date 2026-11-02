@@ -50,8 +50,7 @@ legible:
   join card. What is *never* themed: the neutral tints and ramp, the
   yellow·blue·red hairline ramps, the nav chrome, and the two platform marks. The platforms
   are the one fixed truth against which the themes are read.
-- The empty tubing (`--stream-track`) stays neutral grey on every theme:
-  the tube is infrastructure, the liquid is content.
+- The empty tubing (`--stream-track`) stays the same cool grey on every theme — a grey at the page's own hue, never a true neutral, which reads warm against the blue ground: the tube is infrastructure, the liquid is content.
 
 **Surfaces: glass and liquid.** Most UI elements the reader touches resemble glass and liquids — translucent light sections with hairline rules (`--line`), 16 px radii, soft low shadows, one typeface pair (Sora for display, Inter for body). Dark bands are the liquid: they wear the tank colour and join by two-tone wave caps (`07-waves.css`, `11-band.css`), so band, footer and stream read as *one body of electrolyte* behind the page; light sections are glass the stream shows through. Motion obeys the same law: reveals rise like a filling level, counters charge up, and all of it yields to `prefers-reduced-motion`.
 

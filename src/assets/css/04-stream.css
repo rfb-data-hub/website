@@ -5,7 +5,7 @@
 
    Colour lives in 01a-theme.css: the page theme (front matter `theme:`) sets
    --stream-a/b/c + --stream-track-inner; --stream-track (empty tubing) is the
-   same neutral grey on every theme. This file wires the variables to the
+   same cool grey on every theme. This file wires the variables to the
    strokes and stacks the page content above the svg.
    Couplings: 01-stream.js reads the track's computed stroke-width, so the
    stroke rules here are its source of truth; NARROW there ↔ 960px here.

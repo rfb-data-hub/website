@@ -37,9 +37,10 @@
   --stream-b:#145C82;
   --stream-c:var(--tank);
   /* the tubing's inner shading stroke, neutral on every theme */
-  --stream-track-inner:#D5D5D5;
-  /* the empty tubing: neutral light grey on EVERY theme */
-  --stream-track:#E8E9E8;
+  --stream-track-inner:#CBD9E4;
+  /* the empty tubing: a cool grey at the page's own hue, on EVERY theme.
+     A true neutral grey reads warm — dirty plastic — against the blue ground. */
+  --stream-track:#E1EAF1;
   /* the hero's corner glow (05-hero.css): a tint of --accent */
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   /* the join card's pale tints (13-join.css): background wash, hairline
@@ -66,7 +67,7 @@
   --stream-b:#D9B60A;
   --stream-c:var(--tank);    /* re-declared per theme on purpose: declared
                                 once on :root it would resolve the neutral --tank */
-  --stream-track-inner:#D5D5D5;
+  --stream-track-inner:#CBD9E4;
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   --card-wash:#FAF4D8;
   --card-edge:#F4E7B2;
@@ -89,7 +90,7 @@
   --stream-a:#EE5C5C;
   --stream-b:#D94545;
   --stream-c:var(--tank);
-  --stream-track-inner:#D5D5D5;
+  --stream-track-inner:#CBD9E4;
   --hero-glow:color-mix(in srgb, var(--accent) 14%, transparent);
   --card-wash:#FCEAE8;
   --card-edge:#F7D2CD;
