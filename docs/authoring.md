@@ -189,9 +189,10 @@ The continuous integration (CI) pipeline verifies: every link resolves in the bu
 
 1. Open <https://github.com/rfb-data-hub/website/upload/main/src/static/minutes> and drag the PDF into the page.
 2. Choose **Create a new branch for this commit and start a pull request**.
-3. CI (`ci.yml`) builds the site and runs `check.sh`.
-4. A maintainer reviews the PDF against `.github/pull_request_template.md`.
-5. Merging to `main` deploys the site.
+3. In the description, choose the **minutes** template from the template menu above the text field (`.github/PULL_REQUEST_TEMPLATE/minutes.md`). The default template is for changes that add no document.
+4. CI (`ci.yml`) builds the site and runs `check.sh`.
+5. A maintainer reviews the PDF against the minutes checklist.
+6. Merging to `main` deploys the site.
 
 Without write access, GitHub forks the repository and opens the pull request from the fork; no local git or Node.js installation is needed. `main` is protected: a pull request, one approval and a green `build` check are required, so nothing is published unreviewed.
 

@@ -22,9 +22,10 @@ The date is the meeting date. It is the sort key, the printed date, the year fil
 
 1. Open the upload link above and drag the PDF into the page.
 2. Choose **Create a new branch for this commit and start a pull request** below the text field (if you are asked for it; otherwise ignore this).
-3. A GitHub workflow will automatically build the site and runs `scripts/check.sh` to check everything is okay.
-4. A repository maintainer reviews the PDF and the pull request checklist.
-5. If everything is good, the maintainer merges to `main`, which auto-deploys the PDF to the site. The document appears under Committees → Minutes.
+3. In the pull request description, open the template menu above the text field and choose **minutes**. If no template menu appears, leave the description unchanged.
+4. A GitHub workflow will automatically build the site and run `scripts/check.sh` to check everything is okay.
+5. A repository maintainer reviews the PDF and the pull request checklist.
+6. If everything is good, the maintainer merges to `main`, which auto-deploys the PDF to the site. The document appears under Committees → Minutes.
 
 Without write access, GitHub forks the repository and opens the pull request from the fork. No local git or Node.js installation is needed.
 
