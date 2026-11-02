@@ -242,6 +242,29 @@ else
   done
 fi
 
+# ---------- every data-theme has a rule ----------
+# A page's front matter `theme:` becomes <body data-theme="…"> and the value
+# is passed through unchecked: a typo (`theme: bleu`) or a theme block renamed
+# without its pages renders the default palette in silence, which looks like a
+# design choice rather than a bug. So compare the values the pages emit with
+# the [data-theme="…"] selectors in the bundle. The default theme is addressable
+# (`:root,[data-theme="blue"]`), so naming it explicitly is legal too.
+themes_used=$(grep -rhoE '^<body[^>]*data-theme="[^"]+"' "$OUT" --include='*.html' \
+              | sed -E 's/.*data-theme="//; s/"$//' | sort -u)
+themes_css=$(grep -oE '\[data-theme="[^"]+"\]' "$OUT/assets/css/app.css" \
+             | sed -E 's/.*="//; s/"\]$//' | sort -u)
+themes_bad=""
+for t in $themes_used; do
+  printf '%s\n' "$themes_css" | grep -qx "$t" || themes_bad="$themes_bad $t"
+done
+if [ -z "$themes_bad" ]; then
+  ok "every data-theme has a rule in app.css"
+else
+  for t in $themes_bad; do
+    err "data-theme=\"$t\" has no [data-theme=\"$t\"] rule in app.css — a typo in the front matter, or a theme block renamed without its pages (01a-theme.css)"
+  done
+fi
+
 # ---------- report-only: CSS classes nobody uses ----------
 # Selector classes in the built app.css that appear in no src/**/*.html
 # and no src/**/*.js. Report-only: a class can be reached in a way this

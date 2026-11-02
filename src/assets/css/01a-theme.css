@@ -17,8 +17,11 @@
    The logo's water, not its land. No platform is the page's subject, so
    03-nav.css keeps both .btn-dc and .btn-gh neutral. The brand glyphs are
    currentColor and follow the button's text colour; the platform hover
-   fills stay fixed (--pos-deep / --neg-deep, 01-tokens.css). */
-:root{
+   fills stay fixed (--pos-deep / --neg-deep, 01-tokens.css).
+   The default is addressable: a page may say `theme: blue` and land here,
+   which is what makes the neutral swappable — a future default can take
+   :root while blue stays available as a named theme. */
+:root,[data-theme="blue"]{
   --accent:#1F7FA8;          /* marker and label weight */
   --accent-strong:#145C82;   /* the text-safe weight */
   --accent-deep:#0F4460;     /* the hover-fill weight */
