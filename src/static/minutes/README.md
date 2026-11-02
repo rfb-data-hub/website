@@ -14,7 +14,7 @@ Before uploading the minutes PDF, it needs to be renamed to a format that can be
 | --- | --- | --- |
 | Community Committee | `cc` | `2026-11-02-minutes-cc.pdf` |
 | Data Infrastructure Committee | `dic` | `2026-11-02-minutes-dic.pdf` |
-| Flow Battery Research Committee | `fbr` | `2026-11-02-minutes-fbr.pdf` |
+| Research Committee | `rc` | `2026-11-02-minutes-rc.pdf` |
 
 The date is the meeting date. It is the sort key, the printed date, the year filter and part of the permanent URL. The build stops on an unknown code or an impossible date, and `check.sh` stops on a PDF that no page links.
 
