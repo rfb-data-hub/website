@@ -27,7 +27,8 @@ src/
   assets/css/        numbered files, concatenated into app.css?v=<hash>
   assets/js/         numbered modules, concatenated into app.js
   static/            copied verbatim: 404.html, robots.txt, site.webmanifest,
-                     .nojekyll, and minutes/ (the published PDFs)
+                     .nojekyll, and minutes/ (the published PDFs; its README.md
+                     is the uploader's instructions and is not copied)
 public/              build output (git-ignored, deployed by continuous
                      integration, CI)
 scripts/             build.js · check.sh · serve.sh · gen-orbit.py ·
@@ -46,7 +47,7 @@ Most content changes are made in `src/data/` without editing HTML:
 | nav menu (the footer columns follow it), site-wide text, platform rows, category cards | `src/data/sites-general.js` |
 | home page: hero (top section), news & events, FAQ (frequently asked questions) | `src/data/site-index.js` |
 | committees: descriptions, chairs | `src/data/site-committees.js` |
-| publish meeting minutes | PDF into `src/static/minutes/` + entry in `src/data/site-committees.js` |
+| publish meeting minutes | PDF into `src/static/minutes/` — the filename is the entry; see [src/static/minutes/README.md](src/static/minutes/README.md) |
 | resources page: dashboard band (dark full-width section), intro text | `src/data/site-resources.js` |
 | page structure (sections, headings) | `src/pages/<page>.html` |
 | a reusable block | `src/components/<name>.html` |
@@ -79,6 +80,8 @@ The site follows a single design language, recorded in [ADR 0000](docs/adr/0000-
 ## Publishing
 
 A push to `main` runs `deploy.yml`: it builds, runs `check.sh`, and publishes `public/` to GitHub Pages. Branches and pull requests run `ci.yml` (build and checks only). The repository's Pages source must be set to **GitHub Actions** — deploying from a branch would serve the raw `src/` tree.
+
+Changes reach `main` through a pull request: CI builds and checks the branch, a maintainer approves, and the merge deploys. Publishing minutes therefore needs no local checkout — upload the PDF to `src/static/minutes/` in the browser and open the pull request from there ([src/static/minutes/README.md](src/static/minutes/README.md)).
 
 ## Licence
 
