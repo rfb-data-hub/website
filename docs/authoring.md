@@ -45,7 +45,7 @@ Front matter is the `---` block at the top of a page file:
 ---
 title: Page title — Flow Battery Commons
 description: page summary for search engines, ~150 chars
-theme: green (default — omit) | yellow | red
+theme: blue (default — omit) | yellow | red
 chip: badge text for the page-hero
 h1: Visible <span class="grad">headline</span>
 sub: Intro paragraph.
@@ -242,7 +242,7 @@ The stream (`{{> stream}}` + `assets/js/01-stream.js`) appears on every page; it
 - At the same breakpoint all strokes halve (track 30→15, fill 11→5.5, inner line 11→5.5); colour and opacity are identical at every width. The media query in `04-stream.css` and `NARROW` in `01-stream.js` must use the same value (`960px` today; change both together if the straight tube should start at a different width). Stroke widths are read from CSS by `trackStroke()`; keep `.stream-track` the widest of the three strokes.
 - If a page must not have the stream, it must also drop the `.page` wrapper; never hide one without the other.
 
-**Page themes.** A page declares its theme in the front matter: `theme: yellow` (committee pages) or `theme: red` (resource pages); no key means green, the default. The layout turns the key into `<body data-theme="…">`, and `01a-theme.css` repaints: the stream (`--stream-a/b/c`, `--stream-track-inner`; the empty tubing `--stream-track` stays neutral light grey on every theme), the footer tank (`--tank-*`), the dark bands (`.band` and its wave caps wear the `--tank` colours and `--tank-ink*` text roles), the accent colours (`--accent`, `--accent-strong`, `--accent-deep`, `--accent-bright`, plus `--hero-glow`, the accent at 14 %), the join card (`--card-wash`/`--card-edge`/`--card-crest`), and the join buttons (`.btn-dc`/`.btn-gh`: the platform the page is about gets the solid highlight — yellow → Discord, red → GitHub, green → both neutral; the platform glyphs never change) and the charge bar (the `--stream-a/b/c` ramp, so it repaints with the stream). The ramp's bottom stop always equals `--tank`. Not themed: mint backgrounds, the brand ramps (gold→red headline, yellow·green·red hairlines), the platform marks (Discord yellow, GitHub red) and the nav's own glass; the header comment of `01a-theme.css` keeps the list.
+**Page themes.** A page declares its theme in the front matter: `theme: yellow` (committee pages) or `theme: red` (resource pages); no key means blue, the default. The layout turns the key into `<body data-theme="…">`, and `01a-theme.css` repaints: the stream (`--stream-a/b/c`, `--stream-track-inner`; the empty tubing `--stream-track` stays neutral light grey on every theme), the footer tank (`--tank-*`), the dark bands (`.band` and its wave caps wear the `--tank` colours and `--tank-ink*` text roles), the accent colours (`--accent`, `--accent-strong`, `--accent-deep`, `--accent-bright`, plus `--hero-glow`, the accent at 14 %), the join card (`--card-wash`/`--card-edge`/`--card-crest`), and the join buttons (`.btn-dc`/`.btn-gh`: the platform the page is about gets the solid highlight — yellow → Discord, red → GitHub, blue → both neutral; the platform glyphs never change) and the charge bar (the `--stream-a/b/c` ramp, so it repaints with the stream). The ramp's bottom stop always equals `--tank`. Not themed: the neutral tints and ramp, the brand ramps (gold→red headline, yellow·blue·red hairlines), the platform marks (Discord yellow, GitHub red) and the nav's own glass; the header comment of `01a-theme.css` keeps the list.
 
 
 ## 5. Implementation notes
