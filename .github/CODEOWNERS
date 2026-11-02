@@ -1,0 +1,5 @@
+# Code owners. GitHub asks these accounts for a review automatically when a pull
+# request touches a matching path. The single pattern `*` covers every file, so
+# one owner reviews everything; a narrower rule added below it would take
+# precedence for its paths, because the last matching pattern wins.
+* @csunijena
