@@ -6,6 +6,8 @@
    paced ALONG THE TUBE (see onFrame) via the pathLength=100 dash trick.
    Also drives the #chargeBar scaleX and the nav's .scrolled elevation.
    Rebuilt by ResizeObserver; runs everywhere, no-ops on missing elements.
+   Horizontally the tube belongs to the READING COLUMN, not to the viewport:
+   see contentEdge() and GAP below.
    Couplings: markup in components/stream.html (paths, #streamGrad);
    NARROW ↔ the 960px media query in 04-stream.css, which also owns the
    stroke widths trackStroke() reads; 03-nav.css styles both nav states.
@@ -34,6 +36,12 @@
      CSS cannot read this constant, so they are a pair by convention. */
   var NARROW = '(max-width:960px)';
   var mqNarrow = window.matchMedia ? matchMedia(NARROW) : null;
+  /* px between the tube's outer edge and the reading column's text edge.
+     35 px is not a taste value: it is the gap the viewport-relative formula
+     below happens to produce at ~1500 px, i.e. on a 14" laptop. Anchoring the
+     tube to the column at that same distance therefore moves nothing until
+     past ~1510 px, where the margin starts emptying out. */
+  var GAP = 35;
   /* How much of the tube is already full at scroll 0, in pathLength=100
      units; set in rebuild(). */
   var headFrac = 0;
@@ -98,9 +106,24 @@
     return (!isNaN(w) && w > 0) ? w : 30;
   }
 
+  /* The reading column's text edge, in the path's own space (page-relative
+     CSS px). .wrap is capped at 1160px by 02-base.css, so it is the element
+     that CENTRES when the viewport grows — the viewport is not the reference
+     the reader uses. The first .wrap inside main is the measure for every
+     section on every page; its padding-inline sits inside its box, so the
+     text edge is one padding further right than its border-box left. */
+  function contentEdge(){
+    var w = page.querySelector('main .wrap');
+    if (!w || !window.getComputedStyle) return NaN;
+    var pad = parseFloat(getComputedStyle(w).paddingLeft);
+    return w.getBoundingClientRect().left - page.getBoundingClientRect().left
+           + (isNaN(pad) ? 0 : pad);
+  }
+
   function rebuild(){
     if (!hasStream) return;
     var W = page.offsetWidth || 1, H = page.offsetHeight || 1;
+    var edge = contentEdge();
     /* the tube ends inside the footer's wave: the +12 buries its cap under
        components/wave-top.html, which components/footer.html renders first. */
     var foot = document.querySelector('footer');
@@ -113,13 +136,28 @@
       AMP = 0;
       X0  = trackStroke() / 2;
     } else {
-      X0  = Math.max(26, Math.min(130, W*0.085 - 20));
-      AMP = Math.max(12, Math.min(41, W*0.0375));      // the 130/41 caps keep the tube in the left margin
+      AMP = Math.max(12, Math.min(41, W*0.0375));      // the 41 cap keeps the swing narrow
+      /* Two references, the better (larger) one wins:
+         · legacy — viewport-relative, capped at 130: the tube rides the left
+           margin while the column still fills most of the window;
+         · anchored — column-relative, uncapped: the centreline that puts the
+           swing's OUTER edge GAP from the text. Above ~1510 px the centred
+           column leaves a dead margin and the legacy cap strands the tube
+           there, so from there on the tube follows the text it belongs to.
+           The legacy term is what keeps every laptop width pixel-identical. */
+      var legacy = Math.max(26, Math.min(130, W*0.085 - 20));
+      X0  = isNaN(edge) ? legacy
+                        : Math.max(legacy, edge - GAP - AMP - trackStroke()/2);
     }
     var d = buildD(Hs);
     track.setAttribute('d', d);
     fill.setAttribute('d', d);
     inner.setAttribute('d', d);
+    /* Publish the tube's centreline for the one layer that aligns to it
+       instead of measuring it: the hero's corner glow (05-hero.css). It has
+       to come from here — CSS re-deriving the column's edge from 100vw would
+       count the scrollbar, which the tube (and therefore this) does not. */
+    document.documentElement.style.setProperty('--stream-x', X0.toFixed(1) + 'px');
     tubeLen = Hs;
     buildArc(Hs);
     /* Fill at scroll 0 = mid-height of the h1's first line: the tube starts

@@ -3,8 +3,8 @@
    opaque where the property is unsupported (Firefox < 103 and
    any engine without it).
    Scope rule: it covers the fixed nav bar, the three .glass-*
-   utilities of 01b-glass.css, the translucent repo pills and rail
-   arrows, and the join card — a new glass element needs a
+   utilities of 01b-glass.css, the translucent repo pills and head-line
+   circles, and the join card — a new glass element needs a
    fallback line only when it introduces its own surface.
    ============================================================ */
 @supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
@@ -15,7 +15,7 @@
   .glass-strip{background:var(--paper)}
   .glass-wash{background:linear-gradient(180deg,var(--bg),var(--mint-soft) 55%,var(--bg))}
   .repo-cat .tag,.repo-h .tag,.repo-tag{background:var(--paper)}
-  /* the arrows take .rail-btn's .65 white fill (17-rail.css) */
+  /* the head-line circles take .rail-btn's .65 white fill (17-rail.css) */
   .repo-btn{background:var(--paper)}
   .join-card{background:linear-gradient(160deg,#fff,var(--card-wash) 70%)}
 }

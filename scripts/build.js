@@ -53,6 +53,84 @@ function walk(dir) {
   return out;
 }
 
+/* ---------- minutes discovery ---------- */
+
+/* A minutes document is published by its NAME: <YYYY-MM-DD>-minutes-<code>.pdf
+   in src/static/minutes/ carries the meeting date and the committee, so
+   publishing needs no edit to src/data/site-committees.js (docs/authoring.md
+   §2d). An authored entry for the same committee and date wins — the escape
+   hatch for a document kept off-site and for a corrected revision, which the
+   pattern below deliberately does not match. */
+const MINUTES_DIR = path.join(STATIC, "minutes");
+const MINUTES_NAME = /^(\d{4})-(\d{2})-(\d{2})-minutes-([a-z0-9]+)\.pdf$/;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/* What the build discovered, for the report at the end of the run. */
+let discovered = [];
+
+/* A regex match is not a date: 2026-13-01 and 2026-02-30 both have the right
+   shape. Round-trip through Date so an impossible day fails the build. */
+function isCalendarDate(y, m, d) {
+  const t = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+  return t.getUTCFullYear() === Number(y) &&
+         t.getUTCMonth() === Number(m) - 1 &&
+         t.getUTCDate() === Number(d);
+}
+
+/* Returns {y, m, d} for a YYYY-MM-DD string, or throws naming `where`. */
+function minutesDate(date, where) {
+  const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(date));
+  if (!d || !isCalendarDate(d[1], d[2], d[3])) {
+    throw new Error(`${where}: "${date}" is not a real YYYY-MM-DD date`);
+  }
+  return { y: d[1], m: d[2], d: d[3] };
+}
+
+/* The entries the filenames describe, minus the ones an authored entry already
+   covers. Codes are matched against committees[].code, never against num: a
+   code is part of a published URL and outlives a display label. */
+function discoverMinutes(committees, authored) {
+  const codes = new Map();
+  for (const c of committees) {
+    if (!c.code) {
+      throw new Error(`Committee "${c.id}" has no \`code\` in src/data/site-committees.js — minutes filenames are matched against it (docs/authoring.md §2d)`);
+    }
+    if (codes.has(c.code)) {
+      throw new Error(`Committee code "${c.code}" is used twice in src/data/site-committees.js — a code is a permanent URL token and must be unique`);
+    }
+    codes.set(c.code, c.id);
+  }
+  if (!fs.existsSync(MINUTES_DIR)) return [];
+
+  const covered = new Set(authored.map((m) => `${m.committee} ${m.date}`));
+  const seen = new Map();   // "committee date" → file name, to catch a conflict
+  const entries = [];
+  const files = fs.readdirSync(MINUTES_DIR, { withFileTypes: true })
+    .filter((e) => e.isFile())
+    .map((e) => e.name)
+    .sort();
+  for (const name of files) {
+    const m = MINUTES_NAME.exec(name);
+    if (!m) continue;       // a revision or a stray file: check.sh reports it if nothing links it
+    const [, y, mo, d, code] = m;
+    const committee = codes.get(code);
+    if (!committee) {
+      throw new Error(`Minutes file "${name}" names committee code "${code}", which no committee carries — valid codes: ${[...codes.keys()].join(", ")} (src/data/site-committees.js)`);
+    }
+    const date = `${y}-${mo}-${d}`;
+    minutesDate(date, `Minutes file "${name}"`);
+    const key = `${committee} ${date}`;
+    if (covered.has(key)) continue;   // an authored entry owns this document
+    if (seen.has(key)) {
+      throw new Error(`Two minutes files for ${committee} on ${date}: "${seen.get(key)}" and "${name}" — keep one, or reference the other from an authored entry in src/data/site-committees.js`);
+    }
+    seen.set(key, name);
+    entries.push({ committee, date, href: `minutes/${name}` });
+    discovered.push(`minutes: discovered ${date} ${code} (${name})`);
+  }
+  return entries;
+}
+
 /* ---------- load content data ---------- */
 
 /* src/data/*.js merges into ONE namespace per page, in sorted-filename
@@ -287,13 +365,16 @@ function prepareData(base, pageFile) {
     }
   }
 
-  // Committee minutes are authored as a FLAT list — one {committee, date,
-  // href} line per published document in src/data/site-committees.js — and
-  // filed under their committee here, so the section renders from the same
-  // committees[] the rows use and a name is never spelled in two files.
-  // Order and the printed date are derived here, never authored.
+  // Committee minutes come from two places and are filed under their
+  // committee here, so the section renders from the same committees[] the
+  // rows use and a name is never spelled in two files. The normal case is a
+  // PDF in src/static/minutes/ whose NAME carries committee and date; the
+  // authored FLAT list in src/data/site-committees.js is the exception list
+  // (off-site documents, revisions) and wins over a file of the same
+  // committee and date. Order and the printed date are derived here, never
+  // authored.
   if (Array.isArray(data.minutes) && Array.isArray(data.committees)) {
-    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    data.minutes = data.minutes.concat(discoverMinutes(data.committees, data.minutes));
     const byId = new Map(data.committees.map((c) => [c.id, []]));
     const years = new Set();
     for (const m of data.minutes) {
@@ -301,15 +382,12 @@ function prepareData(base, pageFile) {
       if (!group) {
         throw new Error(`Unknown committee "${m.committee}" in src/data/site-committees.js — ids are authored in its own committees[] (${[...byId.keys()].join(", ")})`);
       }
-      const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(m.date));
-      if (!d || !MONTHS[Number(d[2]) - 1]) {
-        throw new Error(`Minutes date "${m.date}" is not YYYY-MM-DD (committee "${m.committee}")`);
-      }
+      const d = minutesDate(m.date, `Minutes entry for "${m.committee}"`);
       group.push(Object.assign({}, m, {
-        dateLabel: `${Number(d[3])} ${MONTHS[Number(d[2]) - 1]} ${d[1]}`,
-        year: d[1],           // what the year menu filters each entry on
+        dateLabel: `${Number(d.d)} ${MONTHS[Number(d.m) - 1]} ${d.y}`,
+        year: d.y,            // what the year menu filters each entry on
       }));
-      years.add(d[1]);
+      years.add(d.y);
     }
     data.committees = data.committees.map((c) => {
       const items = byId.get(c.id).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
@@ -394,6 +472,7 @@ function prepareData(base, pageFile) {
 function build() {
   const t0 = Date.now();
   const layout = read(LAYOUT);
+  discovered = [];
 
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(OUT, { recursive: true });
@@ -466,7 +545,12 @@ function build() {
   //    only checked for existence (required) and size (minutes PDFs).
   if (fs.existsSync(STATIC)) {
     for (const p of walk(STATIC)) {
-      copyFile(p, path.join(OUT, path.relative(STATIC, p)));
+      const rel = path.relative(STATIC, p);
+      /* src/static/minutes/README.md is the uploader's instructions, not a
+         document: GitHub renders it in the folder, the site must not serve
+         it at /minutes/README.md (docs/authoring.md §2d). */
+      if (rel === path.join("minutes", "README.md")) continue;
+      copyFile(p, path.join(OUT, rel));
     }
   }
 
@@ -483,6 +567,7 @@ function build() {
   const kb = (n) => (n / 1024).toFixed(1) + " KiB";
   console.log(`built in ${Date.now() - t0} ms`);
   for (const [f, n] of report) console.log(`  public/${f.padEnd(14)} ${kb(n)}`);
+  for (const line of discovered) console.log(`  ${line}`);
   console.log(`  public/assets/css/app.css ${kb(css.code.length)} (${css.files.length} files)`);
   console.log(`  public/assets/js/app.js   ${kb(js.code.length)} (${js.files.length} files)`);
 }

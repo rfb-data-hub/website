@@ -6,15 +6,22 @@
    file by source order and so must keep sorting after it.
    The nav.scrolled class and #chargeBar's scaleX transform are written by
    assets/js/01-stream.js; the button highlights read the page theme's
-   --accent roles from 01a-theme.css.
+   --accent roles and the charge bar its --stream-a/b/c ramp from
+   01a-theme.css.
    ============================================================ */
 /* ---------- charge bar ----------
    Scroll-progress line: 01-stream.js writes its transform on every frame;
-   scaleX(0) here is the top-of-page state. */
+   scaleX(0) here is the top-of-page state.
+   The ramp is the electrolyte's own: the same --stream-a/b/c stops and the
+   same offsets as #streamGrad (04-stream.css + components/stream.html), run
+   left→right instead of top→bottom. Because those three tokens are re-declared
+   per page theme in 01a-theme.css, the bar repaints with the page exactly like
+   the stream does — and its right end is --stream-c = --tank, the same place
+   the tube drains into. */
 #chargeBar{
   position:fixed;top:0;left:0;z-index:70;width:100%;height:3px;
-  background:linear-gradient(90deg,var(--g600),var(--g500) 70%,var(--pos));
-  transform:scaleX(0);transform-origin:left center;
+  background:linear-gradient(90deg,var(--stream-a),var(--stream-b) 55%,var(--stream-c));
+  transform:scaleX(0);transform-origin:left center;opacity:.55;
 }
 nav{
   position:fixed;top:0;left:0;right:0;z-index:60;height:64px;

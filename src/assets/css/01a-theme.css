@@ -5,7 +5,8 @@
    Concatenated right after 01-tokens.css; later files read themeable
    colour only through these roles, so a new theme must redefine each
    one except --stream-track, the neutral empty tubing. Consumers:
-   04-stream.css, 05-hero.css, 13-join.css and the tank grounds —
+   04-stream.css, 05-hero.css, 13-join.css, 03-nav.css (the charge bar
+   reuses --stream-a/b/c) and the tank grounds —
    07-waves.css, 11-band.css, 11a-news.css, 14-footer.css,
    17c-dashboard.css. 03-nav.css also reads the attribute itself.
    Never themed: --mint*, the green ramp, the status colours.

@@ -28,7 +28,13 @@
    colour is --hero-glow (01a-theme.css) so it follows the page
    theme. */
 .hero::after,.page-hero::after{
-  content:"";position:absolute;width:640px;height:640px;left:-220px;top:-180px;border-radius:50%;
+  /* left tracks the tube: --stream-x is its centreline, published by
+     01-stream.js, so on a wide screen the glow travels with the stream it is
+     the light of instead of staying at the viewport's left edge. The max()
+     floor keeps the small-screen position, where the tube is straight and
+     flush left and this wash belongs behind the headline, not the border. */
+  content:"";position:absolute;width:640px;height:640px;top:-180px;border-radius:50%;
+  left:calc(max(var(--stream-x,100px),100px) - 320px);
   background:radial-gradient(circle,var(--hero-glow),transparent 65%);pointer-events:none;
 }
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative;z-index:2}

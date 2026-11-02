@@ -37,7 +37,7 @@ sub: Every digital resource the community members (re)share on the GitHub organi
          to the page. 07-repos.js fills the rails from the organisation's GitHub API (one GET
          per API page, cached in sessionStorage); the <noscript> line and the rails'
          placeholders are what a visitor sees when it cannot answer. -->
-    <section class="repos" id="resources" data-repos data-repos-exclude=".github">
+    <section class="repos" id="resources" data-repos data-repos-exclude="{{githubExclude}}">
       <div class="wrap">
         <div class="sec-head" data-reveal>
           <span class="eyebrow">Public repositories</span>
@@ -63,7 +63,12 @@ sub: Every digital resource the community members (re)share on the GitHub organi
              as-is, cloned into the matching <ul>, and filled with textContent, never
              innerHTML — names and descriptions arrive from a network. The whole card is
              the link, so the name is a span; 17a-repos.css clamps the description and
-             07-repos.js moves the cut text into the link's aria-label. -->
+             07-repos.js moves the cut text into the link's aria-label.
+             The .repo-fork span is authored outside .repo-tags so that the row can keep
+             its CSS-side :empty guard; 07-repos.js moves it into the row (17a-repos.css
+             order:1 parks it at the right edge) or drops it on a non-fork. Its label is
+             empty here because the repository list does not carry the origin — 07-repos.js
+             fills it, wording included, from the repository's own API call. -->
         <template id="repo-row-tpl">
           <li class="repo">
             <a class="repo-link glass-card" href="#" rel="noopener" target="_blank">
@@ -74,6 +79,7 @@ sub: Every digital resource the community members (re)share on the GitHub organi
               <span class="repo-desc"></span>
               <span class="repo-meta"></span>
               <span class="repo-tags"></span>
+              <span class="repo-fork" aria-hidden="true">{{icons.fork}}<span class="repo-fork-name"></span></span>
             </a>
           </li>
         </template>

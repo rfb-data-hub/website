@@ -12,13 +12,21 @@
       ============================================================ */
 "use strict";
 
-/* The two external homes of the commons, named once: the org and the invite
-   code are the ONLY literals here, the two URLs are built from them. build.js
-   passes both keys to the layout, where they land on <body> as
-   data-github-org / data-discord-invite for 05-community.js and 07-repos.js
-   to read (docs/authoring.md §5). */
+/* The two external homes of the commons, named once: the org, the invite code
+   and the excluded repository are the ONLY literals here, the two URLs are
+   built from them. build.js passes all three keys to the layout, where they
+   land on <body> as data-github-org / data-discord-invite /
+   data-github-exclude for 05-community.js and 07-repos.js to read
+   (docs/authoring.md §5). */
 const GITHUB_ORG = "rfb-data-hub";
 const DISCORD_INVITE = "SgTcQcfSgn";
+/* Repositories the live counters must not count. The org's profile repo
+   (.github) carries GitHub topics but is not something a member browses, so
+   it is left out of the resources list AND out of the home readout's
+   repository figure — one literal, so the two pages can never disagree.
+   Consumers: data-repos-exclude (07-repos.js) and data-github-exclude
+   (05-community.js), both rendered by layout.html from the key below. */
+const GITHUB_EXCLUDE = ".github";
 const DISCORD_URL = "https://discord.gg/" + DISCORD_INVITE;
 const GITHUB_URL = "https://github.com/" + GITHUB_ORG;
 
@@ -77,7 +85,7 @@ module.exports = {
       children: [
         { label: "Community Committee (CC)", href: "committees.html#committee-community" },
         { label: "Data Infrastructure Committee (DIC)", href: "committees.html#committee-data-infrastructure" },
-        { label: "Flow Battery Research Committee (FBR)", href: "committees.html#committee-research" },
+        { label: "Research Committee (RC)", href: "committees.html#committee-research" },
         { label: "Committee minutes", href: "committees.html#minutes" },
       ],
     },
@@ -116,6 +124,11 @@ module.exports = {
 
   discordInvite: DISCORD_INVITE,
 
+  /* comma list, riding the same <body> route as the pair above: which
+     repositories the live figures must not count, so the rule is authored in
+     data and never typed into a script */
+  githubExclude: GITHUB_EXCLUDE,
+
   /* ---------- home · Community resources (#categories) ----------
      ONE array, three renderings. The home page draws it as cards
      (components/category-card.html, 10b-categories.css); resources.html draws the same
@@ -135,7 +148,7 @@ module.exports = {
 
      `href` is the tile's link target (resources.html, which renders these
      same items). `ghSearch` is the org topic search behind the group's
-     "Search on GitHub" escape hatch, derived after the array from topic +
+     "Explore on GitHub" escape hatch, derived after the array from topic +
      GITHUB_ORG; `type=repositories` and `fork:true` are load-bearing — without
      the first the page reports "0 results" over real rows, and GitHub hides
      forks from search by default while 07-repos.js lists them.
@@ -238,7 +251,7 @@ module.exports = {
   join: {
     eyebrow: "How to join this online community",
     title: "Join the commons",
-    text: "The community has two central online locations: Discord is where the commons talks (e.g. questions, building cooperations, event planning, regular meetings). The GitHub organisation is where our data and resources live.",
+    text: "The community uses two online platforms: A Discord server is where the commons talks (e.g. questions, building cooperations, event planning, regular meetings). A GitHub organisation is where our data and resources live.",
     discordLabel: "Commons Discord",
     discordUrl: DISCORD_URL,
     githubLabel: "Commons Data Hub",
