@@ -1,9 +1,10 @@
 <!-- One committee of the minutes section (committees.html #minutes): the committee as the
      row head, its published minutes as a horizontal rail. Fields: num, title,
      minutes[]{href,dateLabel,year}, icons.chevronL/chevronR; [data-reveal]/[data-delay] are
-     02-reveal.js's. build.js files the flat minutes[] of src/data/site-committees.js under
-     its committee id and stops the build on an unknown one, so a row is always a real
-     committee. Rail shape and hairline rows: 17b-minutes.css and 17-rail.css, which also
+     02-reveal.js's. build.js discovers the PDFs in src/static/minutes/ by filename and
+     merges them with the authored minutes[] of src/data/site-committees.js, then files
+     the result under its committee id and stops the build on an unknown one, so a row is
+     always a real committee. Rail shape and hairline rows: 17b-minutes.css and 17-rail.css, which also
      hides .rail-ctrl without JS — the arrows are markup, never injected, and only their
      [disabled] state moves (07-rail.js, called per row by 07a-minutes.js). The year menu is
      NOT here — the single section-wide one above the rows (pages/committees.html).

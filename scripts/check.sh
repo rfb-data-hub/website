@@ -131,6 +131,35 @@ else
   err "public/ is ${site_kb} KiB (site budget ${site_max_kb} KiB) — move large documents out of src/static/"
 fi
 
+# ---------- every published PDF is linked ----------
+# The build discovers minutes by filename, so a PDF that does not follow the
+# convention — or a revision nobody referenced — is copied to the site but
+# never listed: invisible, yet public and permanent. The reverse of the link
+# check above. One exception: a base document that an authored entry
+# supersedes (a correction) stays published for old links and is out of the
+# rail by design. Rules: docs/authoring.md §2d.
+superseded=$(node -e '
+  const d = require("./src/data/site-committees.js");
+  const code = new Map(d.committees.map((c) => [c.id, c.code]));
+  for (const m of d.minutes) console.log(code.get(m.committee) + " " + m.date);
+' 2>/dev/null | tr "\n" " ")
+unlinked=""
+for f in "$OUT"/minutes/*.pdf; do
+  [ -e "$f" ] || continue
+  base=$(basename "$f")
+  grep -qF "minutes/$base" "$OUT/committees.html" && continue
+  key=$(echo "$base" | sed -nE 's/^([0-9]{4}-[0-9]{2}-[0-9]{2})-minutes-([a-z0-9]+)\.pdf$/\2 \1/p')
+  [ -n "$key" ] && case " $superseded " in *" $key "*) continue ;; esac
+  unlinked="$unlinked $base"
+done
+if [ -z "$unlinked" ]; then
+  ok "every published minutes PDF is linked from committees.html"
+else
+  for f in $unlinked; do
+    err "minutes/$f is not linked from committees.html — name it <YYYY-MM-DD>-minutes-<cc|dic|fbr>.pdf, or reference it from an authored entry in src/data/site-committees.js (docs/authoring.md §2d)"
+  done
+fi
+
 # ---------- generated blocks are in sync ----------
 # The generators own their marked blocks: scripts/gen-orbit.py rewrites
 # ORBIT:BEGIN/END in src/pages/index.html, scripts/gen-wave-mask.js the

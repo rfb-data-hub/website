@@ -9,7 +9,7 @@ How to edit and extend the site. For the directory map and commands see the [REA
   - [2a. Adding a news item](#2a-adding-a-news-item)
   - [2b. Navigation and the footer](#2b-navigation-and-the-footer)
   - [2c. The GitHub resource list (resources.html)](#2c-the-github-resource-list-resourceshtml)
-  - [2d. Adding committee minutes](#2d-adding-committee-minutes) — incl. [Publishing the PDF](#publishing-the-pdf)
+  - [2d. Adding committee minutes](#2d-adding-committee-minutes) — incl. [Publishing the PDF](#publishing-the-pdf) and [the pull request](#the-pull-request)
   - [2e. The dashboard band (resources.html `#dashboard`)](#2e-the-dashboard-band-resourceshtml-dashboard)
 - [3. Adding a component](#3-adding-a-component)
 - [4. The electrolyte stream](#4-the-electrolyte-stream)
@@ -134,11 +134,32 @@ Rules and invariants:
 
 ## 2d. Adding committee minutes
 
-Minutes entries live in `src/data/site-committees.js`; one entry is one published document:
+A minutes document is published by putting a correctly named PDF in `src/static/minutes/` and opening a pull request. The filename carries the metadata: `scripts/build.js` discovers the file, derives the committee, the date and the link from its name, and files it under that committee in `committees.html #minutes`. No data file changes in the normal case.
 
-- `committee` — the committee's `id` in `committees[]` in the same file. The builder files the entry under that committee, newest first, and fails the build on an unknown id. Committee names are single-sourced; the two arrays must load together (§1).
-- `date` — an ISO 8601 date (`YYYY-MM-DD`); the sort key and the source of the printed date ("27 Aug 2026"). A date that is not `YYYY-MM-DD` fails the build.
-- `href` — the document: a relative path into this site (`minutes/2026-08-27-minutes-cc.pdf`, the normal case) or, for a document too large to store here, an absolute URL. Until a relative target exists it must stay external: `check.sh` resolves relative hrefs against the built output and fails on a missing file.
+### The filename is the entry
+
+`<YYYY-MM-DD>-minutes-<code>.pdf` — lowercase letters, digits and hyphens, no spaces.
+
+| Committee | `code` | Example |
+| --- | --- | --- |
+| Community Committee | `cc` | `2026-11-02-minutes-cc.pdf` |
+| Data Infrastructure Committee | `dic` | `2026-11-02-minutes-dic.pdf` |
+| Flow Battery Research Committee | `fbr` | `2026-11-02-minutes-fbr.pdf` |
+
+- The date is the meeting date: the sort key (newest first), the printed date ("27 Aug 2026"), the value the year menu filters on, and part of the permanent URL.
+- `code` is a field of each committee in `src/data/site-committees.js`, not `num`: `num` is a display label and may change, while a code is a published URL token.
+- The build stops on an unknown code (naming the valid ones), on a date that is not a real calendar day, and on two files that resolve to the same committee and date.
+- The build log names every discovered document (`minutes: discovered 2026-11-02 cc (2026-11-02-minutes-cc.pdf)`), so a pull request's CI log shows what was picked up.
+
+### The authored exception list
+
+`minutes[]` in `src/data/site-committees.js` is empty in the normal case. It holds the documents a filename cannot describe, and an entry there wins over a file of the same committee and date:
+
+- `committee` — the committee's `id` in `committees[]` in the same file. The builder files the entry under that committee and fails the build on an unknown id. Committee names are single-sourced; the two arrays must load together (§1).
+- `date` — an ISO 8601 date (`YYYY-MM-DD`); the sort key and the source of the printed date. A date that is not a real calendar day fails the build.
+- `href` — the document: a relative path into this site, or an absolute URL for a document kept off-site (too large to ship).
+
+Two cases use it: a document hosted outside the site, and a corrected revision (`2026-08-27-minutes-cc-rev2.pdf`), which the discovery pattern does not match because of the suffix. A superseded base document stays in `src/static/minutes/` and stays published for old links; `check.sh` accepts it because an authored entry carries its committee and date. A revision file that no entry references fails `check.sh`.
 
 The section (`committees.html #minutes`) renders one hairline row per committee — empty committees included, marked as such — and each row is a horizontal rail with scroll-snap (the row stops on card boundaries while scrolling). Styles: `17b-minutes.css`; behaviour: `07a-minutes.js` (year filter) on the shared rail wiring in `07-rail.js`. Both controls are progressive enhancements (features that only activate when JavaScript is available): without JavaScript they are hidden and the rail is a plain scrollable list.
 
@@ -148,28 +169,36 @@ The section (`committees.html #minutes`) renders one hairline row per committee 
 
 ### Publishing the PDF
 
-Place the file in **`src/static/minutes/`**. The builder copies that directory verbatim into `public/` (`build.js` step 4, `fs.copyFileSync` — binary-safe, unlike the CSS/JS bundler, which reads UTF-8). `public/` is wiped on every build and git-ignored, and `src/assets/img/` maps to `assets/img/`, so `src/static/minutes/` is the only location from which a document reaches the deployed site.
+Place the file in **`src/static/minutes/`**. The builder copies that directory verbatim into `public/` (`build.js` step 4, `fs.copyFileSync` — binary-safe, unlike the CSS/JS bundler, which reads UTF-8), except `README.md`, which is the uploader's instructions and must not be served at `/minutes/README.md`. `public/` is wiped on every build and git-ignored, and `src/assets/img/` maps to `assets/img/`, so `src/static/minutes/` is the only location from which a document reaches the deployed site.
 
 ```
-src/static/minutes/2026-08-27-minutes-cc.pdf   ← the document
-src/data/site-committees.js   { committee: "research", date: "2026-08-27",
-                        href: "minutes/2026-08-27-minutes-cc.pdf" }
+src/static/minutes/2026-08-27-minutes-cc.pdf   ← the document; the name is the entry
 → public/committees.html   <a href="minutes/2026-08-27-minutes-cc.pdf" …>
 ```
 
 Four rules, each enforced by a check:
 
-- **Filename: ISO 8601 date first, then the content** — `2026-08-27-minutes-cc.pdf`, `2026-09-17-minutes-dic.pdf` — lowercase letters, digits and hyphens only, no spaces. The date is the filename and the URL; a published name is never reused or edited afterwards. `check.sh` extracts links with `grep` and iterates them word by word, so a space in a filename reports a false `BROKEN`; Pages URLs are case-sensitive.
+- **The name is the URL.** Lowercase letters, digits and hyphens only, no spaces; a published name is never reused or edited afterwards. `check.sh` extracts links with `grep` and iterates them word by word, so a space in a filename reports a false `BROKEN`; Pages URLs are case-sensitive.
 - **The href is relative**, never `/minutes/…`: Pages serves the site under `/<repo>/` (ADR 0002) and `check.sh` fails on root-absolute URLs.
 - **Compress the file and keep a text layer.** Text-only minutes are 30–150 KB from a Markdown or LaTeX export; word-processor or scan exports are often ten times that. `gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -dCompatibilityLevel=1.7 -sOutputFile=out.pdf in.pdf` or `qpdf --optimize-images` is sufficient; `/ebook` is fine for a document that is not printed. A scan without a text layer cannot be zoomed cleanly, searched, or read by screen readers.
 - **≤ 1 MB is the target, ~2 MB the limit.** A larger document (scan, slide deck, figure set) does not belong in this site: publish it in an organisation annex repository or as a GitHub Release asset (2 GB per file) and put the absolute URL in `href`. The rail entry renders identically either way.
 
-The continuous integration (CI) pipeline verifies: the link resolves in the built output; the file starts with `%PDF-` (a Git LFS — Large File Storage — pointer is a file that exists, and `actions/checkout` does not fetch LFS objects by default — PDFs are kept out of LFS in `.gitattributes`); no published file exceeds 5 MB; the whole site stays under ~250 MB. Rationale and platform limits: [ADR 0004](adr/0004-minutes-pdfs-in-the-site.md).
+The continuous integration (CI) pipeline verifies: every link resolves in the built output; every PDF starts with `%PDF-` (a Git LFS — Large File Storage — pointer is a file that exists, and `actions/checkout` does not fetch LFS objects by default — PDFs are kept out of LFS in `.gitattributes`); no published file exceeds 5 MB; the whole site stays under ~250 MB; and every PDF in `public/minutes/` is linked from `committees.html` or superseded by an authored entry. Rationale and platform limits: [ADR 0004](adr/0004-minutes-pdfs-in-the-site.md).
+
+### The pull request
+
+1. Open <https://github.com/rfb-data-hub/website/upload/main/src/static/minutes> and drag the PDF into the page.
+2. Choose **Create a new branch for this commit and start a pull request**.
+3. CI (`ci.yml`) builds the site and runs `check.sh`.
+4. A maintainer reviews the PDF against `.github/pull_request_template.md`.
+5. Merging to `main` deploys the site.
+
+Without write access, GitHub forks the repository and opens the pull request from the fork; no local git or Node.js installation is needed. `main` is protected: a pull request, one approval and a green `build` check are required, so nothing is published unreviewed.
 
 Two consequences of publishing in the repository:
 
 - A commit publishes. The repository is public and its history permanent, so minutes that name people need review before the commit; deleting the file later does not remove it from history or from clones.
-- Do not overwrite a published document. Corrections get a new file with a suffixed name (`2026-08-27-minutes-cc-rev2.pdf`) and the entry's `href` changes; readers may have cached the old bytes. The rails and the year menu read `date`, not the filename.
+- Do not overwrite a published document. Corrections get a new file with a suffixed name (`2026-08-27-minutes-cc-rev2.pdf`) and an authored entry for the same committee and date; readers may have cached the old bytes. The rails and the year menu read `date`, not the filename.
 
 An entry's appearance does not depend on the file. The row height is the authored `--minute-h` chain, so a visible "PDF · 240 kB" line would move every row in the section; a format hint belongs in the link's `type`/`aria-label`.
 
@@ -232,7 +261,7 @@ The stream (`{{> stream}}` + `assets/js/01-stream.js`) appears on every page; it
 npm run check        # build + check.sh
 ```
 
-`check.sh` enforces: required files exist; no root-absolute URLs; one `<h1>` per page; all internal links resolve; every `#fragment` has a real `id` on the page it targets; `<img>` alt attributes; a 300 KiB budget per artifact (1 KiB = 1024 bytes); no leftover template tags; and that the generated blocks (orbit, wave masks) match their scripts. For documents in `src/static/` (the committee minutes PDFs): each file is a real PDF, stays under 5 MB, and leaves the whole site under ~250 MB. The CI pipeline runs the same checks on every pull request and also reads the source: an unused component or an unread data key fails the build — delete it or wire it up.
+`check.sh` enforces: required files exist; no root-absolute URLs; one `<h1>` per page; all internal links resolve; every `#fragment` has a real `id` on the page it targets; `<img>` alt attributes; a 300 KiB budget per artifact (1 KiB = 1024 bytes); no leftover template tags; and that the generated blocks (orbit, wave masks) match their scripts. For documents in `src/static/` (the committee minutes PDFs): each file is a real PDF, stays under 5 MB, leaves the whole site under ~250 MB, and is linked from `committees.html` or superseded by an authored entry. The CI pipeline runs the same checks on every pull request and also reads the source: an unused component or an unread data key fails the build — delete it or wire it up.
 
 ## 7. Content conventions
 
