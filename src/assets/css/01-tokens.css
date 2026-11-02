@@ -10,27 +10,30 @@
    ============================================================ */
 :root{
   /* ---------- page colours ---------- */
-  --bg:#F6F9F7;
+  --bg:#F4F9FC;
   --paper:#FFFFFF;
-  --ink:#0C261D;
-  --muted:#40584F;
-  --faint:#6B8178;
-  /* ---------- green ramp ---------- */
-  --g900:#0E3B2E;
-  --g700:#14532D;
-  --g600:#166534;
-  --g500:#1F8A4C;
-  --g300:#7FD1A2;
-  --mint:#DCF2E4;
-  --mint-soft:#EAF6EE;
-  --line:#DCE7E0;
+  --ink:#0A2433;
+  --muted:#3D5766;
+  --faint:#6A8291;
+  /* ---------- neutral ramp (the logo's water) ----------
+     The globe's blue, deepened until it can carry text. Green is the logo's
+     land mass, not a neutral: it appears in the artwork only, and is free
+     for a meaning of its own. */
+  --n900:#0A2A3A;
+  --n700:#145C82;
+  --n600:#1F7FA8;
+  --n500:#2E93BF;
+  --n300:#87C9E7;
+  --tint:#D6ECF7;
+  --tint-soft:#EAF5FB;
+  --line:#D8E6EE;
   /* ---------- frosted-glass recipes ---------- */
   /* Applied by 01b-glass.css to .glass-card/.glass-strip/.glass-wash;
      15-fallbacks.css degrades the same surfaces. */
   --glass-bg:rgba(255,255,255,.55);
   --glass-line:rgba(255,255,255,.7);
   --glass-blur:blur(10px) saturate(1.15);
-  --wash-bg:linear-gradient(180deg,rgba(246,249,247,.45),rgba(234,246,238,.5) 55%,rgba(246,249,247,.45));
+  --wash-bg:linear-gradient(180deg,rgba(244,249,252,.45),rgba(234,245,251,.5) 55%,rgba(244,249,252,.45));
   --wash-blur:blur(14px) saturate(1.2);
 
   /* ---------- status colours ---------- */
@@ -43,8 +46,8 @@
      band (13-join.css) and the photo masks (11a-news.css, 17c-dashboard.css) */
   --wave-h:70px;
   --radius:16px;
-  --shadow:0 24px 48px -24px rgba(12,38,29,.16);
-  --shadow-soft:0 10px 30px -12px rgba(12,38,29,.12);
+  --shadow:0 24px 48px -24px rgba(10,36,51,.16);
+  --shadow-soft:0 10px 30px -12px rgba(10,36,51,.12);
   --font-display:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
 }

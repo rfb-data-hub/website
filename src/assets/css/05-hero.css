@@ -17,7 +17,7 @@
 .hero{position:relative;padding:150px 0 96px;overflow:hidden}
 .hero::before{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:radial-gradient(rgba(12,38,29,.055) 1px,transparent 1.5px);
+  background-image:radial-gradient(rgba(10,36,51,.055) 1px,transparent 1.5px);
   background-size:26px 26px;
   -webkit-mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
   mask-image:radial-gradient(ellipse 90% 70% at 60% 20%,#000 0%,transparent 70%);
@@ -52,10 +52,10 @@
 .hero-floats img{position:absolute;border-radius:50%;transform:translate(-50%,-50%)}
 /* ---------- copy column ----------
    .chip is the status pill above the headline, on the theme's
-   mint ground. */
+   tint ground. */
 .chip{
   display:inline-flex;align-items:center;gap:9px;
-  background:var(--mint-soft);border:1px solid var(--mint);color:var(--accent-deep);
+  background:var(--tint-soft);border:1px solid var(--tint);color:var(--accent-deep);
   font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px;margin-bottom:26px;
 }
 .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 2.4s ease-in-out infinite}

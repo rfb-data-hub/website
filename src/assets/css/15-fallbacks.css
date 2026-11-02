@@ -13,7 +13,7 @@
   /* 55% white with nothing blurring it leaves the content behind readable through the card */
   .glass-card{background:var(--paper);border-color:var(--line)}
   .glass-strip{background:var(--paper)}
-  .glass-wash{background:linear-gradient(180deg,var(--bg),var(--mint-soft) 55%,var(--bg))}
+  .glass-wash{background:linear-gradient(180deg,var(--bg),var(--tint-soft) 55%,var(--bg))}
   .repo-cat .tag,.repo-h .tag,.repo-tag{background:var(--paper)}
   /* the head-line circles take .rail-btn's .65 white fill (17-rail.css) */
   .repo-btn{background:var(--paper)}

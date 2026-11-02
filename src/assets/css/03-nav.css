@@ -25,7 +25,7 @@
 }
 nav{
   position:fixed;top:0;left:0;right:0;z-index:60;height:64px;
-  background:rgba(246,249,247,.82);
+  background:rgba(244,249,252,.82);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   /* fixed + backdrop-filter needs its own compositor layer, or the bar swims mid-scroll */
   will-change:transform;
@@ -33,7 +33,7 @@ nav{
   /* border/shadow only: transitioning background-color re-rasterises the blur */
   transition:border-color .3s,box-shadow .3s;
 }
-nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -18px rgba(12,38,29,.25)}
+nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -18px rgba(10,36,51,.25)}
 /* height:100%, not 64px: the bar is border-box, so its content box is 63px
    once the bottom border is drawn. */
 .nav-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
@@ -44,8 +44,8 @@ nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -18px rgba(12,38,29,
 .brand small{display:block;font-family:var(--font-body);font-weight:500;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1;margin-top:2px}
 .nav-links{display:flex;align-items:center;gap:30px;list-style:none}
 .nav-links a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s}
-.nav-links a:hover{color:var(--g700)}
-.nav-links a[aria-current="page"]{color:var(--g700);font-weight:600}
+.nav-links a:hover{color:var(--n700)}
+.nav-links a[aria-current="page"]{color:var(--n700);font-weight:600}
 /* ---------- button base ----------
    The pill geometry the platform buttons below extend; join-btns.html
    renders the only .btn markup. */
@@ -57,7 +57,7 @@ nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -18px rgba(12,38,29,
 }
 .btn:active{transform:translateY(1px)}
 .btn svg{flex:none;opacity:.9}
-/* The two platforms (join-btns.html): neutral by default — on the green theme
+/* The two platforms (join-btns.html): neutral by default — on the blue theme
    both stay neutral. The page theme highlights the platform the page is about:
    yellow → Discord, red → GitHub (roles from 01a-theme.css). */
 .btn-dc,.btn-gh{border-color:var(--line);color:var(--ink);background:rgba(255,255,255,.6)}

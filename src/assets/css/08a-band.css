@@ -11,9 +11,11 @@
    the three pages; items: readout-item, chair-item, repo-cat, dash-spot.
    ============================================================ */
 .figures{position:relative}
-/* the charge line; a band that must not carry it uses .figures-grid
+/* the charge line: + tank → the commons → − tank. The middle stop is the
+   fixed neutral (--n600), never --accent, so the line reads the same on a
+   yellow or red page. A band that must not carry it uses .figures-grid
    without .figures — the dark .dash-facts row, components/dash-spot.html */
-.figures::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--pos),var(--g500) 50%,var(--neg));opacity:.75}
+.figures::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--pos),var(--n600) 50%,var(--neg));opacity:.75}
 .figures-grid{list-style:none;display:grid;grid-template-columns:repeat(var(--fig-cols,4),1fr)}
 .figures-item{position:relative}
 .figures-item + .figures-item::before{content:"";position:absolute;left:0;top:var(--fig-rule-t,10px);bottom:var(--fig-rule-b,10px);width:1px;background:var(--fig-rule,var(--line))}

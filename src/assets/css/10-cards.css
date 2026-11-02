@@ -15,7 +15,7 @@
 }
 .cat:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--accent-bright)}
 .cat .ic{
-  width:46px;height:46px;border-radius:13px;background:var(--mint-soft);border:1px solid var(--mint);
+  width:46px;height:46px;border-radius:13px;background:var(--tint-soft);border:1px solid var(--tint);
   display:flex;align-items:center;justify-content:center;color:var(--accent-strong);margin-bottom:20px;
   transition:background .3s,color .3s;
 }

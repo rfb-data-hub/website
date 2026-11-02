@@ -22,8 +22,8 @@
    one instance is the dashboard band's lede copy on resources.html — the Marimo
    notebook and the study-dashboard repo links in site-resources.js — plus any
    prose link a future band writes. The base rule's two colours are both wrong
-   here: --accent-strong is dark green on dark green, and --mint is the pale mint
-   that NEVER themes (01a-theme.css), so it would draw a green hairline across a
+   here: --accent-strong is dark blue on dark blue, and --tint is the pale tint
+   that NEVER themes (01a-theme.css), so it would draw a blue hairline across a
    yellow or red tank. The band takes its own accent instead: --accent-bright for
    the text (what .band .eyebrow and the band's own .dash-link in
    17c-dashboard.css already wear) and a 35 % wash of it for the hairline, so the

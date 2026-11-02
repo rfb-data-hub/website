@@ -6,7 +6,7 @@
    src/data/sites-general.js. The card's pale tints follow the page
    theme (--card-wash/-edge/-crest, 01a-theme.css); inside it
    03-nav.css highlights the platform the page is about (yellow →
-   Discord, red → GitHub, green → neither). Its blur is a recipe of
+   Discord, red → GitHub, blue → neither). Its blur is a recipe of
    its own, not one of the .glass-* utilities (01b-glass.css);
    15-fallbacks.css carries its no-backdrop-filter fallback.
    ============================================================ */
