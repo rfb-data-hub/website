@@ -61,7 +61,7 @@ module.exports = {
       desc: "Coordinates the joint research activities of the community, in particular the international round-robin studies. Prepares shared measurement protocols and recommendations for reporting experimental results.",
       lastMeeting: "27 Aug 2026",
       cadence: "Every two months",
-      chair: { name: "Thomas Wakelin", avatar: "avatar-08.svg" },
+      chair: { name: "Thomas Wakelin", avatar: "avatar-23.svg" },
       coChair: { name: "Derek Hall", avatar: "avatar-22.svg" },
     },
   ],

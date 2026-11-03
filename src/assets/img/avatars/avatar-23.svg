@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="118" height="118" fill="none" viewBox="0 0 14.734 14.734">
+<!-- avatar: bald man, short brown beard, light-blue shirt under a grey quarter-zip -->
+  <circle cx="7.367" cy="7.367" r="7.28" fill="#7FB08F"/>
+  <path d="m5.95 9.40c-1.05 0.13-2.00 0.58-2.42 1.22-0.38 0.58-0.53 1.62-0.58 2.36 1.08 1.10 2.60 1.64 4.42 1.64 1.82 0 3.34-0.54 4.42-1.64-0.05-0.74-0.20-1.78-0.58-2.36-0.42-0.64-1.37-1.09-2.42-1.22z" fill="#A2A7AC" id="sweater"/>
+  <path d="m6.05 9.35c-0.10 0.45 0.05 0.75 0.35 0.80l0.22-0.68z" fill="#7C8186" id="zip_collar_left"/>
+  <path d="m8.69 9.35c0.10 0.45-0.05 0.75-0.35 0.80l-0.22-0.68z" fill="#7C8186" id="zip_collar_right"/>
+  <path d="m6.42 9.35h1.90l0.42 1.18-1.37 1.72-1.37-1.72z" fill="#B9D2E5" id="shirt"/>
+  <path d="m6.50 8.50h1.73l0.13 1.22c-0.32 0.30-1.67 0.30-1.99 0z" fill="#E3A985" id="neck"/>
+  <path d="m6.42 9.35-0.42 1.18 1.37 1.72 1.37-1.72-0.42-1.18" stroke="#6F7479" stroke-width="0.28" stroke-linejoin="round" id="zip_trim"/>
+  <path d="m6.42 9.35 0.56 0.70-0.88 0.33-0.22-0.65z" fill="#D3E5F2" id="collar_left"/>
+  <path d="m8.32 9.35-0.56 0.70 0.88 0.33 0.22-0.65z" fill="#D3E5F2" id="collar_right"/>
+  <circle cx="7.367" cy="10.55" r="0.16" fill="#F2F8FC" id="button"/>
+  <path d="m7.367 12.25v1.05" stroke="#6F7479" stroke-width="0.18" id="zip"/>
+  <rect x="7.297" y="12.95" width="0.14" height="0.34" rx="0.05" fill="#5F6469" id="zip_pull"/>
+  <ellipse cx="5.02" cy="6.60" rx="0.40" ry="0.70" fill="#EAB694" id="ear_left"/>
+  <ellipse cx="9.71" cy="6.60" rx="0.40" ry="0.70" fill="#EAB694" id="ear_right"/>
+  <ellipse cx="7.367" cy="6.45" rx="2.30" ry="2.75" fill="#F7CCAB" id="head"/>
+  <path d="m9.39 5.65-0.36 0.00c-0.01 0.45-0.13 0.90-0.35 1.30-0.16 0.27-0.40 0.47-0.68 0.47-0.15 0-0.25-0.12-0.32-0.27-0.08-0.17-0.18-0.25-0.31-0.25s-0.23 0.08-0.31 0.25c-0.07 0.15-0.17 0.27-0.32 0.27-0.28 0-0.52-0.20-0.68-0.47-0.22-0.40-0.34-0.85-0.35-1.30h-0.36c-0.12 0.90 0.10 2.00 0.76 2.80 0.35 0.41 0.80 0.71 1.27 0.71s0.92-0.30 1.27-0.71c0.66-0.80 0.88-1.90 0.74-2.80z" fill="#6E4C38" id="beard"/>
+</svg>
