@@ -40,7 +40,7 @@ module.exports = {
       lastMeeting: "27 Aug 2026",
       cadence: "Every two months",
       chair: { name: "Tom Goodwin", avatar: "avatar-06.svg" },
-      coChair: { name: "t.b.a.", avatar: "avatar-tba.svg" },
+      coChair: { name: "Dr. Josh Bailey", avatar: "avatar-22.svg" },
     },
     {
       id: "data-infrastructure",
